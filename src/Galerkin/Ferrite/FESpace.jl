@@ -1,4 +1,6 @@
 using Ferrite
+using LinearAlgebra
+
 export FerriteFESpace
 
 """
