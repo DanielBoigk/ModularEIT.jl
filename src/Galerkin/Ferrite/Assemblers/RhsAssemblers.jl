@@ -1,3 +1,6 @@
+using Ferrite
+export assemble_function_vector
+
 function assemble_function_vector(fe::FerriteFESpace, f, M_cholesky)
     F = zeros(fe.n)
     cellvalues = fe.cellvalues
@@ -19,8 +22,8 @@ function assemble_function_vector(fe::FerriteFESpace, f, M_cholesky)
             for i in 1:n_basefuncs
                 Fe[i] += f_val * shape_value(cellvalues, q, i) * dΩ
             end
-        end  
-        assemble!(F, cdofs,Fe)
+        end
+        assemble!(F, cdofs, Fe)
     end
     return M_cholesky \ F
 end

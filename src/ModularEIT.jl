@@ -1,4 +1,6 @@
 module ModularEIT
+
+include("Galerkin/Galerkin.jl")
 export printsomething
 
 function printsomething()

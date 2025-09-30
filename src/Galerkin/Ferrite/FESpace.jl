@@ -1,3 +1,5 @@
+using Ferrite
+
 """
     FerriteFESpace{RefElem}
 
@@ -39,16 +41,16 @@ Constructor for a type-stable FE space.
 - `qr_order::Int` : quadrature order
 - `boundary_faces::Vector{Int}` : indices of boundary faces for Dirichlet BCs
 """
-function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces::Vector{Int}) where RefElem
+function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces::Vector{Int}) where {RefElem}
     dim = Ferrite.getspatialdim(grid)
 
     # reference element interpolation
-    ip = Lagrange{RefElem, order}()
-    
+    ip = Lagrange{RefElem,order}()
+
     # quadrature
     qr = QuadratureRule{RefElem}(qr_order)
     qr_face = FacetQuadratureRule{RefElem}(qr_order)
-    
+
     # cell and facet values
     cellvalues = CellValues(qr, ip)
     facetvalues = FacetValues(qr_face, ip)
