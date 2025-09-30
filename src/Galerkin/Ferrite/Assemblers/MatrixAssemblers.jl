@@ -1,5 +1,6 @@
 using Ferrite
 using SparseArrays
+using LinearAlgebra
 
 export assemble_M!, assemble_M
 export assemble_K!, assemble_K

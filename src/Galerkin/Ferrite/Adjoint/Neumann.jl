@@ -1,4 +1,6 @@
-using Base: Stateful
+using LinearAlgebra
+using IterativeSolvers
+
 export EITModeN
 export state_adjoint_step_neumann_cg!
 export objective!
@@ -19,7 +21,7 @@ end
 function EITModeN(g::AbstractVector, f::AbstractVector)
     L = length(g)
     M = length(f)
-    return EITMode(zeros(L), zeros(M), zeros(L), zeros(L), f, g, zeros(L), 0.0, L, M)
+    return EITModeN(zeros(L), zeros(M), zeros(L), zeros(L), f, g, zeros(L), 0.0, L, M)
 end
 
 
