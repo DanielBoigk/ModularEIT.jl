@@ -17,7 +17,7 @@ Finite element space for a given reference element type `RefElem`.
 - `n::Int` : number of global DOFs.
 - `m::Int` : number of boundary faces.
 """
-struct FerriteFESpace{RefElem}
+struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     cellvalues::CellValues
     dh::DofHandler
     boundary_faces::Vector{Int}
