@@ -33,6 +33,7 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     M_fac
     K::AbstractMatrix
     K_fac
+    total_volume::Float64
 end
 
 """
@@ -75,7 +76,8 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces
     m = length(boundary_faces)
     M, M_fac = assemble_M(dh, cellvalues)
     K, K_fac = assemble_K(dh, cellvalues)
-    return FerriteFESpace{RefElem}(cellvalues, dh, boundary_faces, facetvalues, ch, order, qr_order, dim, n, m, M, M_fac, K, K_fac)
+    total_volume = calc_total_volume(dh, cellvalues)
+    return FerriteFESpace{RefElem}(cellvalues, dh, boundary_faces, facetvalues, ch, order, qr_order, dim, n, m, M, M_fac, K, K_fac, total_volume)
 end
 
 function dotH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
@@ -117,4 +119,69 @@ function metricH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
 end
 function metricH1sq(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
     return normH1sq(fe, a - b)
+end
+
+function normL1(a::AbstractVector, cellvalues::CellValues, dh::DofHandler)
+    n_basefuncs = getnbasefunctions(cellvalues)
+    qpoints = getnquadpoints(cellvalues)
+    total_residual = 0.0
+    total_volume = 0.0
+    for cell in CellIterator(dh)
+        dofs = celldofs(cell)
+        reinit!(cellvalues, cell)
+        ue = a[dofs]
+        for q in 1:qpoints
+            dΩ = getdetJdV(cellvalues, q)
+            total_volume += dΩ
+
+            uh_q = 0.0
+            for i in 1:n_basefuncs
+                ϕᵢ = shape_function(cellvalues, q, i)
+                uh_q += ue[i] * ϕᵢ
+            end
+
+            total_residual += abs(uh_q) * dΩ
+        end
+    end
+    return total_residual, total_volume
+end
+function normL1(fe::FerriteFESpace, a::AbstractVector)
+    normL1(a, fe.cellvalues, fe.dh)
+end
+
+function normL1grad(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, ndims::Int64)
+    n_basefuncs = getnbasefunctions(cellvalues)
+    qpoints = getnquadpoints(cellvalues)
+    total_residual = 0.0
+    for cell in CellIterator(dh)
+        dofs = celldofs(cell)
+        reinit!(cellvalues, cell)
+        ue = a[dofs]
+        for q in 1:qpoints
+            dΩ = getdetJdV(cellvalues, q)
+            ∇uh_q = zeros(eltype(a), ndims)
+            for i in 1:n_basefuncs
+                ∇ϕᵢ = shape_gradient(cellvalues, q, i)
+                ∇uh_q .+= ue[i] * ∇ϕᵢ
+            end
+
+            total_residual += norm(∇uh_q) * dΩ
+        end
+    end
+
+    return total_residual
+end
+function normL2Grad(fe::FerriteFESpace, a::AbstractVector)
+    normL1grad(a, fe.cellvalues, fe.dh, fe.dim)
+end
+
+function calc_total_volume(dh::DofHandler, cellvalues::CellValues)
+    total_volume = 0.0
+    for cell in CellIterator(dh)
+        reinit!(cellvalues, cell)
+        for q in 1:qpoints
+            total_volume += getdetJdV(cellvalues, q)
+        end
+    end
+    return total_volume
 end
