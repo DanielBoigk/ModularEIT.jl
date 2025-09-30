@@ -9,9 +9,7 @@ export assemble_L!, assemble_L
 # Used for calculating L² distance
 # Also used for Tikhonov L² regularization
 # Mainly we need this as a projector unto FE Space
-function assemble_M!(M::AbstractMatrix, fe::FerriteFESpace)
-    cellvalues = fe.cellvalues
-    dh = fe.dh
+function assemble_M!(M::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
     fill!(M, 0.0)
     n_basefuncs = getnbasefunctions(cellvalues)
     Me = zeros(n_basefuncs, n_basefuncs)
@@ -34,17 +32,26 @@ function assemble_M!(M::AbstractMatrix, fe::FerriteFESpace)
     return M, cholesky(M)
 end
 
+function assemble_M!(M::AbstractMatrix, fe::FerriteFESpace)
+    cellvalues = fe.cellvalues
+    dh = fe.dh
+    assemble_M!(M, cellvalues, dh)
+end
+
 function assemble_M(fe::FerriteFESpace)
     M = allocate_matrix(fe.dh)
     assemble_M!(M, fe)
 end
 
+function assemble_M(dh, cellvalues)
+    M = allocate_matrix(dh)
+    assemble_M!(M, dh, cellvalues)
+end
+
 # This is: ∫(∇(u)⋅∇(v))dΩ the stiffness matrix without specified coefficients.
 # This is used for calculatin H¹ -scalar product
 # It is also used for Tikhonov H¹ regularization.
-function assemble_K!(K::AbstractMatrix, fe::FerriteFESpace)
-    cellvalues = fe.cellvalues
-    dh = fe.dh
+function assemble_K!(M::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
     fill!(K, 0.0)
     n_basefuncs = getnbasefunctions(cellvalues)
     Ke = zeros(n_basefuncs, n_basefuncs)
@@ -65,6 +72,11 @@ function assemble_K!(K::AbstractMatrix, fe::FerriteFESpace)
         assemble!(assembler, celldofs(cell), Ke)
     end
     return K, factorize(K) # Cholesky decomposition might fail
+end
+function assemble_K!(K::AbstractMatrix, fe::FerriteFESpace)
+    cellvalues = fe.cellvalues
+    dh = fe.dh
+    assemble_K!(K, dh, cellvalues)
 end
 
 function assemble_K(fe::FerriteFESpace)

@@ -2,7 +2,7 @@
 # AbstractGelerkin
 This modul is supposed to give a scaffold for numerical solvers based on Galerkin methods like FEM, Spectral methods (like Chebyshev, FFT, Polynomials) or Kernel methods.
 Is goes that it implements:
-- A hilbertspace that allows for one or multiple forms of scalar product, especially  H¹ and L².
+- A hilbertspace that allows for one or multiple forms of scalar product, especially H¹ and L².
 - a general adjoint-state-method that drives the iterative upgrade by calculating a gradient
 - some sort of adaptive method that refines the parameters of the interpolation space (like adaptive meshing)
 - some sort of boundary projection and back projection that manages parametrization of the boundary

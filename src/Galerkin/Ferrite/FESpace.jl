@@ -1,5 +1,6 @@
 using Ferrite
 export FerriteFESpace
+using Base: AbstractArrayOrBroadcasted
 
 """
     FerriteFESpace{RefElem}
@@ -29,6 +30,10 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     dim::Int
     n::Int
     m::Int
+    M::AbstractMatrix
+    M_fac
+    K::AbstractMatrix
+    K_fac
 end
 
 """
@@ -69,6 +74,7 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces
 
     n = ndofs(dh)
     m = length(boundary_faces)
-
-    return FerriteFESpace{RefElem}(cellvalues, dh, boundary_faces, facetvalues, ch, order, qr_order, dim, n, m)
+    M, M_fac = assemble_M(dh, cellvalues)
+    K, K_fac = assemble_K(dh, cellvalues)
+    return FerriteFESpace{RefElem}(cellvalues, dh, boundary_faces, facetvalues, ch, order, qr_order, dim, n, m, M, M_fac, K, K_fac)
 end
