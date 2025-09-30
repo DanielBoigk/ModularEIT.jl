@@ -1,4 +1,5 @@
 using Ferrite
+export FerriteFESpace
 
 """
     FerriteFESpace{RefElem}
@@ -20,7 +21,7 @@ Finite element space for a given reference element type `RefElem`.
 struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     cellvalues::CellValues
     dh::DofHandler
-    boundary_faces::Vector{Int}
+    boundary_faces
     facetvalues::FacetValues
     ch::ConstraintHandler
     order::Int
@@ -39,9 +40,9 @@ Constructor for a type-stable FE space.
 - `grid` : mesh/grid object
 - `order::Int` : polynomial order
 - `qr_order::Int` : quadrature order
-- `boundary_faces::Vector{Int}` : indices of boundary faces for Dirichlet BCs
+- `boundary_faces` : indices of boundary faces for Dirichlet BCs
 """
-function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces::Vector{Int}) where {RefElem}
+function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces) where {RefElem}
     dim = Ferrite.getspatialdim(grid)
 
     # reference element interpolation
