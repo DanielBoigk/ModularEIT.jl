@@ -78,3 +78,27 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces
     K, K_fac = assemble_K(dh, cellvalues)
     return FerriteFESpace{RefElem}(cellvalues, dh, boundary_faces, facetvalues, ch, order, qr_order, dim, n, m, M, M_fac, K, K_fac)
 end
+
+function dotH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
+    return a' * fe.K * b
+end
+
+function dotL2(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
+    return a' * fe.M * b
+end
+
+function dotL2(fe::FerriteFESpace, a::AbstractVector)
+    return a' * fe.M * a
+end
+
+function dotH1(fe::FerriteFESpace, a::AbstractVector)
+    return a' * fe.K * a
+end
+
+function normH1sq(fe::FerriteFESpace, a::AbstractVector)
+    return dotH1(fe, a, a)
+end
+
+function normL2sq(fe::FerriteFESpace, a::AbstractVector)
+    return dotL2(fe, a, a)
+end
