@@ -98,7 +98,24 @@ end
 function normH1sq(fe::FerriteFESpace, a::AbstractVector)
     return dotH1(fe, a, a)
 end
-
 function normL2sq(fe::FerriteFESpace, a::AbstractVector)
     return dotL2(fe, a, a)
+end
+function normL2(fe::FerriteFESpace, a::AbstractVector)
+    return sqrt(normL2sq(fe, a))
+end
+function normH1(fe::FerriteFESpace, a::AbstractVector)
+    return sqrt(normH1(fe, a))
+end
+function metricL2sq(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
+    return normL2sq(fe, a - b)
+end
+function metricL2(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
+    return normL2(fe, a - b)
+end
+function metricH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
+    return normH1(fe, a - b)
+end
+function metricH1sq(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
+    return normH1sq(fe, a - b)
 end
