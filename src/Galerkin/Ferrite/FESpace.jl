@@ -1,6 +1,5 @@
 using Ferrite
 export FerriteFESpace
-using Base: AbstractArrayOrBroadcasted
 
 """
     FerriteFESpace{RefElem}
