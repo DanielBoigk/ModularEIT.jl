@@ -1,6 +1,7 @@
 
 
-
+# Not yet correct
+# Replace with SmoothOptimizers.jl
 function split_bregman(γ0, y; λ=1.0, μ=1.0, τ=0.1, niter=20, prox)
     γ = copy(γ0)
     d = zeros(size(γ0))
