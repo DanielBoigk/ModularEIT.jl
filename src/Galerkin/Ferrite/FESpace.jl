@@ -2,6 +2,12 @@ using Ferrite
 using LinearAlgebra
 
 export FerriteFESpace
+export dotL2, dotH1
+export normL2sq, normL2, normH1, normH1sq
+export normL1, normL1grad
+export metricL2, metricL2sq, metricH1, metricH1sq
+
+
 
 """
     FerriteFESpace{RefElem}
@@ -108,7 +114,7 @@ function normL2(fe::FerriteFESpace, a::AbstractVector)
     return sqrt(normL2sq(fe, a))
 end
 function normH1(fe::FerriteFESpace, a::AbstractVector)
-    return sqrt(normH1(fe, a))
+    return sqrt(normH1sq(fe, a))
 end
 function metricL2sq(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
     return normL2sq(fe, a - b)
@@ -127,25 +133,22 @@ function normL1(a::AbstractVector, cellvalues::CellValues, dh::DofHandler)
     n_basefuncs = getnbasefunctions(cellvalues)
     qpoints = getnquadpoints(cellvalues)
     total_residual = 0.0
-    total_volume = 0.0
     for cell in CellIterator(dh)
         dofs = celldofs(cell)
         reinit!(cellvalues, cell)
         ue = a[dofs]
         for q in 1:qpoints
             dΩ = getdetJdV(cellvalues, q)
-            total_volume += dΩ
-
             uh_q = 0.0
             for i in 1:n_basefuncs
-                ϕᵢ = shape_function(cellvalues, q, i)
+                ϕᵢ = shape_value(cellvalues, q, i)
                 uh_q += ue[i] * ϕᵢ
             end
 
             total_residual += abs(uh_q) * dΩ
         end
     end
-    return total_residual, total_volume
+    return total_residual
 end
 function normL1(fe::FerriteFESpace, a::AbstractVector)
     normL1(a, fe.cellvalues, fe.dh)
@@ -173,12 +176,13 @@ function normL1grad(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, n
 
     return total_residual
 end
-function normL2Grad(fe::FerriteFESpace, a::AbstractVector)
+function normL1grad(fe::FerriteFESpace, a::AbstractVector)
     normL1grad(a, fe.cellvalues, fe.dh, fe.dim)
 end
 
 function calc_total_volume(dh::DofHandler, cellvalues::CellValues)
     total_volume = 0.0
+    qpoints = getnquadpoints(cellvalues)
     for cell in CellIterator(dh)
         reinit!(cellvalues, cell)
         for q in 1:qpoints

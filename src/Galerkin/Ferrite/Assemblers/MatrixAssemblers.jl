@@ -52,7 +52,7 @@ end
 # This is: ∫(∇(u)⋅∇(v))dΩ the stiffness matrix without specified coefficients.
 # This is used for calculatin H¹ -scalar product
 # It is also used for Tikhonov H¹ regularization.
-function assemble_K!(M::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
+function assemble_K!(K::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
     fill!(K, 0.0)
     n_basefuncs = getnbasefunctions(cellvalues)
     Ke = zeros(n_basefuncs, n_basefuncs)
@@ -84,7 +84,10 @@ function assemble_K(fe::FerriteFESpace)
     K = allocate_matrix(fe.dh)
     assemble_K!(K, fe)
 end
-
+function assemble_K(dh::DofHandler, cellvalues::CellValues)
+    K = allocate_matrix(dh)
+    assemble_K!(K, dh, cellvalues)
+end
 function assemble_K!(K::AbstractMatrix, fe::FerriteFESpace, ϵ::Float64)
     cellvalues = fe.cellvalues
     dh = fe.dh
@@ -115,6 +118,8 @@ function assemble_K(fe::FerriteFESpace, ϵ::Float64)
     assemble_K!(K, fe, ϵ)
 end
 
+
+# This assembles L from function γ
 function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ, ϵ=0.0)
     cellvalues = fe.cellvalues
     dh = fe.dh
