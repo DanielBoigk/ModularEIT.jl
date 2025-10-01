@@ -5,9 +5,10 @@ using SparseArrays
 export calculate_bilinear_map!, calculate_bilinear_map
 # Assemble the projection of ∇(u) ⋅ ∇(λ) onto the FE space.
 # This computes rhs_i = ∫ (∇u ⋅ ∇λ) ϕ_i dΩ for each test function ϕ_i.
-function calculate_bilinear_map!(rhs::AbstractVector, a::AbstractVector, b::AbstractVector, fe::FerriteFESpace, M)
+function calculate_bilinear_map!(rhs::AbstractVector, a::AbstractVector, b::AbstractVector, fe::FerriteFESpace)
     cellvalues = fe.cellvalues
     dh = fe.dh
+    M = fe.M_fac
     n_basefuncs = getnbasefunctions(cellvalues)
     qpoints = getnquadpoints(cellvalues)
     re = zeros(n_basefuncs)

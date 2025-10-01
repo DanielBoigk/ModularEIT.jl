@@ -1,7 +1,7 @@
 using Ferrite
 export assemble_function_vector
 
-function assemble_function_vector(fe::FerriteFESpace, f, M_cholesky)
+function project_function_to_fem(fe::FerriteFESpace, f)
     F = zeros(fe.n)
     cellvalues = fe.cellvalues
     dh = fe.dh
@@ -25,5 +25,35 @@ function assemble_function_vector(fe::FerriteFESpace, f, M_cholesky)
         end
         assemble!(F, cdofs, Fe)
     end
-    return M_cholesky \ F
+    return fe.M_fac \ F
 end
+
+# This assembles ∫(g*v)d∂Ω
+function assemble_rhs_func(facetvalues::FacetValues, dh::DofHandler, g_func, ∂Ω)
+    f = zeros(ndofs(dh))
+    fe = zeros(ndofs_per_cell(dh))
+    for facet in FacetIterator(dh, ∂Ω)
+        fill!(fe, 0.0)
+        reinit!(facetvalues, facet)
+        coords = getcoordinates(facet)
+        dofs = celldofs(facet)
+        for q_point in 1:getnquadpoints(facetvalues)
+            x = spatial_coordinate(facetvalues, q_point, coords)
+            g = g_func(x)
+            dΓ = getdetJdV(facetvalues, q_point)
+            for i in 1:getnbasefunctions(facetvalues)
+                ϕᵢ = shape_value(facetvalues, q_point, i)
+                fe[i] += ϕᵢ * g * dΓ
+            end
+        end
+        assemble!(f, dofs, fe)
+    end
+    return f
+end
+
+function assemble_rhs_func(fe::Ferrite.FESpace, g_func)
+    assemble_rhs_func(fe.facetvalues, fe.dh, g_func, fe.∂Ω)
+end
+
+
+# Write assembler for dirichlet boundary from function

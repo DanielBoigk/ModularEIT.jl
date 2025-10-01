@@ -14,6 +14,4 @@ mutable struct FerriteSolverState <: AbstractGalerkinSolver
     β::Float64 # Regularization parameter
     τ::Float64 # Learn rate
     num_pairs::Int64 # Number of voltage-current pairs
-
-
 end
