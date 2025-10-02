@@ -32,9 +32,9 @@ q_func = get_func(q)
 r_func = get_func(r)
 
 
-p_vec = ModularEIT.assemble_function_vector(p_func, fe)
-q_vec = ModularEIT.assemble_function_vector(q_func, fe)
-r_vec = ModularEIT.assemble_function_vector(r_func, fe)
+p_vec = ModularEIT.project_function_to_fem(p_func, fe)
+q_vec = ModularEIT.project_function_to_fem(q_func, fe)
+r_vec = ModularEIT.project_function_to_fem(r_func, fe)
 
 r_test = calculate_bilinear_map(fe, p_vec, q_vec)
 
