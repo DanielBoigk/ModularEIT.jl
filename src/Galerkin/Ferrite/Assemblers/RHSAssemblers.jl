@@ -51,7 +51,7 @@ function assemble_rhs_func(facetvalues::FacetValues, dh::DofHandler, g_func, ∂
     return f
 end
 
-function assemble_rhs_func(fe::Ferrite.FESpace, g_func)
+function assemble_rhs_func(fe::FerriteFESpace, g_func)
     assemble_rhs_func(fe.facetvalues, fe.dh, g_func, fe.∂Ω)
 end
 
