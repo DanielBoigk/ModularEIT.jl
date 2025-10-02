@@ -6,6 +6,8 @@ export assemble_M!, assemble_M
 export assemble_K!, assemble_K
 export assemble_L!, assemble_L
 
+export to_dirichlet, to_dirichlet!
+
 # This is the mass matrix: ∫(u*v)dΩ
 # Used for calculating L² distance
 # Also used for Tikhonov L² regularization
@@ -150,7 +152,7 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ, ϵ=0.0)
     return L
 end
 
-function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, ϵ::Float64)
+function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, ϵ::Float64=0.0)
     cellvalues = fe.cellvalues
     dh = fe.dh
     fill!(L, 0.0)
@@ -181,7 +183,7 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, 
     return L
 end
 
-function assemble_L(fe::FerriteFESpace, γ, ϵ::Float64)
+function assemble_L(fe::FerriteFESpace, γ, ϵ::Float64=0.0)
     L = allocate_matrix(fe.dh)
     return assemble_L!(L, fe, γ, ϵ)
 end
