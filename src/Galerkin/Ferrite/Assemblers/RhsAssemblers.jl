@@ -1,5 +1,5 @@
 using Ferrite
-export assemble_function_vector
+export project_function_to_fem, assemble_rhs_func
 
 function project_function_to_fem(fe::FerriteFESpace, f)
     F = zeros(fe.n)

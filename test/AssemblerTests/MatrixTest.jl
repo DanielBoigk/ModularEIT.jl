@@ -43,3 +43,16 @@ println("Norm of Matrix difference: ", Matrix_norm)
 
 
 # Load gmsh grid and repeat test.
+u = randn(fe.n)
+
+
+diff_u = KD_func * u - KN_func * u
+num_approx_zero = 0
+for i in 1:fe.n
+    if abs(diff_u[i]) < 1e-10
+        num_approx_zero += 1
+    end
+end
+println("Number of approx. zero entries: ", num_approx_zero)
+println("desired Number of approx. zero entries: ", fe.m)
+@assert num_approx_zero == fe.m
