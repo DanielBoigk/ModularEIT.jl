@@ -20,7 +20,7 @@ fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
 #we just take some sample conductivity function:
 conductivity = (x) -> 1.1 + sin(x[1]) * cos(x[2])
 
-cond_vec = ModularEIT.assemble_function_vector(conductivity, fe)
+cond_vec = project_function_to_fem(fe, conductivity)
 
 KN_func = assemble_L(fe, conductivity)
 KN_vec = assemble_L(fe, cond_vec)
