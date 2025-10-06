@@ -5,7 +5,7 @@ Dear Visitor: Over the next weeks I'm gonna build a Electrical Impedance Tomogra
 I'm doing this because of there being several downsides with the existing libraries, like:
 - Lack of Integration with Machine Learning Frameworks
 - Lack of Documentation
-- Performance deficits and parallelization of GPU 
+- Performance deficits and parallelization of GPU
 - Lack of integration with FEM frameworks
 
 
