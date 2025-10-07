@@ -1,5 +1,6 @@
 using LinearAlgebra
 using IterativeSolvers
+using Statistics
 
 export EITModeN
 export state_adjoint_step_neumann_cg!
