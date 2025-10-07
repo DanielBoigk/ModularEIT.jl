@@ -7,7 +7,7 @@ export state_adjoint_step_mixed_cg!
 export objective_mixed_cg!
 export gradient_mixed_cg!
 
-function FerriteEITModeM(g::AbstractVector, f::AbstractVector, m::Int64)
+function FerriteEITModeM(g::AbstractVector, f::AbstractVector, fe::FerriteFESpace)
     n = fe.n
     m = fe.m
     u_g = zeros(n)
