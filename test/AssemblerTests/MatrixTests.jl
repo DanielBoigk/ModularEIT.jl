@@ -9,14 +9,6 @@ using LinearAlgebra
 using IterativeSolvers
 using ModularEIT
 @testset "Matrix Tests" begin
-    grid = generate_grid(Quadrilateral, (16, 16))
-    ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
-
-    order = 3
-    qr_order = 5
-
-    fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
-
     #we just take some sample conductivity function:
     conductivity = (x) -> 1.1 + sin(x[1]) * cos(x[2])
 
@@ -50,7 +42,7 @@ using ModularEIT
     num_approx_zero = 0
     for i in 1:fe.n
         if abs(diff_u[i]) < 1e-5
-            global num_approx_zero += 1
+            num_approx_zero += 1
         end
     end
     println("Number of approx. zero entries: ", num_approx_zero)

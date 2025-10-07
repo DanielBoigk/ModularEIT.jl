@@ -17,7 +17,7 @@ Finite element space for a given reference element type `RefElem`.
 # Fields
 - `cellvalues::CellValues` : precomputed element-level shape functions and quadrature.
 - `dh::DofHandler` : handles mapping between global and local degrees of freedom.
-- `boundary_faces::Vector{Int}` : indices of boundary faces.
+- `∂Ω` : indices of boundary faces.
 - `facetvalues::FacetValues` : precomputed facet-level shape functions for boundary integrals.
 - `ch::ConstraintHandler` : handles Dirichlet (or other) constraints.
 - `order::Int` : polynomial order of FE basis.
@@ -29,7 +29,7 @@ Finite element space for a given reference element type `RefElem`.
 struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     cellvalues::CellValues
     dh::DofHandler
-    boundary_faces
+    ∂Ω
     facetvalues::FacetValues
     ch::ConstraintHandler
     order::Int
@@ -76,16 +76,16 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces
 
     # constraints
     ch = ConstraintHandler(dh)
-    dbc = Dirichlet(:u, boundary_faces, (x) -> 0.0)
+    dbc = Dirichlet(:u, ∂Ω, (x) -> 0.0)
     add!(ch, dbc)
     close!(ch)
 
     n = ndofs(dh)
-    m = length(boundary_faces)
+    m = length(∂Ω)
     M, M_fac = assemble_M(dh, cellvalues)
     K, K_fac = assemble_K(dh, cellvalues)
     total_volume = calc_total_volume(dh, cellvalues)
-    return FerriteFESpace{RefElem}(cellvalues, dh, boundary_faces, facetvalues, ch, order, qr_order, dim, n, m, M, M_fac, K, K_fac, total_volume)
+    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, m, M, M_fac, K, K_fac, total_volume)
 end
 
 function dotH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)

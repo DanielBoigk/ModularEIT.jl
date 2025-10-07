@@ -1,3 +1,6 @@
+using Ferrite
+
+export produce_nonzero_positions
 function produce_nonzero_positions(v, atol=1e-8, rtol=1e-5)
     approx_zero(x; atol=atol, rtol=rtol) = isapprox(x, 0; atol=atol, rtol=rtol)
     non_zero_count = count(x -> !approx_zero(x), v)
@@ -27,4 +30,10 @@ function produce_nonzero_positions(facetvalues::FacetValues, dh::DofHandler, ∂
     end
     nzc, nzpos, down, up = produce_nonzero_positions(f)
     return nzc, nzpos, down, up, f
+end
+function produce_nonzero_positions(fe::FerriteFESpace)
+    facetvalues = fe.facetvalues
+    dh = fe.dh
+    ∂Ω = fe.∂Ω
+    produce_nonzero_positions(facetvalues, dh, ∂Ω)
 end
