@@ -7,4 +7,4 @@ include("Projectors/Boundary.jl")
 #include("Projectors/Volume.jl")
 
 include("SolverState/SolverState.jl")
-include("Adjoint/Neumann.jl")
+include("Adjoint/EITMode.jl")

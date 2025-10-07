@@ -1,4 +1,3 @@
-
 // Concave polygon (triangular meshable). Points and lines marked on the boundary.
 
 SetFactory("OpenCASCADE"); // robust boolean/loop handling

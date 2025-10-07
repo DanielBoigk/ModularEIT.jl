@@ -8,7 +8,7 @@ mutable struct FerriteSolverState <: AbstractGalerkinSolver
     ∂Ω # Definition of the boundary
     σ::AbstractVector # Conductivity values
     δ::AbstractVector # Update of the conductivity
-    L::AbstractMatrix #Current guess of boundary operator for Neumann boundary
+    L::Union{AbstractMatrix,Nothing} #Current guess of boundary operator for Neumann boundary
     L_fac # Factorized version of K
     LD::Union{AbstractMatrix,Nothing} # Current guess of boundary operator for dirichlet boundary
     LD_fac
@@ -40,18 +40,18 @@ end
 makegradₓ(d) = (x, y) -> Enzyme.gradient(Reverse, Const(d), x, y)[1]
 makegrad(n) = (x) -> Enzyme.gradient(Reverse, Const(n), x)
 
-function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d,n)
+function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, n)
     ∂d = makegradₓ(d)
     ∂n = makegrad(n)
     FerriteSolverState(fe, σ, d, ∂d, n, ∂n)
 end
 
-function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d,n,∂n)
+function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, ∂n)
     ∂Ω = fe.∂Ω
     δ = zeros(fe.n)
 
     L = assemble_L(fe, σ)
     Σ = zeros(fe.m - 1)
 
-    FerriteSolverState(∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n,∂n, nothing, nothing, nothing, nothing, 0.0, 0.0, 0.1, 0, 0)
+    FerriteSolverState(∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, 0.0, 0.0, 0.1, 0, 0)
 end
