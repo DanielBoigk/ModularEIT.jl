@@ -13,8 +13,10 @@ mutable struct FerriteSolverState <: AbstractGalerkinSolver
     LD::Union{AbstractMatrix,Nothing} # Current guess of boundary operator for dirichlet boundary
     LD_fac
     Σ::AbstractVector # Singular values of K
-    d # metric we use: d: (x, y) -> norm(x - y)^2 by default
-    ∂d # derivative of the metric after x: (x, y) -> 2 * (x - y) by default
+    d # pseudo-metric we use: d: (x, y) -> norm(x - y)^2 by default
+    ∂d # derivative of the pseudo-metric after x: (x, y) -> 2 * (x - y) by default
+    n # pseudo-norm we use: n: (x) -> norm(x)^2 by default
+    ∂n # derivative of the pseudo-norm after x: (x) -> 2 * x by default
     R_diff # Some Function that holds the differentiable part of the regularizer
     R_ndiff # Some Function that holds the non-differentiable part of the regularizer required to be a convex lower-semicontinuous function
     R_diff_args # Arguments for the differentiable regularizer function
@@ -30,22 +32,26 @@ end
 function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector)
     d = (x, y) -> norm(x - y)^2
     ∂d = (x, y) -> 2 * (x - y)
-    FerriteSolverState(fe, σ, d, ∂d)
+    n = (x) -> norm(x)^2
+    ∂n = (x) -> 2 * x
+    FerriteSolverState(fe, σ, d, ∂d, n, ∂n)
 end
 
 makegradₓ(d) = (x, y) -> Enzyme.gradient(Reverse, Const(d), x, y)[1]
+makegrad(n) = (x) -> Enzyme.gradient(Reverse, Const(n), x)
 
-function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d)
+function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d,n)
     ∂d = makegradₓ(d)
-    FerriteSolverState(fe, σ, d, ∂d)
+    ∂n = makegrad(n)
+    FerriteSolverState(fe, σ, d, ∂d, n, ∂n)
 end
 
-function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d)
+function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d,n,∂n)
     ∂Ω = fe.∂Ω
     δ = zeros(fe.n)
 
     L = assemble_L(fe, σ)
     Σ = zeros(fe.m - 1)
 
-    FerriteSolverState(∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, nothing, nothing, nothing, nothing, 0.0, 0.0, 0.1, 0, 0)
+    FerriteSolverState(∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n,∂n, nothing, nothing, nothing, nothing, 0.0, 0.0, 0.1, 0, 0)
 end

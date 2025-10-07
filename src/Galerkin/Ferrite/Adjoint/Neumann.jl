@@ -26,7 +26,12 @@ end
 
 
 
-function state_adjoint_step_neumann_cg!(mode::EITModeN, L::AbstractMatrix, M, d, ∂d, down, up, fe::FerriteFESpace, maxiter=500)
+function state_adjoint_step_neumann_cg!(mode::EITModeN, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    d = sol.d
+    ∂d = sol.∂d
+    L = sol.L
+    down = fe.down
+    up = fe.up
     # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : σ∂u/∂𝐧 = g
     cg!(mode.u, L, mode.g; maxiter=maxiter)
     mode.b = down(mode.u)
@@ -38,11 +43,16 @@ function state_adjoint_step_neumann_cg!(mode::EITModeN, L::AbstractMatrix, M, d,
     # Calculate J(σ,f,g)
     mode.error = d(mode.b, mode.f)
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = calculate_bilinear_map!(mode.rhs, mode.λ, mode.u, fe, M)
+    mode.δσ = calculate_bilinear_map!(fe,mode.rhs, mode.λ, mode.u)
     return mode.δσ, mode.error
 end
 
-function objective!(mode::EITModeN, L::AbstractMatrix, M, d, ∂d, down, up, fe::FerriteFESpace, maxiter=500)
+function objective!(mode::EITModeN, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    d = sol.d
+    ∂d = sol.∂d
+    L = sol.L
+    down = fe.down
+    up = fe.up
     # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : σ∂u/∂𝐧 = g
     cg!(mode.u, L, mode.g; maxiter=maxiter)
     mode.b = down(mode.u)
@@ -53,10 +63,15 @@ function objective!(mode::EITModeN, L::AbstractMatrix, M, d, ∂d, down, up, fe:
     return mode.error
 end
 
-function gradient!(mode::EITModeN, L::AbstractMatrix, M, d, ∂d, down, up, fe::FerriteFESpace, maxiter=500)
+function gradient!(mode::EITModeN, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    d = sol.d
+    ∂d = sol.∂d
+    L = sol.L
+    down = fe.down
+    up = fe.up
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
     cg!(mode.λ, L, up(∂d(mode.b, mode.f)); maxiter=maxiter)
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = calculate_bilinear_map!(mode.rhs, mode.λ, mode.u, fe, M)
+    mode.δσ = calculate_bilinear_map!(fe,mode.rhs, mode.λ, mode.u)
     return mode.δσ
 end
