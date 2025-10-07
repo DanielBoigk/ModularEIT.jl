@@ -36,12 +36,15 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     qr_order::Int
     dim::Int
     n::Int
+    num_facet::Int
     m::Int
     M::AbstractMatrix
     M_fac
     K::AbstractMatrix
     K_fac
     total_volume::Float64
+    down # Projection from force vector to coefficients of the basis functions of boundary
+    up # Projection from coefficients of the basis functions of boundary to force vector
 end
 
 """
@@ -55,7 +58,7 @@ Constructor for a type-stable FE space.
 - `qr_order::Int` : quadrature order
 - `boundary_faces` : indices of boundary faces for Dirichlet BCs
 """
-function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces) where {RefElem}
+function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {RefElem}
     dim = Ferrite.getspatialdim(grid)
 
     # reference element interpolation
@@ -81,11 +84,13 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, boundary_faces
     close!(ch)
 
     n = ndofs(dh)
-    m = length(∂Ω)
+    num_facet = length(∂Ω)
     M, M_fac = assemble_M(dh, cellvalues)
     K, K_fac = assemble_K(dh, cellvalues)
     total_volume = calc_total_volume(dh, cellvalues)
-    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, m, M, M_fac, K, K_fac, total_volume)
+
+    m, _, down, up, _ = produce_nonzero_positions(facetvalues, dh, ∂Ω)
+    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, down, up)
 end
 
 function dotH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)

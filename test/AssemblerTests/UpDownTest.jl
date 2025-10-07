@@ -10,9 +10,9 @@ using ModularEIT
 
 @testset "UpDownTest" begin
     # Test up projector
-    _, _, down, up, _ = produce_nonzero_positions(fe)
-
-
+    println(fe.n)
+    down = fe.down
+    up = fe.up
     # Test down projector
 
     test_vec = randn(fe.m)

@@ -1,6 +1,26 @@
 using Ferrite
 
 export produce_nonzero_positions
+#=
+function produce_nonzero_positions(facetvalues::FacetValues, dh::DofHandler, ∂Ω)
+    boundary_dofs = Int[]
+    for facet in FacetIterator(dh, ∂Ω)
+        append!(boundary_dofs, celldofs(facet))
+    end
+    boundary_dofs = unique(boundary_dofs)
+    f = zeros(ndofs(dh))
+    f[boundary_dofs] .= 1.0
+    nzc = length(boundary_dofs)
+    down = (x) -> x[boundary_dofs]
+    up = (x) -> begin
+        v = zeros(eltype(x), ndofs(dh))
+        v[boundary_dofs] = x
+        v
+    end
+    return nzc, boundary_dofs, down, up, f
+end
+=#
+
 function produce_nonzero_positions(v, atol=1e-8, rtol=1e-5)
     approx_zero(x; atol=atol, rtol=rtol) = isapprox(x, 0; atol=atol, rtol=rtol)
     non_zero_count = count(x -> !approx_zero(x), v)
@@ -14,6 +34,7 @@ function produce_nonzero_positions(v, atol=1e-8, rtol=1e-5)
     end
     return non_zero_count, non_zero_positions, down, up
 end
+
 function produce_nonzero_positions(facetvalues::FacetValues, dh::DofHandler, ∂Ω)
     f = zeros(ndofs(dh))
     for facet in FacetIterator(dh, ∂Ω)
