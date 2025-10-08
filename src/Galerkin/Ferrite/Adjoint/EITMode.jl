@@ -1,8 +1,6 @@
 using Statistics
 
-include("Dirichlet.jl")
-include("Neumann.jl")
-include("Mixed.jl")
+
 
 export FerriteEITMode
 

@@ -19,6 +19,7 @@ mutable struct FerriteSolverState <: AbstractGalerkinSolver
     ∂n # derivative of the pseudo-norm after x: (x) -> 2 * x by default
     R_diff # Some Function that holds the differentiable part of the regularizer
     R_ndiff # Some Function that holds the non-differentiable part of the regularizer required to be a convex lower-semicontinuous function
+    ∇R # gradient of the regularizer
     R_diff_args # Arguments for the differentiable regularizer function
     R_ndiff_args # Arguments for the non-differentiable regularizer function
     β_diff::Float64 # Regularization parameter for differentiable part
@@ -53,5 +54,5 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     L = assemble_L(fe, σ)
     Σ = zeros(fe.m - 1)
 
-    FerriteSolverState(∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, 0.0, 0.0, 0.1, 0, 0)
+    FerriteSolverState(∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing,nothing, nothing, nothing, nothing, 0.0, 0.0, 0.1, 0, 0)
 end

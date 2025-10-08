@@ -1,4 +1,4 @@
-# Julia EIT
+# Julia EIT (Under Development)
 
 Dear Visitor: Over the next weeks I'm gonna build a Electrical Impedance Tomography (EIT) Library similar in spirit to [PyEIT](https://github.com/eitcom/pyEIT) or [EIDORS](https://eidors3d.sourceforge.net/).
 

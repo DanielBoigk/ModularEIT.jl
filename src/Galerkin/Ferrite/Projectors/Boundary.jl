@@ -32,7 +32,16 @@ function produce_nonzero_positions(v, atol=1e-8, rtol=1e-5)
         v[non_zero_indices] = x
         return v
     end
-    return non_zero_count, non_zero_positions, down, up
+    up! = (out, x) -> begin
+            @assert length(out) == length(v)
+            @assert length(x) == non_zero_count
+            fill!(out, zero(eltype(out)))          # reset (optional)
+            @inbounds for (i, idx) in enumerate(non_zero_indices)
+                out[idx] = x[i]
+            end
+            return out
+        end
+    return non_zero_count, non_zero_positions, down, up,up!
 end
 
 function produce_nonzero_positions(facetvalues::FacetValues, dh::DofHandler, ∂Ω)
@@ -49,8 +58,8 @@ function produce_nonzero_positions(facetvalues::FacetValues, dh::DofHandler, ∂
         end
         assemble!(f, celldofs(facet), fe)
     end
-    nzc, nzpos, down, up = produce_nonzero_positions(f)
-    return nzc, nzpos, down, up, f
+    nzc, nzpos, down, up, up! = produce_nonzero_positions(f)
+    return nzc, nzpos, down, up, up!, f
 end
 function produce_nonzero_positions(fe::FerriteFESpace)
     facetvalues = fe.facetvalues

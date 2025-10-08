@@ -45,6 +45,7 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     total_volume::Float64
     down # Projection from force vector to coefficients of the basis functions of boundary
     up # Projection from coefficients of the basis functions of boundary to force vector
+    up! # Projection from coefficients of the basis functions of boundary to force vector
 end
 
 """
@@ -89,8 +90,8 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
     K, K_fac = assemble_K(dh, cellvalues)
     total_volume = calc_total_volume(dh, cellvalues)
 
-    m, _, down, up, _ = produce_nonzero_positions(facetvalues, dh, ∂Ω)
-    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, down, up)
+    m, _, down, up,up!, _ = produce_nonzero_positions(facetvalues, dh, ∂Ω)
+    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, down, up, up!)
 end
 
 function dotH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)

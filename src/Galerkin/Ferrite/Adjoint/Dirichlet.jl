@@ -21,12 +21,6 @@ function FerriteEITModeD(g::AbstractVector, f::AbstractVector, fe::FerriteFESpac
 end
 
 
-function state_adjoint_step_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
-    objective_dirichlet_cg!(mode, sol, fe, maxiter)
-    gradient_dirichlet_cg!(mode, sol, fe, maxiter)
-    return mode.δσ, mode.error_n
-end
-
 function objective_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     d = sol.d
     ∂d = sol.∂d
@@ -52,4 +46,11 @@ function gradient_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, f
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
     return mode.δσ
+end
+
+
+function state_adjoint_step_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    objective_dirichlet_cg!(mode, sol, fe, maxiter)
+    gradient_dirichlet_cg!(mode, sol, fe, maxiter)
+    return mode.δσ, mode.error_n
 end
