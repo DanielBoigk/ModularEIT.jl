@@ -12,13 +12,13 @@ mutable struct FerriteEITMode
     u_g::Union{AbstractVector,Nothing}
     w::Union{AbstractVector,Nothing}
     b::Union{AbstractVector,Nothing}
-    λ::Union{AbstractVector,Nothing}
-    δσ::Union{AbstractVector,Nothing}
+    λ::AbstractVector
+    δσ::AbstractVector
     F::Union{AbstractVector,Nothing} # This is the long vector for dirichlet boundary conditions
     f::Union{AbstractVector,Nothing} # This is the short vector for dirichlet boundary conditions
     G::Union{AbstractVector,Nothing} # This is the long vector for neumann boundary conditions
     g::Union{AbstractVector,Nothing} # This is the short vector for neumann boundary conditions
-    rhs::Union{AbstractVector,Nothing} # This is a preallocation for calculating the bilinear map
+    rhs::AbstractVector # This is a preallocation for calculating the bilinear map
     error_d::Float64
     error_n::Float64
     error_m::Float64

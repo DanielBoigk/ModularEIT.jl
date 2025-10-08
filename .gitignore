@@ -29,3 +29,8 @@ Manifest.toml
 
 
 .vscode
+
+# Mesh files
+*.msh
+*.vtk
+*.vtu
