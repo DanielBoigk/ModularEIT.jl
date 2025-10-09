@@ -4,7 +4,7 @@ include("Galerkin/Galerkin.jl")
 export printsomething
 
 include("Glue/mesh_creator.jl")
-
+include("Images/Interpolate.jl")
 function printsomething()
     println("Hallo Welt!")
     return "some output"
