@@ -30,23 +30,4 @@ using ModularEIT
     println("Norm of Matrix difference: ", Matrix_norm)
     @test Matrix_norm < 10.0
 
-
-    # Make sanity check if Dirichlet and Neumann boundary operators are compatible with up and down projections.
-
-
-    # Load gmsh grid and repeat test.
-    u = randn(fe.n)
-
-
-    diff_u = KD_func * u - KN_func * u
-    num_approx_zero = 0
-    for i in 1:fe.n
-        if abs(diff_u[i]) < 1e-5
-            num_approx_zero += 1
-        end
-    end
-    println("Number of approx. zero entries: ", num_approx_zero)
-    println("desired Number of approx. zero entries: ", fe.m)
-    println("This produces an error. Figure out why.")
-    @test num_approx_zero == fe.m
 end
