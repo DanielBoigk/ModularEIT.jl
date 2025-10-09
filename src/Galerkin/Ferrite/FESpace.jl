@@ -10,21 +10,30 @@ export metricL2, metricL2sq, metricH1, metricH1sq
 
 
 """
-    FerriteFESpace{RefElem}
+    struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
 
-Finite element space for a given reference element type `RefElem`.
+Finite Element Space for a given reference element type `RefElem`.
 
 # Fields
-- `cellvalues::CellValues` : precomputed element-level shape functions and quadrature.
-- `dh::DofHandler` : handles mapping between global and local degrees of freedom.
-- `∂Ω` : indices of boundary faces.
-- `facetvalues::FacetValues` : precomputed facet-level shape functions for boundary integrals.
+- `cellvalues::CellValues` : precomputed shape functions and quadrature for elements.
+- `dh::DofHandler` : mapping between local and global degrees of freedom.
+- `∂Ω` : boundary faces (indices) for Dirichlet conditions.
+- `facetvalues::FacetValues` : shape functions for facets used in boundary integrals.
 - `ch::ConstraintHandler` : handles Dirichlet (or other) constraints.
-- `order::Int` : polynomial order of FE basis.
-- `qr_order::Int` : quadrature order for integration.
+- `order::Int` : polynomial order of the FE basis.
+- `qr_order::Int` : quadrature order.
 - `dim::Int` : spatial dimension.
-- `n::Int` : number of global DOFs.
-- `m::Int` : number of boundary faces.
+- `n::Int` : number of global degrees of freedom.
+- `num_facet::Int` : number of facets.
+- `m::Int` : number of boundary facets.
+- `M::AbstractMatrix` : mass matrix.
+- `M_fac` : factorization of mass matrix (optional).
+- `K::AbstractMatrix` : stiffness matrix.
+- `K_fac` : factorization of stiffness matrix (optional).
+- `total_volume::Float64` : total volume of the domain.
+- `down` : projection from force vector to boundary coefficients.
+- `up` : projection from boundary coefficients to force vector.
+- `up!` : in-place version of `up`.
 """
 struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     cellvalues::CellValues
@@ -49,15 +58,18 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
 end
 
 """
-    FerriteFESpace{RefElem}(grid, order, qr_order, boundary_faces)
+    FerriteFESpace{RefElem}(grid, order, qr_order, ∂Ω)
 
-Constructor for a type-stable FE space.
+Constructs a type-stable finite element space.
 
 # Arguments
 - `grid` : mesh/grid object
-- `order::Int` : polynomial order
+- `order::Int` : polynomial order of the FE basis
 - `qr_order::Int` : quadrature order
-- `boundary_faces` : indices of boundary faces for Dirichlet BCs
+- `∂Ω` : indices of boundary faces for Dirichlet conditions
+
+Initializes cell/facet values, DOFs, constraints, mass/stiffness matrices,
+and projection operators.
 """
 function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {RefElem}
     dim = Ferrite.getspatialdim(grid)
@@ -94,21 +106,30 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
     return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, down, up, up!)
 end
 
+"""
+    dotH1(fe::FerriteFESpace, a, b)
+
+H¹ inner product of FE coefficient vectors `a` and `b`.
+
+`dotH1(a, b) = aᵀ K b`
+"""
 function dotH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
     return a' * fe.K * b
 end
 
+"""
+    dotL2(fe::FerriteFESpace, a, b)
+
+L² inner product of FE coefficient vectors `a` and `b`.
+
+`dotL2(a, b) = aᵀ M b`
+"""
 function dotL2(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
     return a' * fe.M * b
 end
 
-function dotL2(fe::FerriteFESpace, a::AbstractVector)
-    return a' * fe.M * a
-end
 
-function dotH1(fe::FerriteFESpace, a::AbstractVector)
-    return a' * fe.K * a
-end
+
 
 function normH1sq(fe::FerriteFESpace, a::AbstractVector)
     return dotH1(fe, a, a)
@@ -116,24 +137,45 @@ end
 function normL2sq(fe::FerriteFESpace, a::AbstractVector)
     return dotL2(fe, a, a)
 end
+
+"""
+    normL2(fe, a)
+
+L² norm of FE coefficient vector `a`.
+"""
 function normL2(fe::FerriteFESpace, a::AbstractVector)
     return sqrt(normL2sq(fe, a))
 end
+
+"""
+    normH1(fe, a)
+
+H¹ norm of FE coefficient vector `a`.
+"""
 function normH1(fe::FerriteFESpace, a::AbstractVector)
     return sqrt(normH1sq(fe, a))
 end
 function metricL2sq(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
     return normL2sq(fe, a - b)
 end
-function metricL2(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
-    return normL2(fe, a - b)
-end
-function metricH1(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
-    return normH1(fe, a - b)
-end
-function metricH1sq(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
-    return normH1sq(fe, a - b)
-end
+
+"""
+    metricL2(fe, a, b)
+
+L² distance between FE coefficient vectors `a` and `b`.
+"""
+metricL2(fe, a, b) = normL2(fe, a - b)
+
+"""
+    metricH1(fe, a, b)
+
+H¹ distance between FE coefficient vectors `a` and `b`.
+"""
+metricH1(fe, a, b) = normH1(fe, a - b)
+
+metricH1sq(fe, a, b) = normH1sq(fe, a - b)
+
+
 
 function normL1(a::AbstractVector, cellvalues::CellValues, dh::DofHandler)
     n_basefuncs = getnbasefunctions(cellvalues)
@@ -156,6 +198,13 @@ function normL1(a::AbstractVector, cellvalues::CellValues, dh::DofHandler)
     end
     return total_residual
 end
+
+"""
+    normL1(fe, a)
+
+L¹ norm (integral of absolute value) of FE function represented by coefficient vector `a`.
+Uses quadrature over the finite elements.
+"""
 function normL1(fe::FerriteFESpace, a::AbstractVector)
     normL1(a, fe.cellvalues, fe.dh)
 end
@@ -182,6 +231,14 @@ function normL1grad(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, n
 
     return total_residual
 end
+
+
+"""
+    normL1grad(fe, a)
+
+L¹ norm of the gradient of the FE function represented by `a`.
+Computes ∫ |∇u_h| dΩ over all elements using quadrature.
+"""
 function normL1grad(fe::FerriteFESpace, a::AbstractVector)
     normL1grad(a, fe.cellvalues, fe.dh, fe.dim)
 end
