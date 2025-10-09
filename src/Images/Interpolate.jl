@@ -1,5 +1,7 @@
 using Interpolations
 using Images
+using ImageIO
+using FileIO
 
 export interpolate_from_image
 export func_to_array2D

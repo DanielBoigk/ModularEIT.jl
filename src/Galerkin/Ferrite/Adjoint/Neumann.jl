@@ -6,7 +6,21 @@ export state_adjoint_step_neumann_cg!
 export objective_neumann_cg!
 export gradient_neumann_cg!
 
+"""
+    FerriteEITModeN(g::AbstractVector, f::AbstractVector, fe::FerriteFESpace)
 
+Constructs a Neumann-mode configuration for an Electrical Impedance Tomography (EIT) problem
+using a given finite element space `fe`. Initializes all relevant vectors and parameters
+for the state, adjoint, and gradient computations.
+
+# Arguments
+- `g`: Boundary excitation (current) vector.
+- `f`: Boundary measurement (potential) vector.
+- `fe`: Finite element space (`FerriteFESpace`) describing mesh, degrees of freedom, and lifting operators.
+
+# Returns
+`FerriteEITMode` struct initialized for Neumann boundary problems.
+"""
 function FerriteEITModeN(g::AbstractVector, f::AbstractVector, fe::FerriteFESpace)
     n = fe.n
     m = fe.m
@@ -20,12 +34,49 @@ function FerriteEITModeN(g::AbstractVector, f::AbstractVector, fe::FerriteFESpac
     return FerriteEITMode(nothing, u, nothing, b, λ, δσ, F, f, G, g, rhs, 0.0, 0.0, 0.0)
 end
 
+
+"""
+    state_adjoint_step_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
+
+Performs a full forward–adjoint step for the Neumann formulation of the EIT problem
+using conjugate gradients. Sequentially computes the state (forward) solution,
+then the adjoint solution, and the resulting conductivity gradient.
+
+# Arguments
+- `mode`: Current EIT mode state.
+- `sol`: Solver state containing system operators and loss definitions.
+- `fe`: Finite element space used for discretization.
+- `maxiter`: Maximum number of CG iterations.
+
+# Returns
+Tuple `(δσ, error_n)` — the conductivity gradient and the Neumann data misfit value.
+"""
 function state_adjoint_step_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     objective_neumann_cg!(mode, sol, fe, maxiter)
     gradient_neumann_cg!(mode, sol, fe, maxiter)
     return mode.δσ, mode.error_n
 end
 
+"""
+    objective_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
+
+Solve the forward (state) problem of EIT with Neumann boundary conditions using a conjugate gradient solver.
+The PDE ∇⋅(σ∇uᵢ) = 0 is solved with boundary condition σ∂u/∂n = g.
+
+# Arguments
+- `mode`: Current EIT mode state.
+- `sol`: Solver state containing the operator `L` and data misfit function `d`.
+- `fe`: Finite element space defining up/down lifting maps.
+- `maxiter`: Maximum number of CG iterations.
+
+# Effects
+- Updates `mode.u_g` with the computed potential field.
+- Normalizes the boundary potential using `mean_boundary!`.
+- Updates `mode.error_n` with the current data misfit.
+
+# Returns
+`mode.error_n` — the current Neumann objective (data misfit).
+"""
 function objective_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     d = sol.d
     ∂d = sol.∂d
@@ -40,6 +91,30 @@ function objective_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe
     return mode.error_n
 end
 
+
+"""
+    gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
+
+Solve the adjoint problem for the Neumann formulation of EIT and compute the gradient
+of the objective with respect to the conductivity σ.
+
+# Equations
+Solves ∇⋅(σ∇λᵢ) = 0 with boundary condition σ∂λ/∂n = ∂ₓd(u,f),
+then computes ∂J/∂σ = ∇u ⋅ ∇λ elementwise.
+
+# Arguments
+- `mode`: Current EIT mode state.
+- `sol`: Solver state containing differential operator `L` and loss derivative `∂d`.
+- `fe`: Finite element space defining basis and lifting operators.
+- `maxiter`: Maximum number of CG iterations.
+
+# Effects
+- Updates `mode.λ` with the adjoint field.
+- Updates `mode.δσ` with the conductivity gradient.
+
+# Returns
+`mode.δσ` — the computed gradient with respect to σ.
+"""
 function gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     d = sol.d
     ∂d = sol.∂d
