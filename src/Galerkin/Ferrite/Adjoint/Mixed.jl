@@ -99,9 +99,6 @@ function objective_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::
     objective_neumann_cg!(mode, sol, fe, maxiter)
 
     mode.w = mode.u_f - mode.u_g
-    # It is necessary to normalize w this way:
-    w_mean = mean(mode.w)
-    mode.w .-= w_mean
     mode.error_m = n(mode.w)
     return mode.error_m
 end
@@ -133,8 +130,12 @@ and computes the gradient elementwise as ∂J/∂σ = ∇w ⋅ ∇λ.
 function gradient_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     Ln = sol.L
     ∂n = sol.∂n
+    # This one needs to normalize:
+    rhs = ∂n(mode.w)
+    mean = mean(rhs)
+    rhs -= mean
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = ∂n(w)
-    cg!(mode.λ, Ln, ∂n(mode.w); maxiter=maxiter)
+    cg!(mode.λ, Ln, rhs; maxiter=maxiter)
     # Calculate ∇(uᵢ)⋅∇(λᵢ) here:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
     return mode.δσ
