@@ -127,3 +127,35 @@ function gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
     return mode.δσ
 end
+
+using Base.Threads
+
+"""
+    solve_all_neumann_cg!(modes::Dict{Int,FerriteEITMode}, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
+
+Runs the Neumann EIT state–adjoint solver for all entries in `modes` concurrently using multithreading.
+
+# Arguments
+- `modes`: Dict mapping mode indices to `FerriteEITMode` objects.
+- `sol`: Shared `FerriteSolverState` containing operators and loss definitions.
+- `fe`: Finite element space.
+- `maxiter`: Maximum CG iterations.
+
+# Returns
+A `Dict{Int,Tuple{Vector{Float64},Float64}}` mapping each mode index to `(δσ, error_n)`.
+"""
+function solve_all_neumann_cg!(modes::Dict{Int,FerriteEITMode}, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
+    keys_vec = collect(keys(modes))
+    results = Dict{Int,Tuple{Vector{Float64},Float64}}()
+    lock = ReentrantLock()
+
+    @threads for k in keys_vec
+        mode = modes[k]
+        δσ, err = state_adjoint_step_neumann_cg!(mode, sol, fe, maxiter)
+        lock(lock) do
+            results[k] = (δσ, err)
+        end
+    end
+
+    return results
+end

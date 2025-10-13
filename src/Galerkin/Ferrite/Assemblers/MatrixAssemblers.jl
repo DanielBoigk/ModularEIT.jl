@@ -122,7 +122,7 @@ end
 
 
 # This assembles L from function γ
-function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ, ϵ=0.0)
+function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ, ϵ=1e-12)
     cellvalues = fe.cellvalues
     dh = fe.dh
     fill!(L, 0.0)
@@ -152,7 +152,7 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ, ϵ=0.0)
     return L
 end
 
-function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, ϵ::Float64=0.0)
+function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, ϵ::Float64=1e-12)
     cellvalues = fe.cellvalues
     dh = fe.dh
     fill!(L, 0.0)
@@ -183,7 +183,7 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, 
     return L
 end
 
-function assemble_L(fe::FerriteFESpace, γ, ϵ::Float64=0.0)
+function assemble_L(fe::FerriteFESpace, γ, ϵ::Float64=1e-12)
     L = allocate_matrix(fe.dh)
     return assemble_L!(L, fe, γ, ϵ)
 end
