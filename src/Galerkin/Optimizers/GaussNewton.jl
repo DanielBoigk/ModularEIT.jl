@@ -11,9 +11,9 @@ export gauss_newton_cg!, gauss_newton_svd
 Compute one Gauss–Newton or Levenberg–Marquardt update using the **Conjugate Gradient (CG)** method.
 
 Forms the (possibly regularized) normal equations
-\[
-(J^T J + λ L)\, δ = -J^T r,
-\]
+```math
+(J^T J + λ L)\\, δ = -J^T r,
+```
 and solves them approximately by CG.
 
 # Arguments
@@ -53,9 +53,9 @@ Compute a **Levenberg–Marquardt–regularized Gauss–Newton step** using
 the singular value decomposition (SVD) of `J`.
 
 Performs the update
-\[
-δ = -V \, \mathrm{diag}\!\left(\frac{Σ_i}{Σ_i^2 + λ}\right) U^T r,
-\]
+```math
+δ = -V \\, \\mathrm{diag}\\!\\left(\\frac{Σ_i}{Σ_i^2 + λ}\\right) U^T r,
+```
 which corresponds to **LM damping with `L = I`**.
 
 # Warning
