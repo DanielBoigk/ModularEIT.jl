@@ -3,6 +3,8 @@ using SparseArrays
 using LinearMaps
 using IterativeSolvers
 
+
+export gauss_newton_cg!, gauss_newton_svd
 """
     gauss_newton_cg!(opt::GalerkinOptState; maxiter=500)
 
