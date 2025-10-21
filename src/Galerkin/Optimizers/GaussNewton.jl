@@ -28,7 +28,7 @@ The updated parameter increment `δ`.
 - Supports matrix-free operation when `J` or `L` are given as `LinearMap`s.
 - The solution is written back into `opt.δ` in place.
 """
-function gauss_newton_cg!(opt::GalerkinOptState, maxiter=500)
+function gauss_newton_lm_cg!(opt::GalerkinOptState, maxiter=500)
     J = opt.J
     r = opt.r
     L = opt.L
