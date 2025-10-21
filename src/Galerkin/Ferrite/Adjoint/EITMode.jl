@@ -16,6 +16,7 @@ mutable struct FerriteEITMode
     f::Union{AbstractVector,Nothing} # This is the short vector for dirichlet boundary conditions
     G::Union{AbstractVector,Nothing} # This is the long vector for neumann boundary conditions
     g::Union{AbstractVector,Nothing} # This is the short vector for neumann boundary conditions
+    λrhs::AbstractVector
     rhs::AbstractVector # This is a preallocation for calculating the bilinear map
     error_d::Float64
     error_n::Float64

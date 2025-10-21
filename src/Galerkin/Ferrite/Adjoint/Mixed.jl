@@ -34,8 +34,9 @@ function FerriteEITModeM(g::AbstractVector, f::AbstractVector, fe::FerriteFESpac
     G = fe.up(g)
     λ = zeros(n)
     δσ = zeros(n)
+    λrhs = zeros(n)
     rhs = zeros(n)
-    return FerriteEITMode(u_f, u_g, w, b, λ, δσ, F, f, G, g, rhs, 0.0, 0.0, 0.0)
+    return FerriteEITMode(u_f, u_g, w, b, λ, δσ, F, f, G, g, λrhs, rhs, 0.0, 0.0, 0.0)
 end
 
 """
@@ -131,11 +132,10 @@ function gradient_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::F
     Ln = sol.L
     ∂n = sol.∂n
     # This one needs to normalize:
-    rhs = ∂n(mode.w)
-    mean = mean(rhs)
-    rhs -= mean
+    mode.λrhs = ∂n(mode.w)
+    mode.λrhs -= mean(mode.λrhs)
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = ∂n(w)
-    cg!(mode.λ, Ln, rhs; maxiter=maxiter)
+    cg!(mode.λ, Ln, mode.λrhs; maxiter=maxiter)
     # Calculate ∇(uᵢ)⋅∇(λᵢ) here:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
     return mode.δσ
