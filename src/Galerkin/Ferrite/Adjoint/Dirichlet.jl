@@ -98,8 +98,11 @@ function gradient_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, f
     L = sol.LD
     down = fe.down
     up = fe.up
+
+    rhs = up(∂d(mode.b, mode.g)
+    mean_boundary!(rhs, mode, down)
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
-    cg!(mode.λ, L, up(∂d(mode.b, mode.g)); maxiter=maxiter)
+    cg!(mode.λ, L, rhs; maxiter=maxiter)
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
     return mode.δσ
