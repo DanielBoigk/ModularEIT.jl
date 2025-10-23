@@ -4,7 +4,9 @@ using LinearMaps
 
 export FerriteSolverState
 export GalerkinOptState
-
+export add_diff_Regularizer!
+export add_ndiff_Regularizer!
+export update_L!
 """
     mutable struct GalerkinOptState
 
@@ -156,4 +158,19 @@ end
 
 function update_L!(state::FerriteSolverState)
     state.L .= assemble_L(state.L, state.fe, state.σ)
+end
+
+function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args, ∇Reg)
+    state.R_diff = Reg
+    state.R_diff_args = R_diff_args
+    state.∇R = ∇Reg
+end
+function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args)
+    state.R_diff = Reg
+    state.R_diff_args = R_diff_args
+    state.∇R = Enzyme.gradient(Reg)
+end
+function add_ndiff_Regularizer!(state::FerriteSolverState, nReg, R_ndiff_args )
+    state.R_ndiff = nReg
+    state.R_ndiff_args = R_ndiff_args
 end
