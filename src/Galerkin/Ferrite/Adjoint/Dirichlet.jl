@@ -100,7 +100,7 @@ function gradient_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, f
     down = fe.down
     up = fe.up
 
-    mode.λrhs = up(∂d(mode.b, mode.g)
+    mode.λrhs = up(∂d(mode.b, mode.g))
     mean_boundary!(mode.λrhs, mode, down)
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
     cg!(mode.λ, L, mode.λrhs; maxiter=maxiter)
