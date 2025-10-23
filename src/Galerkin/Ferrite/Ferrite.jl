@@ -1,4 +1,4 @@
-include("FESpace.jl")
+include("FESpace/FESpace.jl")
 include("Assemblers/MatrixAssemblers.jl")
 include("Assemblers/RHSAssemblers.jl")
 include("Assemblers/TensorAssembler.jl")
