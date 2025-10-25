@@ -1,6 +1,8 @@
 using Ferrite
 export project_function_to_fem, assemble_rhs_func
 
+
+
 function project_function_to_fem(fe::FerriteFESpace, f)
     F = zeros(fe.n)
     cellvalues = fe.cellvalues
@@ -52,7 +54,12 @@ function assemble_rhs_func(facetvalues::FacetValues, dh::DofHandler, g_func, ∂
 end
 
 function assemble_rhs_func(fe::FerriteFESpace, g_func)
-    assemble_rhs_func(fe.facetvalues, fe.dh, g_func, fe.∂Ω)
+    vec = assemble_rhs_func(fe.facetvalues, fe.dh, g_func, fe.∂Ω)
+    up = fe.up
+    down = fe.down
+    mean = Statistics.mean(mode.b)
+    b .-= mean
+    up!(vec,b)
 end
 
 
