@@ -55,7 +55,7 @@ end
 
 function assemble_rhs_func(fe::FerriteFESpace, g_func)
     vec = assemble_rhs_func(fe.facetvalues, fe.dh, g_func, fe.∂Ω)
-    up = fe.up
+    up! = fe.up!
     down = fe.down
     b = down(vec)
     mean = Statistics.mean(b)
