@@ -145,7 +145,7 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     L = assemble_L(fe, σ)
     Σ = zeros(fe.m - 1)
     opt = GalerkinOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, nothing, copy(δ))
-    FerriteSolverState(fe, ∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, opt)
+    FerriteSolverState(fe, ∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, opt, false, 1.0)
 end
 
 
