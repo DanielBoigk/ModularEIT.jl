@@ -35,11 +35,11 @@ function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K::Abstra
     if length(g_vec) == fe.n
         G = copy(g_vec)
         g = fe.down(G)
-        f = down(K \ g_vec)
+        f = fe.down(K \ g_vec)
     elseif length(g_vec) ==fe.m
         g = copy(g_vec)
         G = fe.up(g)
-        f = down(K \ g_vec)
+        f = fe.down(K \ g_vec)
     end
     u = zeros(fe.n)
     u_g = zeros(fe.n)
@@ -48,8 +48,8 @@ function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K::Abstra
     λ = zeros(fe.n)
     δσ = zeros(fe.n)
 
-    f = down(K \ g_vec)
-    F = up(f)
+    f = fe.down(K \ g_vec)
+    F = fe.up(f)
     λrhs = zeros(fe.n)
     rhs = zeros(fe.n)
     error_d = 0.0
