@@ -11,12 +11,13 @@ using ModularEIT
 @testset "Matrix Tests" begin
     #we just take some sample conductivity function:
     conductivity = (x) -> 1.1 + sin(x[1]) * cos(x[2])
-
+    # project the conductivity function to the finite element space
     cond_vec = project_function_to_fem(fe, conductivity)
 
+    # assemble the stiffness matrix from the conductivity function
     KN_func = assemble_L(fe, conductivity)
     KN_vec = assemble_L(fe, cond_vec)
-
+    # convert to Dirichlet matrix
     KD_func = to_dirichlet(KN_func, fe)
     KD_vec = to_dirichlet(KN_vec, fe)
 
