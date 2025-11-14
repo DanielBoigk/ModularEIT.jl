@@ -23,4 +23,6 @@ fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
     include("AssemblerTests/UpDownTest.jl")
     #include("AssemblerTests/ExportTest.jl")
     include("MeshTests/MeshTests.jl")
+
+    include("SolverTests/SolverTests.jl")
 end

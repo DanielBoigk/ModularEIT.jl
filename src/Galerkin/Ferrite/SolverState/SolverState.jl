@@ -93,6 +93,7 @@ mutable struct FerriteSolverState <: AbstractGalerkinSolver
     R_ndiff_args # Arguments for the non-differentiable regularizer function
     num_pairs::Int64 # Number of voltage-current pairs
     opt::GalerkinOptState # State of the optimization algorithm
+    modes
     clip::Bool
     clip_value::Float64
 end
@@ -145,7 +146,7 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     L = assemble_L(fe, σ)
     Σ = zeros(fe.m - 1)
     opt = GalerkinOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, nothing, copy(δ))
-    FerriteSolverState(fe, ∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, opt, false, 1.0)
+    FerriteSolverState(fe, ∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, opt, nothing, false, 1.0)
 end
 
 
@@ -170,7 +171,14 @@ function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args)
     state.R_diff_args = R_diff_args
     state.∇R = Enzyme.gradient(Reg)
 end
-function add_ndiff_Regularizer!(state::FerriteSolverState, nReg, R_ndiff_args )
+function add_ndiff_Regularizer!(state::FerriteSolverState, nReg, R_ndiff_args)
     state.R_ndiff = nReg
     state.R_ndiff_args = R_ndiff_args
+end
+
+
+function init_opt!(state::FerriteSolverState, n::Int)
+    state.opt.J = zeros(n, state.fe.n)
+    state.opt.r = zeros(state.fe.n)
+    state.op.λ = 1e-5
 end
