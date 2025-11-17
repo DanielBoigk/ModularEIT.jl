@@ -93,7 +93,6 @@ mutable struct FerriteSolverState <: AbstractGalerkinSolver
     R_ndiff_args # Arguments for the non-differentiable regularizer function
     num_pairs::Int64 # Number of voltage-current pairs
     opt::GalerkinOptState # State of the optimization algorithm
-    modes
     clip::Bool
     clip_value::Float64
 end
@@ -146,7 +145,7 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     L = assemble_L(fe, σ)
     Σ = zeros(fe.m - 1)
     opt = GalerkinOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, nothing, copy(δ))
-    FerriteSolverState(fe, ∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, opt, nothing, false, 1.0)
+    FerriteSolverState(fe, ∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, opt, false, 1.0)
 end
 
 
