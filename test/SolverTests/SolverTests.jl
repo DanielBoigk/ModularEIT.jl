@@ -62,7 +62,7 @@ end
     fe = FerriteFESpace{RefQuadrilateral}(grid, 1, 2, ∂Ω)
     G_full = real_fourier_basis(9)
     rhs_dict = Dict()
-    for i in 2:512
+    Threads.@threads for i in 2:512
         M = make_boundary(G_full[:, i])
         itp = interpolate_array_2D(M)
         rhs_dict[i] = assemble_rhs_func(fe, itp)
@@ -70,14 +70,23 @@ end
     img = load("SolverTests/Reference128.png")
     itp = interpolate_array_2D(Float64.(img))
     cond_vec = project_function_to_fem(fe, itp)
-    K = assemble_L(fe, itp)
+    K = assemble_L(fe, cond_vec)
 
     mode_dict = Dict()
     for i in 2:512
         mode_dict[i] = create_mode_from_g(fe, rhs_dict[i], K)
     end
+    #modes = collect(values(mode_dict))
     start_cond = x -> 0.5
     σ = project_function_to_fem(fe, start_cond)
     sol = FerriteSolverState(fe, σ)
+    sol2 = FerriteSolverState(fe, cond_vec)
+    @test true
+
+    prblm = FerriteProblem(fe, mode_dict, sol)
+    prblm2 = FerriteProblem(fe, mode_dict, sol2)
+
+
+    solve_modes!(prblm)
     @test true
 end

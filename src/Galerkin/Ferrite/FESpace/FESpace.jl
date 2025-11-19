@@ -9,54 +9,6 @@ export FerriteFESpace
 
 
 """
-    struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
-
-Finite Element Space for a given reference element type `RefElem`.
-
-# Fields
-- `cellvalues::CellValues` : precomputed shape functions and quadrature for elements.
-- `dh::DofHandler` : mapping between local and global degrees of freedom.
-- `∂Ω` : boundary faces (indices) for Dirichlet conditions.
-- `facetvalues::FacetValues` : shape functions for facets used in boundary integrals.
-- `ch::ConstraintHandler` : handles Dirichlet (or other) constraints.
-- `order::Int` : polynomial order of the FE basis.
-- `qr_order::Int` : quadrature order.
-- `dim::Int` : spatial dimension.
-- `n::Int` : number of global degrees of freedom.
-- `num_facet::Int` : number of facets.
-- `m::Int` : number of boundary facets.
-- `M::AbstractMatrix` : mass matrix.
-- `M_fac` : factorization of mass matrix (optional).
-- `K::AbstractMatrix` : stiffness matrix.
-- `K_fac` : factorization of stiffness matrix (optional).
-- `total_volume::Float64` : total volume of the domain.
-- `down` : projection from force vector to boundary coefficients.
-- `up` : projection from boundary coefficients to force vector.
-- `up!` : in-place version of `up`.
-"""
-struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
-    cellvalues::CellValues
-    dh::DofHandler
-    ∂Ω
-    facetvalues::FacetValues
-    ch::ConstraintHandler
-    order::Int
-    qr_order::Int
-    dim::Int
-    n::Int
-    num_facet::Int
-    m::Int
-    M::AbstractMatrix
-    M_fac
-    K::AbstractMatrix
-    K_fac
-    total_volume::Float64
-    down # Projection from force vector to coefficients of the basis functions of boundary
-    up # Projection from coefficients of the basis functions of boundary to force vector
-    up! # Projection from coefficients of the basis functions of boundary to force vector
-end
-
-"""
     FerriteFESpace{RefElem}(grid, order, qr_order, ∂Ω)
 
 Constructs a type-stable finite element space.
@@ -101,7 +53,7 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
     K, K_fac = assemble_K(dh, cellvalues)
     total_volume = calc_total_volume(dh, cellvalues)
 
-    m, _, down, up,up!, _ = produce_nonzero_positions(facetvalues, dh, ∂Ω)
+    m, _, down, up, up!, _ = produce_nonzero_positions(facetvalues, dh, ∂Ω)
     return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, down, up, up!)
 end
 

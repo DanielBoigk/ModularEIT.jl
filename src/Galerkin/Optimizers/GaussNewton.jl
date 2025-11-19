@@ -75,7 +75,7 @@ Updates `opt.δ` in place with the computed step.
 - Large `λ` approaches gradient descent.
 - Suitable only for small or dense `J`.
 """
-function gauss_newton_svd(opt::GalerkinOptState)
+function gauss_newton_svd(opt::FerriteOptState)
     J = opt.J
     r = opt.r
     λ = opt.λ

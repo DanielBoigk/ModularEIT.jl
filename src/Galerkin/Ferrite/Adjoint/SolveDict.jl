@@ -1,8 +1,26 @@
 
 export solve_modes!
 
+function solve_modes!(problem::FerriteProblem, solver_func!, maxiter=500)
+    fe = problem.fe
+    modes = problem.modes
+    sol = problem.state
+    for (i, mode) in modes
+        solver_func!(mode, sol, fe, maxiter)
+    end
+end
+
+function solve_modes!(problem::FerriteProblem)
+    fe = problem.fe
+    modes = problem.modes
+    sol = problem.state
+    Threads.@threads for i in eachindex(modes)
+        state_adjoint_step_neumann_cg!(modes[i], sol, fe, 500)
+    end
+end
 
 
+#=
 function solve_modes!(state::FerriteSolverState, solver_func!, maxiter = 500)
     fe = state.fe
 
@@ -13,7 +31,7 @@ function solve_modes!(state::FerriteSolverState, solver_func!, maxiter = 500)
 
 
 end
-
+=#
 
 
 #=
