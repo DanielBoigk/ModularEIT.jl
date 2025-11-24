@@ -53,10 +53,11 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     ∂Ω = fe.∂Ω
     δ = zeros(fe.n)
 
-    L = assemble_L(fe, σ)
+    L = assemble_L(fe, σ, 0.0)
+    L_fak = factorize(L)
     Σ = zeros(fe.m - 1)
     opt = FerriteOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, nothing, copy(δ))
-    FerriteSolverState(∂Ω, σ, δ, L, nothing, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
+    FerriteSolverState(∂Ω, σ, δ, L, L_fak, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
 end
 
 

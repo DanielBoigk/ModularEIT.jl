@@ -32,7 +32,7 @@ function FerriteEITModeN(g::AbstractVector, f::AbstractVector, fe::FerriteFESpac
     λrhs = zeros(n)
     δσ = zeros(n)
     rhs = zeros(n)
-    return FerriteEITMode(nothing, u, nothing, b, λ, δσ, F, f, G, g, λrhs,rhs, 0.0, 0.0, 0.0)
+    return FerriteEITMode(nothing, u, nothing, b, λ, δσ, F, f, G, g, λrhs, rhs, 0.0, 0.0, 0.0)
 end
 
 
@@ -55,6 +55,12 @@ Tuple `(δσ, error_n)` — the conductivity gradient and the Neumann data misfi
 function state_adjoint_step_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     objective_neumann_cg!(mode, sol, fe, maxiter)
     gradient_neumann_cg!(mode, sol, fe, maxiter)
+    return mode.δσ, mode.error_n
+end
+
+function state_adjoint_step_neumann_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    objective_neumann_init!(mode, sol, fe, maxiter)
+    gradient_neumann_init!(mode, sol, fe, maxiter)
     return mode.δσ, mode.error_n
 end
 
@@ -86,6 +92,20 @@ function objective_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe
     up = fe.up
     # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : σ∂u/∂𝐧 = g
     cg!(mode.u_g, L, mode.G; maxiter=maxiter)
+    # Normalize
+    mean_boundary!(mode.u_g, mode, down)
+    mode.error_n = d(mode.b, mode.f)
+    return mode.error_n
+end
+
+function objective_neumann_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    d = sol.d
+    ∂d = sol.∂d
+    L = sol.L_fac
+    down = fe.down
+    up = fe.up
+    # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : σ∂u/∂𝐧 = g
+    mode.u_g .= L \ mode.G
     # Normalize
     mean_boundary!(mode.u_g, mode, down)
     mode.error_n = d(mode.b, mode.f)
@@ -126,6 +146,22 @@ function gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe:
     mean_boundary!(mode.λrhs, mode, down)
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
     cg!(mode.λ, L, mode.λrhs; maxiter=maxiter)
+    # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
+    mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
+    return mode.δσ
+end
+
+
+function gradient_neumann_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    d = sol.d
+    ∂d = sol.∂d
+    L = sol.L_fac
+    down = fe.down
+    up = fe.up
+    mode.λrhs = up(∂d(mode.b, mode.f))
+    mean_boundary!(mode.λrhs, mode, down)
+    # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
+    mode.λ = L \ mode.λrhs
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
     return mode.δσ

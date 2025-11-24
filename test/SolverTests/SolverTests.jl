@@ -73,20 +73,19 @@ end
     K = assemble_L(fe, cond_vec)
 
     mode_dict = Dict()
-    for i in 2:512
-        mode_dict[i] = create_mode_from_g(fe, rhs_dict[i], K)
+    @time begin
+        Threads.@threads for i in 2:512
+            mode_dict[i-1] = create_mode_from_g(fe, rhs_dict[i], K)
+        end
     end
-    #modes = collect(values(mode_dict))
-    start_cond = x -> 0.5
-    σ = project_function_to_fem(fe, start_cond)
-    sol = FerriteSolverState(fe, σ)
-    sol2 = FerriteSolverState(fe, cond_vec)
+
+    sol = FerriteSolverState(fe, cond_vec)
     @test true
 
     prblm = FerriteProblem(fe, mode_dict, sol)
-    prblm2 = FerriteProblem(fe, mode_dict, sol2)
 
 
-    solve_modes!(prblm)
+    @time solve_modes!(prblm, 100, state_adjoint_step_neumann_cg!)
+
     @test true
 end
