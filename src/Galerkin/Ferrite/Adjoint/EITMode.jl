@@ -14,7 +14,7 @@ function mean_boundary!(vec, mode, down)
 end
 
 
-function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K::AbstractMatrix)
+function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K)
     if length(g_vec) == fe.n
         G = copy(g_vec)
         g = fe.down(G)

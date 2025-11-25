@@ -71,7 +71,7 @@ end
     itp = interpolate_array_2D(Float64.(img))
     cond_vec = project_function_to_fem(fe, itp)
     K = assemble_L(fe, cond_vec)
-
+    K_fac = factorize(K)
     mode_dict = Dict()
     @time begin
         Threads.@threads for i in 2:512
