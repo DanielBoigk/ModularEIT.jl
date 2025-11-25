@@ -2,9 +2,8 @@ using LinearAlgebra
 using IterativeSolvers
 
 export FerriteEITModeN
-export state_adjoint_step_neumann_cg!
-export objective_neumann_cg!
-export gradient_neumann_cg!
+export state_adjoint_step_neumann_cg!, state_adjoint_step_neumann_init!
+export objective_neumann_cg!, gradient_neumann_cg!, objective_neumann_init!, gradient_neumann_init!
 
 """
     FerriteEITModeN(g::AbstractVector, f::AbstractVector, fe::FerriteFESpace)

@@ -29,12 +29,12 @@ function real_fourier_basis(n::Int)
     return F
 end
 #This functions makes puts some boundary into the elements of the edges of an array
-function make_boundary(a::AbstractVector)
-    A = zeros(129, 129)
-    A[1:129, 1] = a[1:129]
-    A[129, 2:129] = a[130:130+127]
-    A[128:-1:1, 129] = a[258:258+127]
-    A[1, 128:-1:2] = a[386:512]
+function make_boundary(a::AbstractVector, n::Int=128)
+    A = zeros(n + 1, n + 1)
+    A[1:n+1, 1] = a[1:n+1]
+    A[n+1, 2:n+1] = a[n+2:2*n+1]
+    A[n:-1:1, n+1] = a[2*n+2:3*n+1]
+    A[1, n:-1:2] = a[3*n+2:4*n]
     A
 end
 # Then this function gives a function that interpolates over the array:
@@ -85,7 +85,7 @@ end
     prblm = FerriteProblem(fe, mode_dict, sol)
 
 
-    @time solve_modes!(prblm, 100, state_adjoint_step_neumann_cg!)
+    @time solve_modes!(prblm, 100, state_adjoint_step_neumann_init!)
 
     @test true
 end
