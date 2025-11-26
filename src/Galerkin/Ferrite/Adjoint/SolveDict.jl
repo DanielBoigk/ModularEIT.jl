@@ -36,3 +36,15 @@ end
 #=
 function solve_modes!(J::AbstractMatrix,r::AbstractVector, modes::Dict{Int,FerriteEITMode},fe::FerriteFESpace, sol::FerriteSolutionState,num_modes::Int)
 =#
+
+export collect_Jr!
+
+function collect_Jr!(problem::FerriteProblem, n::Int)
+    problem.state.opt.J = zeros(n, problem.fe.n)
+    problem.state.opt.r = zeros(n)
+
+    for i in 1:n
+        problem.state.opt.J[i, :] = problem.modes[i].δσ
+        problem.state.opt.r[i] = problem.modes[i].error_n
+    end
+end
