@@ -42,7 +42,7 @@ function gauss_newton_lm_cg!(opt::GalerkinOptState, maxiter=500)
     end
     b = -(J' * r)
     cg!(δ, A_map, b; maxiter=maxiter)
-    δ
+    δ .*= opt.τ
 end
 
 

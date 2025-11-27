@@ -7,7 +7,7 @@ export FerriteOptState
 export add_diff_Regularizer!
 export add_ndiff_Regularizer!
 export update_L!
-
+export update_σ!
 """
     FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector)
 
@@ -62,7 +62,7 @@ end
 
 
 function update_sigma!(state::FerriteSolverState, clip::Bool=false, clip_limit::Float64=1.0)
-    state.σ .= max.(state.σ .+ state.opt.τ .* state.δ, 1e-6)
+    state.σ .= max.(state.σ .+ state.δ, 1e-6)
     if clip
         state.σ .= min.(state.σ, clip_limit)
     end
