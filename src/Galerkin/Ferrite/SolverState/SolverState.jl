@@ -56,20 +56,20 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     L = assemble_L(fe, σ, 0.0)
     L_fak = factorize(L)
     Σ = zeros(fe.m - 1)
-    opt = FerriteOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, nothing, copy(δ))
-    FerriteSolverState(∂Ω, σ, δ, L, L_fak, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
+    opt = FerriteOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, LinearMap(spdiagm(ones(fe.n))), copy(δ))
+    FerriteSolverState(∂Ω, copy(σ), δ, L, L_fak, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
 end
 
 
 function update_sigma!(state::FerriteSolverState, clip::Bool=false, clip_limit::Float64=1.0)
-    state.σ .= min.(state.σ .+ state.opt.τ .* state.δ, 1e-6)
+    state.σ .= max.(state.σ .+ state.opt.τ .* state.δ, 1e-6)
     if clip
-        state.σ .= max.(state.σ, clip_limit)
+        state.σ .= min.(state.σ, clip_limit)
     end
 end
 
-function update_L!(state::FerriteSolverState)
-    state.L .= assemble_L(state.L, state.fe, state.σ)
+function update_L!(state::FerriteSolverState, fe::FerriteFESpace)
+    state.L .= assemble_L!(state.L, fe, state.σ)
 end
 
 function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args, ∇Reg)

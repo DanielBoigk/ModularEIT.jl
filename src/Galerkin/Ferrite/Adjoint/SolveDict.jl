@@ -48,3 +48,11 @@ function collect_Jr!(problem::FerriteProblem, n::Int)
         problem.state.opt.r[i] = problem.modes[i].error_n
     end
 end
+
+export update_all!
+
+function update_all!(problem::FerriteProblem, n::Int)
+    collect_Jr!(problem, n)
+    update_sigma!(problem.state)
+    update_L!(problem.state, problem.fe)
+end

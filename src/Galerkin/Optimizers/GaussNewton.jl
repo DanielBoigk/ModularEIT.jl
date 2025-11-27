@@ -2,9 +2,9 @@ using LinearAlgebra
 using SparseArrays
 using LinearMaps
 using IterativeSolvers
+using Base: *
 
-
-export gauss_newton_cg!, gauss_newton_svd
+export gauss_newton_lm_cg!, gauss_newton_svd
 """
     gauss_newton_cg!(opt::GalerkinOptState; maxiter=500)
 
