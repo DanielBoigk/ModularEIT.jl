@@ -55,6 +55,6 @@ function update_all!(problem::FerriteProblem, n::Int)
     collect_Jr!(problem, n)
     gauss_newton_lm_cg!(problem.state.opt, 5000)
     problem.state.δ = problem.state.opt.δ
-    update_sigma!(problem.state)
+    update_σ!(problem.state)
     update_L!(problem.state, problem.fe)
 end

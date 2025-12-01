@@ -120,6 +120,10 @@ function assemble_K(fe::FerriteFESpace, ϵ::Float64)
     assemble_K!(K, fe, ϵ)
 end
 
+struct L_Assembler
+    n_basefuncs::Int
+    Le::Matrix{Float64}
+end
 
 # This assembles L from function γ
 function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ, ϵ=1e-12)

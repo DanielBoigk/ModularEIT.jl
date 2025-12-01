@@ -4,7 +4,7 @@ using LinearMaps
 using IterativeSolvers
 using Base: *
 
-export gauss_newton_lm_cg!, gauss_newton_svd
+export gauss_newton_lm_cg!, gauss_newton_svd!
 """
     gauss_newton_cg!(opt::GalerkinOptState; maxiter=500)
 
@@ -75,7 +75,7 @@ Updates `opt.δ` in place with the computed step.
 - Large `λ` approaches gradient descent.
 - Suitable only for small or dense `J`.
 """
-function gauss_newton_svd(opt::FerriteOptState)
+function gauss_newton_svd!(opt::FerriteOptState)
     J = opt.J
     r = opt.r
     λ = opt.λ

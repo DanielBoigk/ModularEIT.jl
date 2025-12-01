@@ -61,8 +61,8 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
 end
 
 
-function update_sigma!(state::FerriteSolverState, clip::Bool=false, clip_limit::Float64=1.0)
-    state.σ .= max.(state.σ .+ state.δ, 1e-6)
+function update_σ!(state::FerriteSolverState, clip::Bool=false, clip_limit::Float64=1.0)
+    state.σ .= max.(state.σ .- state.δ, 1e-6)
     if clip
         state.σ .= min.(state.σ, clip_limit)
     end
