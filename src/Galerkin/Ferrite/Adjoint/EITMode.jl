@@ -17,7 +17,7 @@ end
 function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K)
     if length(g_vec) == fe.n
         G = copy(g_vec)
-        g = down(G)
+        g = fe.down(G)
         mean_g = Statistics.mean(g)
         G .-= mean_g
         g .-= mean_g
