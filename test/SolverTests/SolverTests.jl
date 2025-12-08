@@ -84,8 +84,10 @@ end
 
     prblm = FerriteProblem(fe, mode_dict, sol)
 
-
+    #This is to test whether the rturned gradient for the correct conductivity is ≈ 0
     @time solve_modes!(prblm, 100, state_adjoint_step_neumann_init!)
-
-    @test true
+    @test abs(prblm.modes[1].error_n) < 1e-14
+    @show prblm.modes[1].error_n
+    @test maximum(abs.(prblm.modes[1].δσ)) < 1.1e-4
+    @show maximum(abs.(prblm.modes[1].δσ))
 end
