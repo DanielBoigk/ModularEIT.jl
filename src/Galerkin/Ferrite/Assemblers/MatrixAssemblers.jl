@@ -7,6 +7,7 @@ export assemble_K!, assemble_K
 export assemble_L!, assemble_L
 
 export to_dirichlet, to_dirichlet!
+export build_projection_matrix, assemble_coupling_mass, assemble_coupling_mass!
 
 # This is the mass matrix: ∫(u*v)dΩ
 # Used for calculating L² distance
