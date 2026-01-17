@@ -1,5 +1,5 @@
 using Statistics
-
+using LinearAlgebra
 
 
 export FerriteEITMode
@@ -153,9 +153,11 @@ function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     # collect g's and f's
     G = [mode.g for mode in values(modes)]
     F = [mode.f for mode in values(modes)]
-
+    G = hcat(G...)
+    F = hcat(F...)
     Λ = F * G'
-    U, Σ, V = svd(Λ)
+    U, Σ, V = LinearAlgebra.svd(Λ)
+    Σ = Σ[Σ.>1e-10]
     num_modes = length(Σ)
 
     for i in 1:num_modes

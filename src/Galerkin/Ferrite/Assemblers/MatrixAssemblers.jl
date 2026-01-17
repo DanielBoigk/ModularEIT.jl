@@ -203,3 +203,84 @@ function to_dirichlet(L::AbstractArray, fe::FerriteFESpace)
     apply!(Ld, fe.ch)
     Ld
 end
+
+
+
+"""
+    build_projection_matrix(fine_space::FerriteFESpace, coarse_space::FerriteFESpace)
+
+Build L2 projection matrix P from fine space to coarse space.
+For a function u_fine in the fine space, u_coarse = P * u_fine minimizes
+‖u_fine - u_coarse‖_{L2}
+"""
+function build_projection_matrix(fine_space::FerriteFESpace, coarse_space::FerriteFESpace)
+    # The projection satisfies: M_coarse * u_coarse = B * u_fine
+    # where B is the "coupling" mass matrix between spaces
+
+    n_coarse = coarse_space.n
+    n_fine = fine_space.n
+
+    # Assemble coupling mass matrix B
+    B = assemble_coupling_mass(coarse_space, fine_space)
+
+    # Solve: M_coarse * P = B
+    # So: P = M_coarse \ B
+    P = coarse_space.M_fac \ B
+
+    return P
+end
+
+"""
+    assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace)
+
+Assemble the coupling mass matrix B where B[i,j] = ∫ φ_coarse[i] * φ_fine[j] dΩ
+"""
+function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace)
+    fill!(B, 0.0)
+
+    dh_coarse = coarse_space.dh
+    dh_fine = fine_space.dh
+    cv_fine = fine_space.cellvalues
+
+    # Get interpolation for coarse space
+    RefElem = typeof(coarse_space).parameters[1]
+    ip_coarse = Lagrange{RefElem,coarse_space.order}()
+
+    # Create cell values with fine quadrature rule but coarse interpolation
+    cv_coarse = CellValues(fine_space.cellvalues.qr, ip_coarse)
+
+    n_basefuncs_coarse = getnbasefunctions(cv_coarse)
+    n_basefuncs_fine = getnbasefunctions(cv_fine)
+    Be = zeros(n_basefuncs_coarse, n_basefuncs_fine)
+
+    assembler = start_assemble(B)
+
+    for cell in CellIterator(dh_fine)
+        fill!(Be, 0)
+        reinit!(cv_fine, cell)
+        reinit!(cv_coarse, cell)
+
+        # Assemble local coupling matrix
+        for q_point in 1:getnquadpoints(cv_fine)
+            dΩ = getdetJdV(cv_fine, q_point)
+            for i in 1:n_basefuncs_coarse
+                φ_coarse = shape_value(cv_coarse, q_point, i)
+                for j in 1:n_basefuncs_fine
+                    φ_fine = shape_value(cv_fine, q_point, j)
+                    Be[i, j] += φ_coarse * φ_fine * dΩ
+                end
+            end
+        end
+
+        # Assemble into global matrix
+        assemble!(assembler, celldofs(cell), Be)
+    end
+
+    return B
+end
+
+function assemble_coupling_mass(coarse_space::FerriteFESpace, fine_space::FerriteFESpace)
+    B = spzeros(coarse_space.n, fine_space.n)
+    assemble_coupling_mass!(B, coarse_space, fine_space)
+    return B
+end
