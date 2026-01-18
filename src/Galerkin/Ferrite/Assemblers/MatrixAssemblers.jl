@@ -236,7 +236,7 @@ end
 
 Assemble the coupling mass matrix B where B[i,j] = ∫ φ_coarse[i] * φ_fine[j] dΩ
 """
-function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace)
+function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace) # Careful. This thing only works because it is assumed that the shape & placemants of the elements are exactly identical and only the order is different. This can not project from i.e. triangular to quadrilateral elements.
     fill!(B, 0.0)
 
     dh_coarse = coarse_space.dh
