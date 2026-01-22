@@ -253,7 +253,7 @@ function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace
     n_basefuncs_coarse = getnbasefunctions(cv_coarse)
     n_basefuncs_fine = getnbasefunctions(cv_fine)
     Be = zeros(n_basefuncs_coarse, n_basefuncs_fine)
-
+    assembler = start_assemble(B)
 
     for cell in CellIterator(dh_fine)
         fill!(Be, 0)
@@ -278,14 +278,14 @@ function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace
         coarse_dofs = celldofs(dh_coarse, cellid)
         fine_dofs   = celldofs(dh_fine,   cellid)
 
-
-        for i in 1:length(coarse_dofs)
+        assemble!(assembler, coarse_dofs, fine_dofs, Be)
+        #=for i in 1:length(coarse_dofs)
             I = coarse_dofs[i]
             for j in 1:length(fine_dofs)
                 J = fine_dofs[j]
                 B[I, J] += Be[i, j]
             end
-        end
+        end=#
 
     end
 
