@@ -68,8 +68,11 @@ function update_σ!(state::FerriteSolverState, clip::Bool=false, clip_limit::Flo
     end
 end
 
-function update_L!(state::FerriteSolverState, fe::FerriteFESpace)
+function update_L!(state::FerriteSolverState, fe::FerriteFESpace, factorize::Bool=false)
     state.L .= assemble_L!(state.L, fe, state.σ)
+    if factorize
+        state.L_fac = factorize(state.L)
+    end
 end
 
 function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args, ∇Reg)
@@ -80,7 +83,7 @@ end
 function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args)
     state.R_diff = Reg
     state.R_diff_args = R_diff_args
-    state.∇R = Enzyme.gradient(Reg)
+    state.∇R = Enzyme.gradient(Reg) # What is with the case where Reg takes args?
 end
 function add_ndiff_Regularizer!(state::FerriteSolverState, nReg, R_ndiff_args)
     state.R_ndiff = nReg

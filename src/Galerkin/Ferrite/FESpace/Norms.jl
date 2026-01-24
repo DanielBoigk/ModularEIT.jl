@@ -5,8 +5,8 @@ export normL1, normTV
 export metricL2, metricL2sq, metricH1, metricH1sq
 
 export normTV_diff,
-       huber_norm_smooth_isotropic,
-       huber_norm_smooth_anisotropic
+    huber_norm_smooth_isotropic,
+    huber_norm_smooth_anisotropic
 
 
 """
@@ -28,7 +28,7 @@ L² inner product of FE coefficient vectors `a` and `b`.
 `dotL2(a, b) = aᵀ M b`
 """
 function dotL2(fe::FerriteFESpace, a::AbstractVector, b::AbstractVector)
-    return a' * fe.M * b
+    return dot(a, fe.M * b)
 end
 
 
@@ -142,7 +142,7 @@ function huber_smooth_val_grad_hess_aniso(g::AbstractVector, δ::Real)
         s = sqrt(gi^2 + δ^2)
         φ += s - δ
         grad[i] = gi / s
-        H[i,i] = δ^2 / s^3
+        H[i, i] = δ^2 / s^3
     end
 
     return φ, grad, H
@@ -222,7 +222,7 @@ function normTV(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, ndims
                 ∇ϕᵢ = shape_gradient(cellvalues, q, i)
                 ∇uh_q .+= ue[i] * ∇ϕᵢ
             end
-            total_residual += norm(∇uh_q,iso) * dΩ
+            total_residual += norm(∇uh_q, iso) * dΩ
 
         end
     end
@@ -275,7 +275,7 @@ function normTV_diff(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, 
                 ∇ϕᵢ = shape_gradient(cellvalues, q, i)
                 ∇uh_q .+= ue[i] * ∇ϕᵢ
             end
-            total_residual += huber(∇uh_q, ε)* dΩ
+            total_residual += huber(∇uh_q, ε) * dΩ
         end
     end
     return total_residual
