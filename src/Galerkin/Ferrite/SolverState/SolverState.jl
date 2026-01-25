@@ -68,9 +68,9 @@ function update_σ!(state::FerriteSolverState, clip::Bool=false, clip_limit::Flo
     end
 end
 
-function update_L!(state::FerriteSolverState, fe::FerriteFESpace, factorize::Bool=false)
-    state.L .= assemble_L!(state.L, fe, state.σ)
-    if factorize
+function update_L!(state::FerriteSolverState, fe::FerriteFESpace, factorized::Bool=false)
+    assemble_L!(state.L, fe, state.σ)
+    if factorized
         state.L_fac = factorize(state.L)
     end
 end
