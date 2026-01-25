@@ -126,6 +126,8 @@ mutable struct FerriteSolverState <: AbstractGalerkinSolver
     ∂Ω # Definition of the boundary
     σ::AbstractVector # Conductivity values
     δ::AbstractVector # Update of the conductivity
+    δ_updated::Bool
+    error::Float64
     L::Union{AbstractMatrix,Nothing} #Current guess of boundary operator for Neumann boundary
     L_fac # Factorized version of K
     LD::Union{AbstractMatrix,Nothing} # Current guess of boundary operator for dirichlet boundary

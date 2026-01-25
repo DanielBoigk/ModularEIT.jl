@@ -57,7 +57,7 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     L_fak = factorize(L)
     Σ = zeros(fe.m - 1)
     opt = FerriteOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, LinearMap(spdiagm(ones(fe.n))), copy(δ))
-    FerriteSolverState(∂Ω, copy(σ), δ, L, L_fak, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
+    FerriteSolverState(∂Ω, copy(σ), δ,false, -1.0, L, L_fak, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
 end
 
 
