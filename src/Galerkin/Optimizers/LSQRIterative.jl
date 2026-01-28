@@ -1,6 +1,6 @@
 using LinearMaps, IterativeSolvers
 
-
+export gauss_newton_lm_lsqr!
 # Run this for now. Debug optimized version later
 function gauss_newton_lm_lsqr!(opt::GalerkinOptState, maxiter=200; tol=1e-6)
     J = opt.J
@@ -12,7 +12,7 @@ function gauss_newton_lm_lsqr!(opt::GalerkinOptState, maxiter=200; tol=1e-6)
     A = [J; sqrt(λ) * L]
     b = vcat(-r, zeros(nσ))
     A_map = LinearMap(A)
-    lsqr!(δ,A_map, b; maxiter=maxiter, atol=tol, btol=tol)
+    lsqr!(δ, A_map, b; maxiter=maxiter, atol=tol, btol=tol)
     return δ
 end
 
@@ -79,8 +79,8 @@ end
 
 function Llm_chol_mul!(out, v, F, tmpL)  # F is lower triangular Cholesky factor
     # out = F' * (F * v)
-    ldiv!(F, v, tmpL)      # tmpL = F \ v  (forward solve, in-place)
-    mul!(out, adjoint(F), tmpL)  # out = F' * tmpL  (in-place, uses BLAS)
+    ldiv!(F, v, tmpL)
+    mul!(out, adjoint(F), tmpL)
     return out
 end
 =#
