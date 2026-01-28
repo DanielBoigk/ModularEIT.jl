@@ -46,7 +46,7 @@ function collect_Jr!(problem::FerriteProblem, n::Int, f = identity, n2 = problem
 
     for i in 1:n
         problem.state.opt.J[i, :] = f(problem.modes[i].δσ)
-        problem.state.opt.r[i] = problem.modes[i].error_n
+        problem.state.opt.r[i] = problem.modes[i].error_n+
     end
 end
 
