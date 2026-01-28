@@ -40,13 +40,13 @@ function solve_modes!(J::AbstractMatrix,r::AbstractVector, modes::Dict{Int,Ferri
 
 export collect_Jr!
 
-function collect_Jr!(problem::FerriteProblem, n::Int, f = identity, n2 = problem.fe.n)
+function collect_Jr!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n)
     problem.state.opt.J = zeros(n, n2)
     problem.state.opt.r = zeros(n)
 
     for i in 1:n
         problem.state.opt.J[i, :] = f(problem.modes[i].δσ)
-        problem.state.opt.r[i] = problem.modes[i].error_n+
+        problem.state.opt.r[i] = problem.modes[i].error_n
     end
 end
 
