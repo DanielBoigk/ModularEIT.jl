@@ -71,7 +71,18 @@ end
 function update_L!(state::FerriteSolverState, fe::FerriteFESpace, factorized::Bool=false)
     assemble_L!(state.L, fe, state.σ)
     if factorized
-        state.L_fac = factorize(state.L)
+        #state.L_fac = factorize(state.L)
+        # I know this is terrible design:
+        try
+            state.L_fac = factorize(state.L)
+        catch e
+            if e isa LinearAlgebra.ZeroPivotException
+                @warn "Cholesky failed, using LU"
+                state.L_fac = lu(state.L)
+            else
+                rethrow(e)
+            end
+        end
     end
 end
 
