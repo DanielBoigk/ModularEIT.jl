@@ -163,5 +163,5 @@ function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     for i in 1:num_modes
         out[i] = create_mode_from_fg(fe, Σ[i] * U[:, i], V[:, i])
     end
-    out
+    out, num_modes
 end
