@@ -14,7 +14,6 @@ function mean_boundary!(vec, mode, down)
     vec .-= mean
 end
 
-
 function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K)
     if length(g_vec) == fe.n
         G = copy(g_vec)
@@ -147,7 +146,7 @@ function add_noise_g!(mode::FerriteEITMode, n::Int, σ::Real)
     noise_vec = σ * randn(n)
     add_noise_g!(mode, noise_vec)
 end
-
+#=
 function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     out = Dict{T,FerriteEITMode}()
     # collect g's and f's
@@ -155,7 +154,7 @@ function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     F = [mode.f for mode in values(modes)]
     G = hcat(G...)
     F = hcat(F...)
-    Λ = F * G'
+    Λ = G * F'
     U, Σ, V = LinearAlgebra.svd(Λ)
     Σ = Σ[Σ.>1e-10]
     num_modes = length(Σ)
@@ -165,3 +164,4 @@ function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     end
     out, num_modes
 end
+=#
