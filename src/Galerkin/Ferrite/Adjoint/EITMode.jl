@@ -5,7 +5,7 @@ using LinearAlgebra
 export FerriteEITMode
 export create_mode_from_g, create_mode_from_fg, create_mode_from_f
 export add_noise_f!, add_noise_g!
-export svd
+#export svd
 
 function mean_boundary!(vec, mode, down)
     mode.b = down(vec)
