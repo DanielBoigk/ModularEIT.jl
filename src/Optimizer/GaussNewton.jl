@@ -39,7 +39,7 @@ function gauss_newton_svd(J::Matrix{Float64}, r::Vector{Float64}; λ::Float64=1e
     for i in 1:n
         Σ_damped[i] = Σ[i] / (Σ[i]^2 + λ) # Levenberg-Marquardt regularization
     end
-    V * (Σ_damped .* (U' * r))
+    -V * (Σ_damped .* (U' * r))
 end
 function gauss_newton_svd!(gns::GaussNewtonState, λ::Float64=1e-3)
     J = gns.J
@@ -50,7 +50,7 @@ function gauss_newton_svd!(gns::GaussNewtonState, λ::Float64=1e-3)
     for i in 1:n
         Σ_damped[i] = Σ[i] / (Σ[i]^2 + λ) # Levenberg-Marquardt regularization
     end
-    gns.δ = V * (Σ_damped .* (U' * r))
+    gns.δ = -V * (Σ_damped .* (U' * r))
 end
 function update_M!(gns::GaussNewtonState, regularizers::Tuple{Float64, <:AbstractMatrix}...)
     if isempty(regularizers)

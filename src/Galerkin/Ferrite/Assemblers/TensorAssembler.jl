@@ -13,6 +13,7 @@ function calculate_bilinear_map!(fe::FerriteFESpace, rhs::AbstractVector, a::Abs
     qpoints = getnquadpoints(cellvalues)
     re = zeros(n_basefuncs)
 
+    fill!(rhs, 0.0)
     for cell in CellIterator(dh)
         dofs = celldofs(cell)
         reinit!(cellvalues, cell)
