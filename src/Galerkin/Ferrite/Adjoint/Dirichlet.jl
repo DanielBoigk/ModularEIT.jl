@@ -32,7 +32,7 @@ function FerriteEITModeD(g::AbstractVector, f::AbstractVector, fe::FerriteFESpac
     δσ = zeros(n)
     λrhs = zeros(n)
     rhs = zeros(n)
-    return FerriteEITMode(u, nothing, nothing, b, λ, δσ, F, f, G, g, λrhs,rhs, 0.0, 0.0, 0.0)
+    return FerriteEITMode(u, nothing, nothing, b, λ, δσ, F, f, G, g, λrhs, rhs, 0.0, 0.0, 0.0)
 end
 
 
@@ -105,7 +105,7 @@ function gradient_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, f
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
     cg!(mode.λ, L, mode.λrhs; maxiter=maxiter)
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
+    mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_f)
     return mode.δσ
 end
 
@@ -128,5 +128,5 @@ Tuple `(δσ, error_d)` — the conductivity gradient and the data misfit value.
 function state_adjoint_step_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     objective_dirichlet_cg!(mode, sol, fe, maxiter)
     gradient_dirichlet_cg!(mode, sol, fe, maxiter)
-    return mode.δσ, mode.error_n
+    return mode.δσ, mode.error_d
 end
