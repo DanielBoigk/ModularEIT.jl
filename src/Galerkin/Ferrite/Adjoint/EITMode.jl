@@ -86,8 +86,8 @@ end
 function create_mode_from_fg(fe::FerriteFESpace, f_vec::AbstractVector, g_vec::AbstractVector)
     if length(f_vec) == fe.n
         F = copy(f_vec)
+        f = fe.down(F)
         mean_f = Statistics.mean(f)
-        f = down(F)
         f .-= mean_f
         F .-= mean_f
     elseif length(f_vec) == fe.m
@@ -98,8 +98,8 @@ function create_mode_from_fg(fe::FerriteFESpace, f_vec::AbstractVector, g_vec::A
     end
     if length(g_vec) == fe.n
         G = copy(g_vec)
+        g = fe.down(G)
         mean_g = Statistics.mean(g)
-        g = down(G)
         g .-= mean_g
         G .-= mean_g
     elseif length(g_vec) == fe.m
@@ -125,26 +125,26 @@ function create_mode_from_fg(fe::FerriteFESpace, f_vec::AbstractVector, g_vec::A
     FerriteEITMode(u, u_g, w, b, λ, δσ, F, f, G, g, λrhs, rhs, error_d, error_n, error_m)
 end
 
-function add_noise_f!(mode::FerriteEITMode, noise_vec::AbstractVector)
+function add_noise_f!(mode::FerriteEITMode, noise_vec::AbstractVector, fe::FerriteFESpace)
     noise_mean = Statistics.mean(noise_vec)
     @. mode.f += noise_vec - noise_mean
     mode.F = fe.up(mode.f)
     nothing
 end
-function add_noise_f!(mode::FerriteEITMode, n::Int, σ::Real)
+function add_noise_f!(mode::FerriteEITMode, n::Int, σ::Real, fe::FerriteFESpace)
     noise_vec = σ * randn(n)
-    add_noise_f!(mode, noise_vec)
+    add_noise_f!(mode, noise_vec, fe)
 end
 
-function add_noise_g!(mode::FerriteEITMode, noise_vec::AbstractVector)
+function add_noise_g!(mode::FerriteEITMode, noise_vec::AbstractVector, fe::FerriteFESpace)
     noise_mean = Statistics.mean(noise_vec)
     @. mode.g += noise_vec - noise_mean
     mode.G = fe.up(mode.g)
     nothing
 end
-function add_noise_g!(mode::FerriteEITMode, n::Int, σ::Real)
+function add_noise_g!(mode::FerriteEITMode, n::Int, σ::Real, fe::FerriteFESpace)
     noise_vec = σ * randn(n)
-    add_noise_g!(mode, noise_vec)
+    add_noise_g!(mode, noise_vec, fe)
 end
 #=
 function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}

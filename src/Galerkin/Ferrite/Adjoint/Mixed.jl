@@ -60,7 +60,7 @@ Tuple `(δσ, error_m)` — the conductivity gradient and the mixed data misfit 
 function state_adjoint_step_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     objective_mixed_cg!(mode, sol, fe, maxiter)
     gradient_mixed_cg!(mode, sol, fe, maxiter)
-    return mode.δσ, mode.error_n
+    return mode.δσ, mode.error_m
 end
 
 
