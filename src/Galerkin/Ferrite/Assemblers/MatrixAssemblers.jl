@@ -236,7 +236,7 @@ end
 
 Assemble the coupling mass matrix B where B[i,j] = ∫ φ_coarse[i] * φ_fine[j] dΩ
 """
-function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace)
+function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace) # Careful. This thing only works because it is assumed that the shape & placemants of the elements are exactly identical and only the order is different. This can not project from i.e. triangular to quadrilateral elements.
     fill!(B, 0.0)
 
     dh_coarse = coarse_space.dh
@@ -253,7 +253,6 @@ function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace
     n_basefuncs_coarse = getnbasefunctions(cv_coarse)
     n_basefuncs_fine = getnbasefunctions(cv_fine)
     Be = zeros(n_basefuncs_coarse, n_basefuncs_fine)
-
     assembler = start_assemble(B)
 
     for cell in CellIterator(dh_fine)
@@ -274,7 +273,20 @@ function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace
         end
 
         # Assemble into global matrix
-        assemble!(assembler, celldofs(cell), Be)
+        cellid = cell.cellid
+
+        coarse_dofs = celldofs(dh_coarse, cellid)
+        fine_dofs   = celldofs(dh_fine,   cellid)
+
+        assemble!(assembler, coarse_dofs, fine_dofs, Be)
+        #=for i in 1:length(coarse_dofs)
+            I = coarse_dofs[i]
+            for j in 1:length(fine_dofs)
+                J = fine_dofs[j]
+                B[I, J] += Be[i, j]
+            end
+        end=#
+
     end
 
     return B

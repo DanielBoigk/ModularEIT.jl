@@ -79,11 +79,11 @@ function gauss_newton_svd!(opt::FerriteOptState)
     J = opt.J
     r = opt.r
     λ = opt.λ
-    U, Σ, V = svd(J, full=false)
+    U, Σ, V = LinearAlgebra.svd(J)
     n = length(Σ)
     Σ_damped = zeros(n)
     for i in 1:n
         Σ_damped[i] = Σ[i] / (Σ[i]^2 + λ) # Levenberg-Marquardt regularization
     end
-    opt.δ = V * (Σ_damped .* (U' * r))
+    opt.δ = -V * (Σ_damped .* (U' * r))
 end

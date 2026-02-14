@@ -57,7 +57,7 @@ function FerriteSolverState(fe::FerriteFESpace, σ::AbstractVector, d, ∂d, n, 
     L_fak = factorize(L)
     Σ = zeros(fe.m - 1)
     opt = FerriteOptState(nothing, nothing, 0.0, 0.0, 0.1, 0, 1e-5, LinearMap(spdiagm(ones(fe.n))), copy(δ))
-    FerriteSolverState(∂Ω, copy(σ), δ, L, L_fak, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
+    FerriteSolverState(∂Ω, copy(σ), δ,false, -1.0, L, L_fak, nothing, nothing, Σ, d, ∂d, n, ∂n, nothing, nothing, nothing, nothing, nothing, nothing, 0, fe.n, opt, false, 1.0)
 end
 
 
@@ -68,8 +68,22 @@ function update_σ!(state::FerriteSolverState, clip::Bool=false, clip_limit::Flo
     end
 end
 
-function update_L!(state::FerriteSolverState, fe::FerriteFESpace)
-    state.L .= assemble_L!(state.L, fe, state.σ)
+function update_L!(state::FerriteSolverState, fe::FerriteFESpace, factorized::Bool=false)
+    assemble_L!(state.L, fe, state.σ)
+    if factorized
+        #state.L_fac = factorize(state.L)
+        # I know this is terrible design:
+        try
+            state.L_fac = factorize(state.L)
+        catch e
+            if e isa LinearAlgebra.ZeroPivotException
+                @warn "Cholesky failed, using LU"
+                state.L_fac = lu(state.L)
+            else
+                rethrow(e)
+            end
+        end
+    end
 end
 
 function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args, ∇Reg)
@@ -80,7 +94,7 @@ end
 function add_diff_Regularizer!(state::FerriteSolverState, Reg, R_diff_args)
     state.R_diff = Reg
     state.R_diff_args = R_diff_args
-    state.∇R = Enzyme.gradient(Reg)
+    state.∇R = Enzyme.gradient(Reg) # What is with the case where Reg takes args?
 end
 function add_ndiff_Regularizer!(state::FerriteSolverState, nReg, R_ndiff_args)
     state.R_ndiff = nReg
