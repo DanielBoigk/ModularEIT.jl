@@ -1,7 +1,7 @@
-export create_fg
+export create_f∂f
 
 """
-create_fg(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false)
+create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false)
 
 Create objective (`f`) and gradient (`g`) closures for EIT reconstruction.
 

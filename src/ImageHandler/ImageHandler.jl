@@ -1,6 +1,6 @@
 using Interpolations
 
-export real_fourier_basis, make_boundary, interpolate_array_2D
+export real_fourier_basis, make_boundary, interpolate_array_2D, equidistant_grid
 
 function real_fourier_basis(n::Int)
     N = 2^n

@@ -9,7 +9,10 @@ function printsomething()
     println("Hallo Welt!")
     return "some output"
 end
+
+
 greet() = print("Hello World!")
 
-end # module EIT4Julia
 include("ImageHandler/ImageHandler.jl")
+include("wrapper.jl")
+end # module EIT4Julia

@@ -6,56 +6,57 @@ using IterativeSolvers
 using Enzyme
 using Interpolations
 using Images
-
+#=
 function real_fourier_basis(n::Int)
-    N = 2^n
-    t = collect(0:N-1) ./ N
-    F = Matrix{Float64}(undef, N, N)
+   N = 2^n
+   t = collect(0:N-1) ./ N
+   F = Matrix{Float64}(undef, N, N)
 
-    # DC component
-    F[:, 1] .= 1 / sqrt(N)
+   # DC component
+   F[:, 1] .= 1 / sqrt(N)
 
-    k = 2
-    for m in 1:(N÷2-1)
-        F[:, k] .= sqrt(2 / N) .* cos.(2π * m .* t)
-        k += 1
-        F[:, k] .= sqrt(2 / N) .* sin.(2π * m .* t)
-        k += 1
-    end
+   k = 2
+   for m in 1:(N÷2-1)
+       F[:, k] .= sqrt(2 / N) .* cos.(2π * m .* t)
+       k += 1
+       F[:, k] .= sqrt(2 / N) .* sin.(2π * m .* t)
+       k += 1
+   end
 
-    # Nyquist frequency (only cosine, since sine vanishes)
-    F[:, k] .= (N % 2 == 0) ? (sqrt(1 / N) .* cos.(π .* (0:N-1))) : zeros(N)
+   # Nyquist frequency (only cosine, since sine vanishes)
+   F[:, k] .= (N % 2 == 0) ? (sqrt(1 / N) .* cos.(π .* (0:N-1))) : zeros(N)
 
-    return F
+   return F
 end
 #This functions makes puts some boundary into the elements of the edges of an array
 function make_boundary(a::AbstractVector, n::Int=128)
-    A = zeros(n + 1, n + 1)
-    A[1:n+1, 1] = a[1:n+1]
-    A[n+1, 2:n+1] = a[n+2:2*n+1]
-    A[n:-1:1, n+1] = a[2*n+2:3*n+1]
-    A[1, n:-1:2] = a[3*n+2:4*n]
-    A
+   A = zeros(n + 1, n + 1)
+   A[1:n+1, 1] = a[1:n+1]
+   A[n+1, 2:n+1] = a[n+2:2*n+1]
+   A[n:-1:1, n+1] = a[2*n+2:3*n+1]
+   A[1, n:-1:2] = a[3*n+2:4*n]
+   A
 end
 # Then this function gives a function that interpolates over the array:
 function interpolate_array_2D(arr::Array{Float64,2})
-    # Ensure the input array is n x n
-    @assert size(arr, 1) == size(arr, 2) "The input array must be square (n x n)."
+   # Ensure the input array is n x n
+   @assert size(arr, 1) == size(arr, 2) "The input array must be square (n x n)."
 
-    # Define the range of the original array indices
-    n = size(arr, 1)
-    xs = 1:n
-    ys = 1:n
+   # Define the range of the original array indices
+   n = size(arr, 1)
+   xs = 1:n
+   ys = 1:n
 
-    # Create an interpolation object
-    itp = Interpolations.interpolate((xs, ys), arr, Gridded(Linear()))
+   # Create an interpolation object
+   itp = Interpolations.interpolate((xs, ys), arr, Gridded(Linear()))
 
-    # Define a function to map the interval [-1, 1] to the array index range [1, n]
-    return x -> itp(1 + (0.5 * x[1] + 0.5) * (n - 1), 1 + (0.5 * x[2] + 0.5) * (n - 1))
+   # Define a function to map the interval [-1, 1] to the array index range [1, n]
+   return x -> itp(1 + (0.5 * x[1] + 0.5) * (n - 1), 1 + (0.5 * x[2] + 0.5) * (n - 1))
 end
 
+=#
 @testset "SolverTests" begin
-    # Your test code here
+    # This code tests whether feeding the correct solution yields a zero gradient for a natural image
     n = 128
     grid = generate_grid(Quadrilateral, (n, n))
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
@@ -84,7 +85,7 @@ end
 
     prblm = FerriteProblem(fe, mode_dict, sol)
 
-    #This is to test whether the rturned gradient for the correct conductivity is ≈ 0
+    #This is to test whether the returned gradient for the correct conductivity is ≈ 0
     @time solve_modes!(prblm, 100, state_adjoint_step_neumann_init!)
     @test abs(prblm.modes[1].error_n) < 1e-14
     @show prblm.modes[1].error_n

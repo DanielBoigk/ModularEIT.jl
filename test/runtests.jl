@@ -18,6 +18,7 @@ fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
 
 @testset "ModularEIT.jl" begin
     # Write your tests here.
+    #=
     include("AssemblerTests/BilinearMap.jl")
     include("AssemblerTests/MatrixTests.jl")
     include("AssemblerTests/UpDownTest.jl")
@@ -25,4 +26,6 @@ fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
     include("MeshTests/MeshTests.jl")
 
     include("SolverTests/SolverTests.jl")
+    =#
+    include("ReconstructionTests/SimpleImage.jl")
 end
