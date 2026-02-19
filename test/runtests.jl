@@ -27,5 +27,6 @@ fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
 
     include("SolverTests/SolverTests.jl")
     =#
+    include("GradientTests/NeumannAdjointGradientTest.jl")
     include("ReconstructionTests/SimpleImage.jl")
 end

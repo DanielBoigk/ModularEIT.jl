@@ -43,11 +43,18 @@ Note: The `gn` (Gauss–Newton) flag is included in the signature for future beh
 
 """
 function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false)
+    # Flag to force computation on first call to avoid returning sentinel value
+    first_call = Ref(true)
+
     f = σ -> begin
         σc = max.(σ, 1e-6)
-        if σc == prblm.state.σ
+        if !first_call[] && σc == prblm.state.σ
+            # Cache hit (but not on first call)
             return prblm.state.error
         end
+        first_call[] = false
+
+        # Cache miss or first call - recompute
         prblm.state.σ .= σc
         update_L!(prblm.state, prblm.fe, true)
         solve_modes!(prblm, num_modes, objective_neumann_init!)
