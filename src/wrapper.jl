@@ -69,7 +69,7 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
                 prblm.state.error += prblm.state.opt.β_diff * prblm.state.R_diff(prblm.state.σ)
             end
         elseif prblm.state.δ_updated
-            return prblm.state.δ
+            return copy(prblm.state.δ)
         end
         prblm.state.δ_updated = true
         fill!(prblm.state.δ, 0.0)
@@ -80,7 +80,7 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         if regularize
             prblm.state.δ .+= (prblm.state.opt.β_diff * prblm.state.∇R(prblm.state.σ))
         end
-        return prblm.state.δ
+        return copy(prblm.state.δ)
     end
     return f, ∂f
 end

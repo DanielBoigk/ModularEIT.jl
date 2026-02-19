@@ -20,7 +20,7 @@ function lbfgs(f, grad, x0; m=10, maxiter=100, tol=1e-6)
     x = copy(x0)
     fx = f(x)
     println("Iteration 0 - Loss: $fx")
-    g = grad(x)
+    g = copy(grad(x))
 
     S = Vector{Vector{Float64}}()  # s_k = x_{k+1}-x_k
     Y = Vector{Vector{Float64}}()  # y_k = g_{k+1}-g_k
@@ -70,7 +70,7 @@ function lbfgs(f, grad, x0; m=10, maxiter=100, tol=1e-6)
         x_new = proj(x .+ α .* p)
         fx = f(x_new)
         println("Iteration $k - Loss: $fx")
-        g_new = grad(x_new)
+        g_new = copy(grad(x_new))
 
         s = x_new - x
         y = g_new - g
