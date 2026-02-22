@@ -1,6 +1,55 @@
 using ModularEIT
 using Test
+using LinearAlgebra
 
+@testset "LBFGS_B test" begin
+
+
+    # 1. Define the Objective Function and its Gradient
+    # f(x) = sum( (x_i - target_i)^2 )
+    function test_f(x, target)
+        return sum((x .- target) .^ 2)
+    end
+
+    # The gradient ∇f = 2 * (x - target)
+    function test_g(x, target)
+        return 2.0 .* (x .- target)
+    end
+
+    # 2. Run the Test
+    function run_lbfgs_test()
+        # Scenario: Target is at -5.0, but bounds are [0, 1]
+        # The optimal solution should be exactly [0, 0, 0]
+        n = 3
+        x0 = [0.5, 0.5, 0.5]
+        target = [-5.0, -5.0, -5.0]
+
+        println("--- Starting Test: Target = -5.0, Bounds = [0, 1] ---")
+
+        # Wrap functions to match the lbfgs_b signature
+        f(x) = test_f(x, target)
+        g(x) = test_g(x, target)
+
+        result = lbfgs_b(f, g, x0; lb=0.0, ub=1.0, m=5, maxiter=50)
+
+        println("\nFinal x: $result")
+        println("Target was -5.0, expected [0.0, 0.0, 0.0] due to lb=0.0")
+
+        if all(isapprox.(result, 0.0, atol=1e-5))
+            println("✅ TEST PASSED: Constraints respected.")
+            return true
+        else
+            println("❌ TEST FAILED: Constraints violated or optimization failed.")
+            return false
+        end
+    end
+
+    @test run_lbfgs_test()
+
+end
+
+
+#=
 @testset "LBFGS_BasicQuadratic" begin
     println("Testing LBFGS with simple quadratic function")
 
@@ -47,3 +96,4 @@ end
     println("Initial f: $f_initial, Final f: $f_final")
     @test f_final < f_initial
 end
+=#

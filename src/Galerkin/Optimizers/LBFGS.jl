@@ -1,4 +1,5 @@
-export lbfgs
+using LinearAlgebra
+export lbfgs, lbfgs_b
 
 """
     lbfgs(f, grad_f, x0; m=10, maxiter=100, tol=1e-6)
@@ -130,5 +131,110 @@ function lbfgs(f, descent_grad, x0; m=10, maxiter=100, tol=1e-6)
         p_steepest = p_steepest_new
     end
 
+    return x
+end
+
+
+
+# Helper: The standard L-BFGS two-loop recursion
+function two_loop_direction(q_init, S, Y, ρ)
+    q = copy(q_init)
+    n = length(S)
+    α_vec = zeros(n)
+    for i in n:-1:1
+        α_vec[i] = ρ[i] * dot(S[i], q)
+        q .-= α_vec[i] .* Y[i]
+    end
+    γ = n == 0 ? 1.0 : dot(S[end], Y[end]) / dot(Y[end], Y[end])
+    r = γ .* q
+    for i in 1:n
+        β = ρ[i] * dot(Y[i], r)
+        r .+= (α_vec[i] - β) .* S[i]
+    end
+    return r
+end
+
+
+function lbfgs_b(f, g, x0; lb=0.0, ub=Inf, m=10, maxiter=100, tol=1e-6)
+    # Project initial point into bounds [lb, ub]
+    project(x) = clamp.(x, lb, ub)
+    x = project(copy(x0))
+
+    fx = f(x)
+    gx = g(x) # Expects standard gradient ∇f
+
+    # Storage for L-BFGS history
+    S, Y, ρ = Vector{Vector{Float64}}(), Vector{Vector{Float64}}(), Float64[]
+
+    for k in 1:maxiter
+        # 1. Check Convergence (Projected Gradient Norm)
+        # Convergence is met if the gradient points "out" of the bounds
+        pg = x .- project(x .- gx)
+        if norm(pg, Inf) < tol
+            println("Converged at iteration $k")
+            break
+        end
+
+        # 2. Compute Descent Direction via Two-Loop Recursion
+        # Note: We pass -gx (the descent direction)
+        p = two_loop_direction(-gx, S, Y, ρ)
+
+        # 3. Identify Free Variables (Variables not at bounds or moving away from them)
+        # If a variable is at lb and the direction p wants to go lower, we kill that component.
+        for i in eachindex(x)
+            if (x[i] <= lb && p[i] < 0) || (x[i] >= ub && p[i] > 0)
+                p[i] = 0.0
+            end
+        end
+
+        # 4. Backtracking Line Search (Armijo)
+        α = 1.0
+        c1 = 1e-4
+        step_accepted = false
+
+        # Calculate max possible alpha to stay in bounds
+        max_α = 1e10
+        for i in eachindex(x)
+            if p[i] > 0 && ub < Inf
+                max_α = min(max_α, (ub - x[i]) / p[i])
+            elseif p[i] < 0 && lb > -Inf
+                max_α = min(max_α, (lb - x[i]) / p[i])
+            end
+        end
+        α = min(1.0, max_α)
+
+        x_old, gx_old = copy(x), copy(gx)
+
+        for bt in 1:20
+            x_trial = project(x + α * p)
+            if f(x_trial) <= fx + c1 * α * dot(gx, p)
+                x = x_trial
+                step_accepted = true
+                break
+            end
+            α *= 0.5
+        end
+
+        # 5. Update History
+        fx = f(x)
+        gx = g(x)
+
+        s = x - x_old
+        y = gx - gx_old
+        sy = dot(s, y)
+
+        if sy > 1e-10 * norm(s) * norm(y)
+            push!(S, s)
+            push!(Y, y)
+            push!(ρ, 1.0 / sy)
+            if length(S) > m
+                popfirst!(S)
+                popfirst!(Y)
+                popfirst!(ρ)
+            end
+        end
+
+        println("Iter $k - Loss: $fx")
+    end
     return x
 end
