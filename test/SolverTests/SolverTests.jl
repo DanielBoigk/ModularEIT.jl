@@ -64,9 +64,9 @@ end
     G_full = real_fourier_basis(9)
     rhs_dict = Dict()
     Threads.@threads for i in 2:512
-        M = make_boundary(G_full[:, i])
+        M = make_boundary(G_full[:, i-1])
         itp = interpolate_array_2D(M)
-        rhs_dict[i] = assemble_rhs_func(fe, itp)
+        rhs_dict[i-1] = assemble_rhs_func(fe, itp)
     end
     img = load("SolverTests/Reference128.png")
     itp = interpolate_array_2D(Float64.(img))
@@ -75,8 +75,9 @@ end
     K_fac = factorize(K)
     mode_dict = Dict()
     @time begin
-        Threads.@threads for i in 2:512
-            mode_dict[i-1] = create_mode_from_g(fe, rhs_dict[i], K)
+        #Threads.@threads
+        for i in 1:511
+            mode_dict[i] = create_mode_from_g(fe, rhs_dict[i], K)
         end
     end
 
