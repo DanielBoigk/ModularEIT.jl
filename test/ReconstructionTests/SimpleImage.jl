@@ -19,27 +19,39 @@ end
 
     # Generate a basis on the boundary and assemble it as a righthandside vector.
     G_full = real_fourier_basis(8)
+    #= # For reasons I cannot explain using a dict in a parallel doesn't work anymore...
     rhs_dict = Dict()
     Threads.@threads for i in 2:256
         M = make_boundary(G_full[:, i], 64)
         itp = interpolate_array_2D(M)
         rhs_dict[i] = assemble_rhs_func(fe, itp)
     end
-
+    =#
+    rhs_vec = Vector{Any}(undef, 511)
+    Threads.@threads for i in 1:511
+        M = make_boundary(G_full[:, i])
+        itp = interpolate_array_2D(M)
+        rhs_vec[i] = assemble_rhs_func(fe, itp)
+    end
     # Assemble stiffness matrix and calculate boundary pairs:
     K = assemble_L(fe, cond_vec)
     K_fac = factorize(K)
+    #=
     mode_dict = Dict{Int64,FerriteEITMode}()
     @time begin
         Threads.@threads for i in 2:256
             mode_dict[i-1] = create_mode_from_g(fe, rhs_dict[i], K_fac)
         end
     end
-
+    =#
+    mode_vec = Vector{Any}(undef, 511)
+    for i in 1:511
+        mode_vec[i] = create_mode_from_g(fe, rhs_vec[i], K)
+    end
     # define starting guess and define problem:
     σ_vec = project_function_to_fem(fe, x -> 0.5)
     sol = FerriteSolverState(fe, σ_vec)
-    prblm = FerriteProblem(fe, mode_dict, sol)
+    prblm = FerriteProblem(fe, mode_vec, sol)
 
 
     # We need the point handler later

@@ -173,6 +173,6 @@ export FerriteProblem
 
 struct FerriteProblem
     fe::FerriteFESpace
-    modes::Dict{Int64,FerriteEITMode}
+    modes::Union{Dict{Int64,FerriteEITMode},Vector{Any}}
     state::FerriteSolverState
 end
