@@ -62,29 +62,32 @@ end
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
     fe = FerriteFESpace{RefQuadrilateral}(grid, 1, 2, ∂Ω)
     G_full = real_fourier_basis(9)
-    rhs_dict = Dict()
+    #rhs_dict = Dict()
+    rhs_vec = Vector{Any}(undef, 512)
     Threads.@threads for i in 2:512
         M = make_boundary(G_full[:, i-1])
         itp = interpolate_array_2D(M)
-        rhs_dict[i-1] = assemble_rhs_func(fe, itp)
+        #rhs_dict[i-1] = assemble_rhs_func(fe, itp)
+        rhs_vec[i-1] = assemble_rhs_func(fe, itp)
     end
     img = load("SolverTests/Reference128.png")
     itp = interpolate_array_2D(Float64.(img))
     cond_vec = project_function_to_fem(fe, itp)
     K = assemble_L(fe, cond_vec)
     K_fac = factorize(K)
-    mode_dict = Dict()
+    #mode_dict = Dict()
+    mode_vec = Vector{Any}(undef, 512)
     @time begin
-        #Threads.@threads
-        for i in 1:511
-            mode_dict[i] = create_mode_from_g(fe, rhs_dict[i], K)
+        Threads.@threads for i in 1:511
+            #mode_dict[i] = create_mode_from_g(fe, rhs_dict[i], K)
+            mode_vec[i] = create_mode_from_g(fe, rhs_vec[i], K)
         end
     end
 
     sol = FerriteSolverState(fe, cond_vec)
     @test true
 
-    prblm = FerriteProblem(fe, mode_dict, sol)
+    prblm = FerriteProblem(fe, mode_vec, sol)
 
     #This is to test whether the returned gradient for the correct conductivity is ≈ 0
     @time solve_modes!(prblm, 100, state_adjoint_step_neumann_init!)
