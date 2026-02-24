@@ -57,7 +57,7 @@ end
 =#
 @testset "SolverTests" begin
     # This code tests whether feeding the correct solution yields a zero gradient for a natural image
-    n = 128
+    n = 127
     grid = generate_grid(Quadrilateral, (n, n))
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
     fe = FerriteFESpace{RefQuadrilateral}(grid, 1, 2, ∂Ω)
@@ -65,7 +65,7 @@ end
     #rhs_dict = Dict()
     rhs_vec = Vector{Any}(undef, 512)
     Threads.@threads for i in 2:512
-        M = make_boundary(G_full[:, i-1])
+        M = make_boundary(G_full[:, i])
         itp = interpolate_array_2D(M)
         #rhs_dict[i-1] = assemble_rhs_func(fe, itp)
         rhs_vec[i-1] = assemble_rhs_func(fe, itp)
@@ -76,7 +76,7 @@ end
     K = assemble_L(fe, cond_vec)
     K_fac = factorize(K)
     #mode_dict = Dict()
-    mode_vec = Vector{Any}(undef, 512)
+    mode_vec = Vector{Any}(undef, 511)
     @time begin
         Threads.@threads for i in 1:511
             #mode_dict[i] = create_mode_from_g(fe, rhs_dict[i], K)

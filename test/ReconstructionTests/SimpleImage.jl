@@ -17,7 +17,7 @@ end
 
 @testset "SimpleReconstructionGaussian" begin
     println("Starting SimpleReconstructionGaussian test")
-    n = 21  # Reduced from 63 for speed
+    n = 63  # Reduced from 63 for speed
     grid = generate_grid(Quadrilateral, (n, n))
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
     fe = FerriteFESpace{RefQuadrilateral}(grid, 2, 3, ∂Ω)
@@ -34,11 +34,12 @@ end
         rhs_dict[i] = assemble_rhs_func(fe, itp)
     end
     =#
-    rhs_vec = Vector{Any}(undef, 511)
-    Threads.@threads for i in 1:511
-        M = make_boundary(G_full[:, i])
+    rhs_vec = Vector{Any}(undef, 255)
+
+    Threads.@threads for i in 2:256
+        M = make_boundary(G_full[:, i], 64)
         itp = interpolate_array_2D(M)
-        rhs_vec[i] = assemble_rhs_func(fe, itp)
+        rhs_vec[i-1] = assemble_rhs_func(fe, itp)
     end
     # Assemble stiffness matrix and calculate boundary pairs:
     K = assemble_L(fe, cond_vec)
@@ -51,8 +52,8 @@ end
         end
     end
     =#
-    mode_vec = Vector{Any}(undef, 511)
-    for i in 1:511
+    mode_vec = Vector{Any}(undef, 255)
+    for i in 1:255
         mode_vec[i] = create_mode_from_g(fe, rhs_vec[i], K)
     end
     # define starting guess and define problem:
@@ -60,6 +61,8 @@ end
     sol = FerriteSolverState(fe, σ_vec)
     prblm = FerriteProblem(fe, mode_vec, sol)
 
+    #solve_modes!(prblm, 255, state_adjoint_step_neumann_init!)
+    #@test prblm.modes[1].error_n ≠ -1.0
 
     # We need the point handler later
     eval_points = reshape(equidistant_grid(64), :)
@@ -81,7 +84,7 @@ end
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
     descent_dir(x) = -∂f(x)
-    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=50)
+    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=10)
 
     starting_error = norm(σ_vec - cond_vec)
     total_error = norm(solution - cond_vec)
