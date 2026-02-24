@@ -2,6 +2,8 @@ include("testfunctions.jl")
 # Here the reconstruction is tested against simple functions like gaussian, anisotropic, polynomial, and soft disk. In order to test behavior of classical regularization methods, like Tikhonov regularization and Total Variation regularization, we use a simple image with a known ground truth.
 using ModularEIT
 using FFTW
+using Images
+using Ferrite
 
 function spectral_distance(A::AbstractMatrix, B::AbstractMatrix)
     A_s = dct(dct(A, 1), 2)
@@ -79,7 +81,7 @@ end
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 19; regularize=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 20; regularize=false)  # Reduced from 255 to 19
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
@@ -95,5 +97,12 @@ end
     f_final = f(solution)
     println("Initial objective: $f_initial")
     println("Final objective: $f_final")
+
+    img_initial = Gray.(max.(0.0,min.(1.0,0.1 .* reshape(evaluate_at_points(ph, prblm.fe.dh, σ_vec), (64,64)))))
+    img_final = Gray.(max.(0.0,min.(1.0,0.1 .* reshape(evaluate_at_points(ph, prblm.fe.dh, solution), (64,64)))))
+
+    # Save the images for inspection
+    save("ReconstructionTests/Reconstruction/img_initial.png", img_initial)
+    save("ReconstructionTests/Reconstruction/img_final.png", img_final)
     @test f_final < f_initial  # Objective should decrease
 end
