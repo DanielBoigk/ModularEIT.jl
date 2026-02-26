@@ -4,7 +4,7 @@ using LinearMaps
 using IterativeSolvers
 using Base: *
 
-export gauss_newton_lm_cg!, gauss_newton_svd!
+export gauss_newton_lm_cg!, gauss_newton_svd!, gauss_newton_lm_lsqr!, proximal_gauss_newton_step!
 """
     gauss_newton_cg!(opt::GalerkinOptState; maxiter=500)
 
@@ -86,4 +86,51 @@ function gauss_newton_svd!(opt::FerriteOptState)
         Σ_damped[i] = Σ[i] / (Σ[i]^2 + λ) # Levenberg-Marquardt regularization
     end
     opt.δ = -V * (Σ_damped .* (U' * r))
+end
+
+function gauss_newton_lm_lsqr!(opt::GalerkinOptState, maxiter=200; tol=1e-6)
+    J = opt.J
+    r = opt.r
+    L = opt.L
+    λ = opt.λ
+    δ = opt.δ
+    _, nσ = size(J)
+    A = [J; sqrt(λ) * L]
+    b = vcat(-r, zeros(nσ))
+    A_map = LinearMap(A)
+    lsqr!(δ, A_map, b; maxiter=maxiter, atol=tol, btol=tol)
+    return δ
+end
+
+# Fix still:
+function proximal_gauss_newton_step!(opt::FerriteOptState, σ::AbstractVector; maxiter=500)
+    J = LinearMap(opt.J)
+    λ = opt.λ
+    β_d = opt.β_diff
+    β_nd = opt.β_ndiff
+    τ = opt.τ # Step size / learning rate
+
+    # Differentiable regularizer gradient
+    grad_smooth = opt.J' * opt.r + β_d * opt.∇R(σ)
+
+    # Solve Gauss Newton
+    A_map = J' * J + λ * I
+    cg!(opt.δ, A_map, -grad_smooth; maxiter=maxiter)
+
+    # update standard step
+    σ_trial = σ + τ * opt.δ
+
+    # proximal step
+    threshold = τ * β_nd
+
+    # and then clamping for your 1e-6 physical constraint
+    for i in eachindex(σ)
+        # Apply L1 proximal operator
+        val = σ_trial[i]
+        # Find out what the exact proximal operator is:
+        σ_new = sign(val) * max(abs(val) - threshold, 0.0)
+
+        # Apply Box Constraint (Non-negativity)
+        opt.δ[i] = max(σ_new, 1e-6) - σ[i]
+    end
 end

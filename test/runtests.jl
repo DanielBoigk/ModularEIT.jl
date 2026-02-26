@@ -28,5 +28,6 @@ fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
     # include("SolverTests/SolverTests.jl")
     # include("OptimizerTests/LBFGS_BasicTest.jl")
     # include("GradientTests/NeumannAdjointGradientTest.jl")
-    include("ReconstructionTests/SimpleImage.jl")
+    # include("ReconstructionTests/SimpleImage.jl")
+    include("ReconstructionTests/ComplicatedImage.jl")
 end
