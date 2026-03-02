@@ -59,6 +59,9 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         update_L!(prblm.state, prblm.fe, true)
         solve_modes!(prblm, num_modes, objective_neumann_init!)
         prblm.state.error = sum(prblm.modes[i].error_n for i in 1:num_modes)
+        if gn
+            collect_r!(prblm, num_modes)
+        end
         if regularize
             prblm.state.error += prblm.state.opt.β_diff * prblm.state.R_diff(prblm.state.σ)
         end
@@ -81,8 +84,14 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         prblm.state.δ_updated = true
         fill!(prblm.state.δ, 0.0)
         solve_modes!(prblm, num_modes, gradient_neumann_init!)
-        for i in 1:num_modes
-            prblm.state.δ .-= prblm.modes[i].δσ
+        if gn
+            collect_J!(prblm, num_modes)
+            gauss_newton_svd!(prblm.state.opt)
+            problem.state.δ = copy(problem.state.opt.δ)
+        else
+            for i in 1:num_modes
+                prblm.state.δ .-= prblm.modes[i].δσ
+            end
         end
         if regularize
             prblm.state.δ .+= (prblm.state.opt.β_diff * prblm.state.∇R(prblm.state.σ))

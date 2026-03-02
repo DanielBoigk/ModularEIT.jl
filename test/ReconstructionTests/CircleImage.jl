@@ -9,7 +9,7 @@ using Ferrite
 
 @testset "Reconstruction Circle Image LBFGS" begin
     println("Starting Reconstruction Complicated Image test")
-    n = 63  # Reduced from 63 for speed
+    n = 63
     grid = generate_grid(Quadrilateral, (n, n))
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
     fe = FerriteFESpace{RefQuadrilateral}(grid, 2, 3, ∂Ω)
@@ -61,17 +61,17 @@ using Ferrite
     TikhonovReg = (x) -> normH1sq(prblm.fe, x)
     ∇Tkhnv = (x) -> grad_normH1sq(prblm.fe, x)
     add_diff_Regularizer!(prblm.state, TikhonovReg, nothing, ∇Tkhnv)
-    prblm.state.opt.β_diff = 1e-4
+    prblm.state.opt.β_diff = 1e-6
 
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 100; regularize=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 255; regularize=false)  # Reduced from 255 to 19
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
     descent_dir(x) = -∂f(x)
-    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=10)
+    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=40)
 
     starting_error = norm(σ_vec - cond_vec)
     total_error = norm(solution - cond_vec)
@@ -83,8 +83,8 @@ using Ferrite
     println("Initial objective: $f_initial")
     println("Final objective: $f_final")
 
-    img_initial = Gray.(max.(0.0, min.(1.0, 0.1 .* reshape(evaluate_at_points(ph, prblm.fe.dh, cond_vec), (64, 64)))))
-    img_final = Gray.(max.(0.0, min.(1.0, 0.1 .* reshape(evaluate_at_points(ph, prblm.fe.dh, solution), (64, 64)))))
+    img_initial = Gray.(max.(0.0, min.(1.0, reshape(evaluate_at_points(ph, prblm.fe.dh, cond_vec), (64, 64)))))
+    img_final = Gray.(max.(0.0, min.(1.0, reshape(evaluate_at_points(ph, prblm.fe.dh, solution), (64, 64)))))
 
     # Save the images for inspection
     save("ReconstructionTests/Reconstruction/Circle_init.png", img_initial)
@@ -93,7 +93,6 @@ using Ferrite
 end
 
 
-#=
 # @testset "Reconstruction Circle Image Gauss-Newton" begin
 #     println("Starting Reconstruction Complicated Image test")
 #     n = 63  # Reduced from 63 for speed

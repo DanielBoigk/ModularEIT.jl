@@ -84,8 +84,8 @@ using Ferrite
     println("Initial objective: $f_initial")
     println("Final objective: $f_final")
 
-    img_initial = Gray.(max.(0.0, min.(1.0, 0.1 .* reshape(evaluate_at_points(ph, prblm.fe.dh, cond_vec), (64, 64)))))
-    img_final = Gray.(max.(0.0, min.(1.0, 0.1 .* reshape(evaluate_at_points(ph, prblm.fe.dh, solution), (64, 64)))))
+    img_initial = Gray.(max.(0.0, min.(1.0, reshape(evaluate_at_points(ph, prblm.fe.dh, cond_vec), (64, 64)))))
+    img_final = Gray.(max.(0.0, min.(1.0, reshape(evaluate_at_points(ph, prblm.fe.dh, solution), (64, 64)))))
 
     # Save the images for inspection
     save("ReconstructionTests/Reconstruction/img_initial.png", img_initial)
