@@ -67,12 +67,12 @@ using Ferrite
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 100; regularize=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 100; regularize=false, gn=false)  # Reduced from 255 to 19
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
     descent_dir(x) = -∂f(x)
-    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=10)
+    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=60)
 
     starting_error = norm(σ_vec - cond_vec)
     total_error = norm(solution - cond_vec)
@@ -88,7 +88,7 @@ using Ferrite
     img_final = Gray.(max.(0.0, min.(1.0, reshape(evaluate_at_points(ph, prblm.fe.dh, solution), (64, 64)))))
 
     # Save the images for inspection
-    save("ReconstructionTests/Reconstruction/img_initial.png", img_initial)
-    save("ReconstructionTests/Reconstruction/img_final.png", img_final)
+    save("ReconstructionTests/Reconstruction/Complicated_initial.png", img_initial)
+    save("ReconstructionTests/Reconstruction/Complicated_final.png", img_final)
     @test f_final < f_initial  # Objective should decrease
 end

@@ -87,7 +87,7 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         if gn
             collect_J!(prblm, num_modes)
             gauss_newton_svd!(prblm.state.opt)
-            problem.state.δ = copy(problem.state.opt.δ)
+            prblm.state.δ = copy(prblm.state.opt.δ)
         else
             for i in 1:num_modes
                 prblm.state.δ .-= prblm.modes[i].δσ

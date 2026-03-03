@@ -8,7 +8,7 @@ using Ferrite
 
 
 @testset "Reconstruction Circle Image LBFGS" begin
-    println("Starting Reconstruction Complicated Image test")
+    println("Starting Reconstruction Circle Image LBFGS test")
     n = 63
     grid = generate_grid(Quadrilateral, (n, n))
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
@@ -66,12 +66,12 @@ using Ferrite
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 255; regularize=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 255; regularize=false, gn=true)  # Reduced from 255 to 19
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
     descent_dir(x) = -∂f(x)
-    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=40)
+    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=20)
 
     starting_error = norm(σ_vec - cond_vec)
     total_error = norm(solution - cond_vec)
