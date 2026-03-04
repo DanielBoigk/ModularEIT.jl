@@ -44,7 +44,6 @@ function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K)
     error_d = 0.0
     error_n = 0.0
     error_m = 0.0
-
     FerriteEITMode(u, u_g, w, b, λ, δσ, F, f, G, g, λrhs, rhs, error_d, error_n, error_m)
 end
 

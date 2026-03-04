@@ -61,16 +61,15 @@ using Enzyme
     ∇Tkhnv = (x) -> grad_normH1sq(prblm.fe, x)
     add_diff_Regularizer!(prblm.state, TikhonovReg, nothing, ∇Tkhnv)
 
-    TV = (x) -> normTV_diff(prblm.fe, x)
-
-    add_diff_Regularizer!(prblm.state, TV, nothing, ∇TV)
+    # TV = (x) -> normTV_diff(prblm.fe, x)
+    # add_diff_Regularizer!(prblm.state, TV, nothing, ∇TV)
 
     prblm.state.opt.β_diff = 1e-4
 
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 255; regularize=true, gn=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 20; regularize=true, gn=false)  # Reduced from 255 to 19
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f

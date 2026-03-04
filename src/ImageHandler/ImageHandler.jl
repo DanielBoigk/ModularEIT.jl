@@ -53,3 +53,18 @@ function equidistant_grid(n::Integer)
     xs = range(-1, 1; length=n)
     [Vec(x, y) for x in xs, y in xs]
 end
+
+function make_boundary_funcs(n::Int)
+    func_vec = rhs_vec = Vector{Any}(undef, 2^n - 1)
+    N = 2^n
+    k = 1
+    for m in 1:(N÷2-1)
+        func_vec[k] = (x) -> cos(2π * m / N * atan(x[2], x[1]))
+        k += 1
+        func_vec[k] = (x) -> sin(2π * m / N * atan(x[2], x[1]))
+        k += 1
+    end
+    # Do Nyquist frequency (only cosine, since sine vanishes)
+    func_vec[k] = (x) -> cos(π * atan(x[2], x[1]))
+    return func_vec
+end
