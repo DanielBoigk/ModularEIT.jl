@@ -6,7 +6,9 @@ export FerriteEITModeM
 export state_adjoint_step_mixed_cg!
 export objective_mixed_cg!
 export gradient_mixed_cg!
-
+export objective_mixed_init
+export gradient_mixed_init
+export state_adjoint_step_mixed_init!
 
 
 """
@@ -62,7 +64,11 @@ function state_adjoint_step_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverSt
     gradient_mixed_cg!(mode, sol, fe, maxiter)
     return mode.δσ, mode.error_m
 end
-
+function state_adjoint_step_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    objective_mixed_init!(mode, sol, fe, maxiter)
+    gradient_mixed_init!(mode, sol, fe, maxiter)
+    return mode.δσ, mode.error_m
+end
 
 """
     objective_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
