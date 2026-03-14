@@ -56,7 +56,7 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
 
         # Cache miss or first call - recompute
         prblm.state.σ .= σc
-        update_L!(prblm.state, prblm.fe, true)
+        update_L!(prblm.state, prblm.fe, true, mode ≠ "neumann")
         solve_modes!(prblm, num_modes, obj)
 
         collect_r!(prblm, num_modes, mode=mode)
@@ -85,14 +85,13 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         solve_modes!(prblm, num_modes, grad)
         collect_J!(prblm, num_modes)
         if gn
-            collect_J!(prblm, num_modes)
             gauss_newton_svd!(prblm.state.opt)
             prblm.state.δ = copy(prblm.state.opt.δ)
         else
             # for i in 1:num_modes
             #     prblm.state.δ .-= prblm.modes[i].δσ
             # end
-            prblm.state.δ .= sum(prblm.state.opt.J; dims=2)
+            prblm.state.δ = vec(sum(prblm.state.opt.J; dims=1))
         end
         if regularize
             prblm.state.δ .+= (prblm.state.opt.β_diff * prblm.state.∇R(prblm.state.σ))

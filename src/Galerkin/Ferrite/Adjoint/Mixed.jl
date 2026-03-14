@@ -164,7 +164,7 @@ function gradient_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe:
     ∂n = sol.∂n
     # This one needs to normalize:
     mode.λrhs = ∂n(mode.w)
-    mode.λrhs -= mean(mode.λrhs)
+    mode.λrhs .-= mean(mode.λrhs)
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = ∂n(w)
     mode.λ = L \ mode.λrhs
     # Calculate ∇(uᵢ)⋅∇(λᵢ) here:

@@ -70,6 +70,9 @@ end
 
 function update_L!(state::FerriteSolverState, fe::FerriteFESpace, factorized::Bool=false, dirichlet=false)
     assemble_L!(state.L, fe, state.σ)
+    if dirichlet
+        state.LD = to_dirichlet(state.L, fe)
+    end
     if factorized
         #state.L_fac = factorize(state.L)
         # I know this is terrible design:
