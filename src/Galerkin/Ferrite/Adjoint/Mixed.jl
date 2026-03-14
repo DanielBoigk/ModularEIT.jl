@@ -6,8 +6,8 @@ export FerriteEITModeM
 export state_adjoint_step_mixed_cg!
 export objective_mixed_cg!
 export gradient_mixed_cg!
-export objective_mixed_init
-export gradient_mixed_init
+export objective_mixed_init!
+export gradient_mixed_init!
 export state_adjoint_step_mixed_init!
 
 
@@ -110,7 +110,7 @@ function objective_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::
     return mode.error_m
 end
 
-function objective_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace)
+function objective_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     n = sol.n
     # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : u = f
     objective_dirichlet_init!(mode, sol, fe)
@@ -159,7 +159,7 @@ function gradient_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::F
     return mode.δσ
 end
 
-function gradient_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace)
+function gradient_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     L = sol.L_fac
     ∂n = sol.∂n
     # This one needs to normalize:

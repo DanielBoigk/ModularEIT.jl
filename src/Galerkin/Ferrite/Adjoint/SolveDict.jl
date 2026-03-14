@@ -48,7 +48,7 @@ function collect_J!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n
     end
 end
 
-function collect_r!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n, mode = "neumann")
+function collect_r!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n; mode="neumann")
     problem.state.opt.r = zeros(n)
 
     if mode == "neumann"
@@ -66,7 +66,7 @@ function collect_r!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n
     end
 end
 
-function collect_Jr!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n, mode = "neumann")
+function collect_Jr!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n, mode="neumann")
     problem.state.opt.J = zeros(n, n2)
     problem.state.opt.r = zeros(n)
 

@@ -69,7 +69,8 @@ using Enzyme
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 20; regularize=true, gn=false)  # Reduced from 255 to 19
+    #f, ∂f = create_f∂f(prblm, 20; regularize=true, gn=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 20; regularize=true, gn=false, mode ="mixed",obj = objective_mixed_init!, grad = gradient_mixed_init!)
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
