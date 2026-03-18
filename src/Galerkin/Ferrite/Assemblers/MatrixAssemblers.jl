@@ -9,6 +9,9 @@ export assemble_L!, assemble_L
 export to_dirichlet, to_dirichlet!
 export build_projection_matrix, assemble_coupling_mass, assemble_coupling_mass!
 
+# Possible performance improvements:
+# additional preallocation structs for Me, and other assembler arrays
+
 # This is the mass matrix: ∫(u*v)dΩ
 # Used for calculating L² distance
 # Also used for Tikhonov L² regularization

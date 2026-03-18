@@ -155,7 +155,7 @@ function gradient_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::F
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = ∂n(w)
     cg!(mode.λ, Ln, mode.λrhs; maxiter=maxiter)
     # Calculate ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
+    mode.δσ = -calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
     return mode.δσ
 end
 
@@ -168,6 +168,6 @@ function gradient_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe:
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = ∂n(w)
     mode.λ = L \ mode.λrhs
     # Calculate ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
+    mode.δσ = -calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
     return mode.δσ
 end

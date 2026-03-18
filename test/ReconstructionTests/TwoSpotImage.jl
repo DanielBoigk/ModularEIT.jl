@@ -69,13 +69,19 @@ using Enzyme
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 8; regularize=true, gn=false)  # Reduced from 255 to 19
-    #f, ∂f = create_f∂f(prblm, 10; regularize=true, gn=true, mode ="mixed",obj = objective_mixed_init!, grad = gradient_mixed_init!)
+    #f, ∂f = create_f∂f(prblm, 24; regularize=false, gn=false)  # Reduced from 255 to 19
+    # I think this is incorrect atleast it produces nonsense:
+    #f, ∂f = create_f∂f(prblm, 10; regularize=false, gn=false, mode="mixed", obj=objective_mixed_init!, grad=gradient_mixed_init!)
+
+
+    #f, ∂f = create_f∂f(prblm, 10; regularize=false, gn=false, mode="dirichlet", obj=objective_dirichlet_init!, grad=gradient_dirichlet_init!)
+
+
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
     descent_dir(x) = ∂f(x)
-    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=10)
+    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=20)
 
     starting_error = norm(σ_vec - cond_vec)
     total_error = norm(solution - cond_vec)

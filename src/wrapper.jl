@@ -42,7 +42,7 @@ Example
 Note: The `gn` (Gauss–Newton) flag is included in the signature for future behavior changes but is ignored by the current code.
 
 """
-function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!)
+function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!)
     # Flag to force computation on first call to avoid returning sentinel value
     first_call = Ref(true)
 
@@ -79,7 +79,7 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         solve_modes!(prblm, num_modes, grad)
         collect_J!(prblm, num_modes)
         if gn
-            gauss_newton_svd!(prblm.state.opt)
+            gauss_newton(prblm.state.opt)
             prblm.state.δ = copy(prblm.state.opt.δ)
         else
             # for i in 1:num_modes
