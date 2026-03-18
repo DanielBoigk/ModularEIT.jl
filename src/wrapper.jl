@@ -70,13 +70,7 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
     ∂f = σ -> begin
         σc = max.(σ, 1e-6)
         if σc != prblm.state.σ
-            prblm.state.σ .= σc
-            update_L!(prblm.state, prblm.fe, true)
-            solve_modes!(prblm, num_modes, objective_neumann_init!)
-            prblm.state.error = sum(prblm.modes[i].error_n for i in 1:num_modes)
-            if regularize
-                prblm.state.error += prblm.state.opt.β_diff * prblm.state.R_diff(prblm.state.σ)
-            end
+            f(σc)
         elseif prblm.state.δ_updated
             return copy(prblm.state.δ)
         end
