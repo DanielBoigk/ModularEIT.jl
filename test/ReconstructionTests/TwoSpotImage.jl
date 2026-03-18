@@ -74,7 +74,7 @@ using Enzyme
     # Now we solve the problem:
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
-    descent_dir(x) = -∂f(x)
+    descent_dir(x) = ∂f(x)
     solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=10)
 
     starting_error = norm(σ_vec - cond_vec)
