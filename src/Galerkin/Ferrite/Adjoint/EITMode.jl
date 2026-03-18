@@ -34,7 +34,7 @@ function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K)
     u = zeros(fe.n)
     u_g = zeros(fe.n)
     w = zeros(fe.n)
-    b = zeros(fe.n)
+    b = zeros(fe.m)
     λ = zeros(fe.n)
     δσ = zeros(fe.n)
 
@@ -44,7 +44,6 @@ function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K)
     error_d = 0.0
     error_n = 0.0
     error_m = 0.0
-
     FerriteEITMode(u, u_g, w, b, λ, δσ, F, f, G, g, λrhs, rhs, error_d, error_n, error_m)
 end
 
@@ -69,7 +68,7 @@ function create_mode_from_f(fe::FerriteFESpace, f_vec::AbstractVector, KD, KN)
     u = zeros(fe.n)
     u_g = zeros(fe.n)
     w = zeros(fe.n)
-    b = zeros(fe.n)
+    b = zeros(fe.m)
     λ = zeros(fe.n)
     δσ = zeros(fe.n)
 
@@ -112,7 +111,7 @@ function create_mode_from_fg(fe::FerriteFESpace, f_vec::AbstractVector, g_vec::A
     u = zeros(fe.n)
     u_g = zeros(fe.n)
     w = zeros(fe.n)
-    b = zeros(fe.n)
+    b = zeros(fe.m)
     λ = zeros(fe.n)
     δσ = zeros(fe.n)
 

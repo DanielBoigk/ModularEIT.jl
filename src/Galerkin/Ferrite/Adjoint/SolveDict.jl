@@ -38,15 +38,53 @@ end
 function solve_modes!(J::AbstractMatrix,r::AbstractVector, modes::Dict{Int,FerriteEITMode},fe::FerriteFESpace, sol::FerriteSolutionState,num_modes::Int)
 =#
 
-export collect_Jr!
+export collect_Jr!, collect_J!, collect_r!
 
-function collect_Jr!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n)
+function collect_J!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n)
     problem.state.opt.J = zeros(n, n2)
-    problem.state.opt.r = zeros(n)
 
     for i in 1:n
         problem.state.opt.J[i, :] = f(problem.modes[i].δσ)
-        problem.state.opt.r[i] = problem.modes[i].error_n
+    end
+end
+
+function collect_r!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n; mode="neumann")
+    problem.state.opt.r = zeros(n)
+
+    if mode == "neumann"
+        for i in 1:n
+            problem.state.opt.r[i] = problem.modes[i].error_n
+        end
+    elseif mode == "dirichlet"
+        for i in 1:n
+            problem.state.opt.r[i] = problem.modes[i].error_d
+        end
+    elseif mode == "mixed"
+        for i in 1:n
+            problem.state.opt.r[i] = problem.modes[i].error_m
+        end
+    end
+end
+
+function collect_Jr!(problem::FerriteProblem, n::Int, f=identity, n2=problem.fe.n, mode="neumann")
+    problem.state.opt.J = zeros(n, n2)
+    problem.state.opt.r = zeros(n)
+
+    if mode == "neumann"
+        for i in 1:n
+            problem.state.opt.J[i, :] = f(problem.modes[i].δσ)
+            problem.state.opt.r[i] = problem.modes[i].error_n
+        end
+    elseif mode == "dirichlet"
+        for i in 1:n
+            problem.state.opt.J[i, :] = f(problem.modes[i].δσ)
+            problem.state.opt.r[i] = problem.modes[i].error_d
+        end
+    elseif mode == "mixed"
+        for i in 1:n
+            problem.state.opt.J[i, :] = f(problem.modes[i].δσ)
+            problem.state.opt.r[i] = problem.modes[i].error_m
+        end
     end
 end
 

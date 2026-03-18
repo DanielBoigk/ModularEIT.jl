@@ -5,6 +5,9 @@ export FerriteEITModeN
 export state_adjoint_step_dirichlet_cg!
 export objective_dirichlet_cg!
 export gradient_dirichlet_cg!
+export state_adjoint_step_dirichlet_init!
+export gradient_dirichlet_init!
+export objective_dirichlet_init!
 
 """
     FerriteEITModeD(g::AbstractVector, f::AbstractVector, fe::FerriteFESpace)
@@ -69,7 +72,19 @@ function objective_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, 
     mode.error_d = d(mode.b, mode.g)
     return mode.error_d
 end
-
+function objective_dirichlet_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    d = sol.d
+    ∂d = sol.∂d
+    L = sol.LD_fac
+    down = fe.down
+    up = fe.up
+    # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : u = f
+    mode.u_f .= L \ mode.F
+    # Normalize
+    mean_boundary!(mode.u_f, mode, down)
+    mode.error_d = d(mode.b, mode.g)
+    return mode.error_d
+end
 """
     gradient_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
 
@@ -108,7 +123,21 @@ function gradient_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, f
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_f)
     return mode.δσ
 end
+function gradient_dirichlet_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    d = sol.d
+    ∂d = sol.∂d
+    L = sol.LD_fac
+    down = fe.down
+    up = fe.up
 
+    mode.λrhs = up(∂d(mode.b, mode.g))
+    mean_boundary!(mode.λrhs, mode, down)
+    # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
+    mode.λ .= L \ mode.λrhs
+    # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
+    mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_f)
+    return mode.δσ
+end
 """
     state_adjoint_step_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
 
@@ -128,5 +157,10 @@ Tuple `(δσ, error_d)` — the conductivity gradient and the data misfit value.
 function state_adjoint_step_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
     objective_dirichlet_cg!(mode, sol, fe, maxiter)
     gradient_dirichlet_cg!(mode, sol, fe, maxiter)
+    return mode.δσ, mode.error_d
+end
+function state_adjoint_step_dirichlet_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    objective_dirichlet_init!(mode, sol, fe, maxiter)
+    gradient_dirichlet_init!(mode, sol, fe, maxiter)
     return mode.δσ, mode.error_d
 end

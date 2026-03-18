@@ -6,7 +6,9 @@ export FerriteEITModeM
 export state_adjoint_step_mixed_cg!
 export objective_mixed_cg!
 export gradient_mixed_cg!
-
+export objective_mixed_init!
+export gradient_mixed_init!
+export state_adjoint_step_mixed_init!
 
 
 """
@@ -62,7 +64,11 @@ function state_adjoint_step_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverSt
     gradient_mixed_cg!(mode, sol, fe, maxiter)
     return mode.δσ, mode.error_m
 end
-
+function state_adjoint_step_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    objective_mixed_init!(mode, sol, fe, maxiter)
+    gradient_mixed_init!(mode, sol, fe, maxiter)
+    return mode.δσ, mode.error_m
+end
 
 """
     objective_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
@@ -104,6 +110,18 @@ function objective_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::
     return mode.error_m
 end
 
+function objective_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    n = sol.n
+    # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : u = f
+    objective_dirichlet_init!(mode, sol, fe)
+    # We solve the state equation ∇⋅(σ∇uᵢ) = 0 : σ∂u/∂𝐧 = g
+    objective_neumann_init!(mode, sol, fe)
+
+    mode.w = mode.u_f - mode.u_g
+    mode.error_m = n(mode.w)
+    return mode.error_m
+end
+
 
 """
     gradient_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace; maxiter=500)
@@ -137,6 +155,19 @@ function gradient_mixed_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::F
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = ∂n(w)
     cg!(mode.λ, Ln, mode.λrhs; maxiter=maxiter)
     # Calculate ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
+    mode.δσ = -calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
+    return mode.δσ
+end
+
+function gradient_mixed_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+    L = sol.L_fac
+    ∂n = sol.∂n
+    # This one needs to normalize:
+    mode.λrhs = ∂n(mode.w)
+    mode.λrhs .-= mean(mode.λrhs)
+    # We solve the adjoint equation ∇⋅(σ∇λᵢ) = ∂n(w)
+    mode.λ = L \ mode.λrhs
+    # Calculate ∇(uᵢ)⋅∇(λᵢ) here:
+    mode.δσ = -calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.w)
     return mode.δσ
 end

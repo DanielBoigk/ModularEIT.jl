@@ -9,6 +9,9 @@ export assemble_L!, assemble_L
 export to_dirichlet, to_dirichlet!
 export build_projection_matrix, assemble_coupling_mass, assemble_coupling_mass!
 
+# Possible performance improvements:
+# additional preallocation structs for Me, and other assembler arrays
+
 # This is the mass matrix: ∫(u*v)dΩ
 # Used for calculating L² distance
 # Also used for Tikhonov L² regularization
@@ -152,7 +155,9 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ, ϵ=1e-12)
         assemble!(assembler, celldofs(cell), Le)
     end
     if ϵ ≠ 0.0
-        L += ϵ * I
+        for i in 1:size(L, 1)
+            L[i, i] += ϵ
+        end
     end
     return L
 end
@@ -183,7 +188,9 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, 
         assemble!(assembler, celldofs(cell), Le)
     end
     if ϵ ≠ 0.0
-        L += ϵ * I
+        for i in 1:size(L, 1)
+            L[i, i] += ϵ
+        end
     end
     return L
 end
@@ -276,7 +283,7 @@ function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace
         cellid = cell.cellid
 
         coarse_dofs = celldofs(dh_coarse, cellid)
-        fine_dofs   = celldofs(dh_fine,   cellid)
+        fine_dofs = celldofs(dh_fine, cellid)
 
         assemble!(assembler, coarse_dofs, fine_dofs, Be)
         #=for i in 1:length(coarse_dofs)

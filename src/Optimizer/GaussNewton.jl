@@ -9,15 +9,15 @@ mutable struct GaussNewtonState
     δ::AbstractVector
     M::LinearMaps.WrappedMap
 end
-function GaussNewtonState(n::Int64,k::Int64) # Just some default constructor
-    J = zeros(k,n)
+function GaussNewtonState(n::Int64, k::Int64) # Just some default constructor
+    J = zeros(k, n)
     r = zeros(k)
     δ = zeros(n)
     M = LinearMap(spdiagm(ones(n)))
-    GaussNewtonState(J,r,δ,M)
+    GaussNewtonState(J, r, δ, M)
 end
 
-function gauss_newton_cg!(gns::GaussNewtonState, λ::Float64 = 1e-3, maxiter = 500)
+function gauss_newton_cg!(gns::GaussNewtonState, λ::Float64=1e-3, maxiter=500)
     J = gns.J
     r = gns.r
     M = gns.M
@@ -28,7 +28,7 @@ function gauss_newton_cg!(gns::GaussNewtonState, λ::Float64 = 1e-3, maxiter = 5
         A_map = J_map' * J_map
     end
     b = -(J' * r)
-    cg!(gns.δ, A_map, b; maxiter = maxiter)
+    cg!(gns.δ, A_map, b; maxiter=maxiter)
     gns.δ
 end
 # for reference with svd but only with Levenberg Marquardt
@@ -52,7 +52,7 @@ function gauss_newton_svd!(gns::GaussNewtonState, λ::Float64=1e-3)
     end
     gns.δ = -V * (Σ_damped .* (U' * r))
 end
-function update_M!(gns::GaussNewtonState, regularizers::Tuple{Float64, <:AbstractMatrix}...)
+function update_M!(gns::GaussNewtonState, regularizers::Tuple{Float64,<:AbstractMatrix}...)
     if isempty(regularizers)
         # Handle case with no regularizers, e.g., set M to a zero map
         n = size(gns.J, 2)
