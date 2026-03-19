@@ -69,12 +69,12 @@ using Enzyme
 
     # we wrap the function for use in LBFGS:
 
-    #f, ∂f = create_f∂f(prblm, 24; regularize=false, gn=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 24; regularize=false, gn=false)  # Reduced from 255 to 19
     # I think this is incorrect atleast it produces nonsense:
     #f, ∂f = create_f∂f(prblm, 10; regularize=false, gn=false, mode="mixed", obj=objective_mixed_init!, grad=gradient_mixed_init!)
 
 
-    #f, ∂f = create_f∂f(prblm, 10; regularize=false, gn=false, mode="dirichlet", obj=objective_dirichlet_init!, grad=gradient_dirichlet_init!)
+    #f, ∂f = create_f∂f(prblm, 24; regularize=false, gn=false, mode="dirichlet", obj=objective_dirichlet_init!, grad=gradient_dirichlet_init!)
 
 
     # Now we solve the problem:

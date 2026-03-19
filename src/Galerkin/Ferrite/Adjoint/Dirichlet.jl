@@ -69,6 +69,7 @@ function objective_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, 
     cg!(mode.u_f, L, mode.F; maxiter=maxiter)
     # Normalize
     mean_boundary!(mode.u_f, mode, down)
+    mode.b .= down(sol.L * mode.u_f)
     mode.error_d = d(mode.b, mode.g)
     return mode.error_d
 end
@@ -82,6 +83,7 @@ function objective_dirichlet_init!(mode::FerriteEITMode, sol::FerriteSolverState
     mode.u_f .= L \ mode.F
     # Normalize
     mean_boundary!(mode.u_f, mode, down)
+    mode.b .= down(sol.L * mode.u_f)
     mode.error_d = d(mode.b, mode.g)
     return mode.error_d
 end
@@ -117,7 +119,7 @@ function gradient_dirichlet_cg!(mode::FerriteEITMode, sol::FerriteSolverState, f
 
     mode.λrhs = up(∂d(mode.b, mode.g))
     mean_boundary!(mode.λrhs, mode, down)
-    # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
+    # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : λ = ∂ₓd(u,f)
     cg!(mode.λ, L, mode.λrhs; maxiter=maxiter)
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_f)
@@ -130,9 +132,9 @@ function gradient_dirichlet_init!(mode::FerriteEITMode, sol::FerriteSolverState,
     down = fe.down
     up = fe.up
 
-    mode.λrhs = up(∂d(mode.b, mode.g))
+    mode.λrhs .= up(∂d(mode.b, mode.g))
     mean_boundary!(mode.λrhs, mode, down)
-    # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
+    # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : λ = ∂ₓd(u,f)
     mode.λ .= L \ mode.λrhs
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
     mode.δσ = calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_f)

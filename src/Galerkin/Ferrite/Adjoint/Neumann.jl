@@ -141,7 +141,7 @@ function gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe:
     L = sol.L
     down = fe.down
     up = fe.up
-    mode.λrhs = up(∂d(mode.b, mode.f))
+    mode.λrhs .= up(∂d(mode.b, mode.f))
     mean_boundary!(mode.λrhs, mode, down)
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
     cg!(mode.λ, L, mode.λrhs; maxiter=maxiter)
@@ -158,7 +158,7 @@ function gradient_neumann_init!(mode::FerriteEITMode, sol::FerriteSolverState, f
     L = sol.L_fac
     down = fe.down
     up = fe.up
-    mode.λrhs = up(∂d(mode.b, mode.f))
+    mode.λrhs .= up(∂d(mode.b, mode.f))
     mean_boundary!(mode.λrhs, mode, down)
     # We solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
     mode.λ = L \ mode.λrhs
