@@ -2,28 +2,28 @@
 
 This is a Julia library for electrical impedance tomography similar in spirit to [PyEIT](https://github.com/eitcom/pyEIT) or [EIDORS](https://eidors3d.sourceforge.net/).
 This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem.github.io/Ferrite.jl/stable/)although one can plug in other Galerkin methods as solvers. Currently this project is still under construction although  multiple things work already. Planned features:
-- [ ] Integration with Machine Learning library Lux.jl
-	- [ ] Support for DiffEqFlux.jl
+- [x] Integration with Machine Learning library Lux.jl
 	- [ ] Learned Regularizers
 	- [ ] Learned Metrics
 - [ ]  Documentation
 - [ ] Various Optimizers:
-	- [ ] Gauss-Newton
-	- [ ] L-BFGS
+	- [x] Gauss-Newton
+	- [x] L-BFGS
 	- [ ] Proximal Gauss-Newton
 	- [ ] ...
 - [ ] Galerkin methods:
-	- [ ] Ferrite.jl
+	- [x] Ferrite.jl
 	- [ ] GalerkinToolkit/Gridap
 	- [ ] AppoxFun
 - [ ] Adaptive Meshing
 - [ ] Autodiff
-	- [ ] for metrics/regularizers
-	- [ ] 
+	- [x] for metrics/regularizers
+	- [ ] of full objective 
 - [ ] Performance optimization:
-	- [ ] Multithreading
+	- [x] Multithreading
 		- [ ] On GPU
-	- [ ] DeviceAgnostic (i.e. Reactant)
+		- [ ] DeviceAgnostic (i.e. Reactant)
+- [ ] Performance optimizations 
 
 This is supposed to be very modular, so just plugin other (pseudo) metrics/loss maps, regularizers, optimizers, ... and run with it.
 
