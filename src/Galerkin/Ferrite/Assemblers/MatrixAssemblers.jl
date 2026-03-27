@@ -9,6 +9,16 @@ export assemble_L!, assemble_L
 export to_dirichlet, to_dirichlet!
 export build_projection_matrix, assemble_coupling_mass, assemble_coupling_mass!
 
+function get_factorized(M::AbstractMatrix)
+    try
+        return factorize(M)
+    catch e
+        return lu(M)
+    else
+        rethrow(e)
+    end
+end
+
 # Possible performance improvements:
 # additional preallocation structs for Me, and other assembler arrays
 
@@ -36,7 +46,9 @@ function assemble_M!(M::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
         end
         assemble!(assembler, celldofs(cell), Me)
     end
-    return M, cholesky(M)
+    M_Fac = get_factorized(M)
+
+    return M, M_Fac
 end
 
 function assemble_M!(M::AbstractMatrix, fe::FerriteFESpace)
@@ -78,7 +90,7 @@ function assemble_K!(K::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
         end
         assemble!(assembler, celldofs(cell), Ke)
     end
-    return K, factorize(K) # Cholesky decomposition might fail
+    return K, get_factorized(K) # Cholesky decomposition might fail
 end
 function assemble_K!(K::AbstractMatrix, fe::FerriteFESpace)
     cellvalues = fe.cellvalues

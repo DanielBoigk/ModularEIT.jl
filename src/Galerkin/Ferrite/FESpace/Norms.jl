@@ -117,7 +117,7 @@ function huber_norm_smooth_isotropic(grad::AbstractVector, δ::Real)
     return (sqrt(gnorm^2 + δ^2) - δ)
 end
 function huber_norm_smooth_anisotropic(grad::AbstractVector, δ::Real)
-    return (sqrt(g^2 + δ^2) - δ)
+    return (sqrt(grad^2 + δ^2) - δ)
 end
 
 function huber_smooth_val_grad_hess(g::AbstractVector, δ::Real)
@@ -263,7 +263,7 @@ Gradients or Hessians with respect to `a` can be obtained using **Enzyme.jl**:
 function normTV_diff(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, ndims::Int64; ε::Float64=1e-6, huber=huber_norm_smooth_isotropic)
     n_basefuncs = getnbasefunctions(cellvalues)
     qpoints = getnquadpoints(cellvalues)
-    total_residual = 0.0
+    total_residual = zero(eltype(a))
     for cell in CellIterator(dh)
         dofs = celldofs(cell)
         reinit!(cellvalues, cell)

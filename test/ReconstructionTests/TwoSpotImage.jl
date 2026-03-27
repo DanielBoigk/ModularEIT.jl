@@ -9,9 +9,13 @@ using Enzyme
 @testset "Reconstruction Two Spot Image LBFGS" begin
     println("Starting Reconstruction Two Spot Image LBFGS test")
     n = 63
-    grid = generate_grid(Quadrilateral, (n, n))
+    grid = generate_grid(Triangle, (n, n))
+    #grid = generate_grid(Quadrilateral, (n, n))
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
-    fe = FerriteFESpace{RefQuadrilateral}(grid, 2, 3, ∂Ω)
+
+    println("Type of ∂Ω: $(typeof(∂Ω))")
+    fe = FerriteFESpace{RefTriangle}(grid, 2, 3, ∂Ω)
+    #fe = FerriteFESpace{RefQuadrilateral}(grid, 2, 3, ∂Ω)
     img = load("SolverTests/Reference2Spot.jpg")
     itp = interpolate_array_2D(Float64.(img))
     cond_vec = project_function_to_fem(fe, itp)
@@ -58,18 +62,21 @@ using Enzyme
     # We set the regularizer:
     grad_normH1sq(fe, a) = 2 * fe.K * a
     TikhonovReg = (x) -> normH1sq(prblm.fe, x)
-    ∇Tkhnv = (x) -> grad_normH1sq(prblm.fe, x)
+    ∇Tkhnv = (x) -> -grad_normH1sq(prblm.fe, x)
     add_diff_Regularizer!(prblm.state, TikhonovReg, nothing, ∇Tkhnv)
 
-    # TV = (x) -> normTV_diff(prblm.fe, x)
+    # TV = (x) -> normTV_diff(prblm.fe, x) # Huber smoothed TV
+    # TV = (x) -> normTV # This is the non differentiable TV
+    # add huber smoothed gradient for TV:
+    # ∇TV = (x) -> ∇normTV_diff(prblm.fe, x)
     # add_diff_Regularizer!(prblm.state, TV, nothing, ∇TV)
 
-    prblm.state.opt.β_diff = 1e-4
+    prblm.state.opt.β_diff = 1e-2
 
 
     # we wrap the function for use in LBFGS:
 
-    f, ∂f = create_f∂f(prblm, 24; regularize=false, gn=false)  # Reduced from 255 to 19
+    f, ∂f = create_f∂f(prblm, 100; regularize=false, gn=false)  # Reduced from 255 to 19
     # I think this is incorrect atleast it produces nonsense:
     #f, ∂f = create_f∂f(prblm, 10; regularize=false, gn=false, mode="mixed", obj=objective_mixed_init!, grad=gradient_mixed_init!)
 
@@ -81,7 +88,7 @@ using Enzyme
     println("Starting LBFGS:")
     # LBFGS expects descent direction (negative gradient), so negate ∂f
     descent_dir(x) = ∂f(x)
-    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=20)
+    solution = lbfgs_b(f, descent_dir, copy(σ_vec); m=10, tol=1e-6, maxiter=30)
 
     starting_error = norm(σ_vec - cond_vec)
     total_error = norm(solution - cond_vec)

@@ -60,7 +60,7 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         solve_modes!(prblm, num_modes, obj)
 
         collect_r!(prblm, num_modes, mode=mode)
-        prblm.state.error = sum(prblm.state.opt.r)
+        prblm.state.error = sum(prblm.state.opt.r) #/ num_modes
         if regularize
             prblm.state.error += prblm.state.opt.β_diff * prblm.state.R_diff(prblm.state.σ)
         end
