@@ -9,13 +9,13 @@ using Enzyme
 @testset "Reconstruction Two Spot Image LBFGS" begin
     println("Starting Reconstruction Two Spot Image LBFGS test")
     n = 63
-    grid = generate_grid(Triangle, (n, n))
-    #grid = generate_grid(Quadrilateral, (n, n))
+    #grid = generate_grid(Triangle, (n, n))
+    grid = generate_grid(Quadrilateral, (n, n))
     ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
 
     println("Type of ∂Ω: $(typeof(∂Ω))")
-    fe = FerriteFESpace{RefTriangle}(grid, 2, 3, ∂Ω)
-    #fe = FerriteFESpace{RefQuadrilateral}(grid, 2, 3, ∂Ω)
+    #fe = FerriteFESpace{RefTriangle}(grid, 2, 3, ∂Ω)
+    fe = FerriteFESpace{RefQuadrilateral}(grid, 2, 3, ∂Ω)
     img = load("SolverTests/Reference2Spot.jpg")
     itp = interpolate_array_2D(Float64.(img))
     cond_vec = project_function_to_fem(fe, itp)

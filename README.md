@@ -115,7 +115,10 @@ For easy use with other optimizers one can wrap the problem to get the objective
 ``` 
 f, ∂f = create_f∂f(prblm, 100; regularize=false, gn=false)
 ```
-
+Here one can also specify which solver should be used:
+```
+f, ∂f = create_f∂f(prblm, 10; regularize=false, gn=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!)
+```
 This can then be solved with some optimization algorithm, like: 
 ```
 solution = lbfgs_b(f, ∂f, σ_vec; m=10, tol=1e-6, maxiter=30)
