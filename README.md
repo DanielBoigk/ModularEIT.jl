@@ -1,4 +1,4 @@
-# ModularEIT.jl
+# ModularEIT.jl (Under Development)
 
 This is a Julia library for electrical impedance tomography similar in spirit to [PyEIT](https://github.com/eitcom/pyEIT) or [EIDORS](https://eidors3d.sourceforge.net/).
 This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem.github.io/Ferrite.jl/stable/)although one can plug in other Galerkin methods as solvers. Currently this project is still under construction although  multiple things work already. Planned features:
