@@ -42,7 +42,7 @@ Example
 Note: The `gn` (Gauss–Newton) flag is included in the signature for future behavior changes but is ignored by the current code.
 
 """
-function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!)
+function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!, returnJr::Bool = false)
     # Flag to force computation on first call to avoid returning sentinel value
     first_call = Ref(true)
 
@@ -60,6 +60,9 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         solve_modes!(prblm, num_modes, obj)
 
         collect_r!(prblm, num_modes, mode=mode)
+        if returnJr
+            return prblm.state.opt.r
+        end
         prblm.state.error = sum(prblm.state.opt.r) #/ num_modes
         if regularize
             prblm.state.error += prblm.state.opt.β_diff * prblm.state.R_diff(prblm.state.σ)
@@ -78,6 +81,9 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
         fill!(prblm.state.δ, 0.0)
         solve_modes!(prblm, num_modes, grad)
         collect_J!(prblm, num_modes)
+        if returnJr
+            return prblm.state.opt.J
+        end
         if gn
             gauss_newton(prblm.state.opt)
             prblm.state.δ = copy(prblm.state.opt.δ)
