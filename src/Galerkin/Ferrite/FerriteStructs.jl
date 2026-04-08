@@ -38,6 +38,7 @@ mutable struct FerriteOptState <: GalerkinOptState
     λ::Float64 # Levenberg-Marquardt parameter
     L::Union{AbstractMatrix,Nothing,LinearMap} # Regularization matrix
     δ::AbstractVector # Proposed update to `σ`
+    ∇R::Union{AbstractMatrix,Nothing} #Gradient from Regularizer
 end
 
 """
