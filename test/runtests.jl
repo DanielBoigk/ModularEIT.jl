@@ -16,6 +16,8 @@ qr_order = 5
 
 fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
 
+# Load from .msh file and mesh with Triangular
+
 @testset "ModularEIT.jl" begin
     # Write your tests here.
 

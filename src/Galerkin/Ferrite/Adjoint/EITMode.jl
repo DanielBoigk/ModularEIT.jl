@@ -164,3 +164,25 @@ function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     out, num_modes
 end
 =#
+
+# For later use:
+
+
+function mean_nonzero!(x::AbstractVector)
+    s = zero(eltype(x))
+    n = 0
+    @inbounds for xi in x
+        if xi != 0
+            s += xi
+            n += 1
+        end
+    end
+    n == 0 && return x  # nothing to do
+    μ = s / n
+    @inbounds for i in eachindex(x)
+        if x[i] != 0
+            x[i] -= μ
+        end
+    end
+    return x
+end

@@ -34,6 +34,7 @@ function gauss_newton_lm_cg!(opt::GalerkinOptState, maxiter=500)
     L = opt.L
     λ = opt.λ
     δ = opt.δ
+    β = opt.β_diff
     J_map = LinearMap(J)
     if λ ≠ 0.0
         A_map = J_map' * J_map + λ * L

@@ -39,6 +39,9 @@ mutable struct FerriteOptState <: GalerkinOptState
     L::Union{AbstractMatrix,Nothing,LinearMap} # Regularization matrix
     δ::AbstractVector # Proposed update to `σ`
     ∇R::Union{AbstractMatrix,Nothing} #Gradient from Regularizer
+    x::Union{AbstractVector,Nothing} # Variable for prox scheme
+    y::Union{AbstractVector,Nothing} # Regularizer variable for prox scheme
+    u::Union{AbstractVector,Nothing} # Dual variable for prox scheme
 end
 
 """
