@@ -167,7 +167,7 @@ end
 
 # For later use:
 
-
+# Only to be applied to the g or G vector! (or f, F is also ok)
 function mean_nonzero!(x::AbstractVector)
     s = zero(eltype(x))
     n = 0
