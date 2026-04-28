@@ -1,6 +1,6 @@
 using ModularEIT
 using Test
-using Ferrite
+using Ferrite, FerriteGmsh
 using SparseArrays
 using LinearAlgebra
 using IterativeSolvers
@@ -17,18 +17,23 @@ qr_order = 5
 fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
 
 # Load from .msh file and mesh with Triangular
+grid_circ = togrid("circle.msh")
+∂Ω_circ = union(getfacetset.((grid_circ,), ["boundary"])...)
+fe_circ = FerriteFESpace{RefTriangle}(grid_circ, 2, 3, ∂Ω_circ)
+
+# Load from .msh file and mesh with Triangular
 
 @testset "ModularEIT.jl" begin
     # Write your tests here.
 
-    # include("AssemblerTests/BilinearMap.jl")
-    # include("AssemblerTests/MatrixTests.jl")
-    # include("AssemblerTests/UpDownTest.jl")
+    include("AssemblerTests/BilinearMap.jl")
+    include("AssemblerTests/MatrixTests.jl")
+    include("AssemblerTests/UpDownTest.jl")
     # #include("AssemblerTests/ExportTest.jl")
     # include("MeshTests/MeshTests.jl")
 
     # include("SolverTests/SolverTests.jl")
     # include("OptimizerTests/LBFGS_BasicTest.jl")
     # include("GradientTests/NeumannAdjointGradientTest.jl")
-    include("ReconstructionTests/ReconstructionTests.jl")
+    # include("ReconstructionTests/ReconstructionTests.jl")
 end

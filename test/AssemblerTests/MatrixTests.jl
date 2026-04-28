@@ -11,6 +11,7 @@ using ModularEIT
 @testset "Matrix Tests" begin
     #we just take some sample conductivity function:
     conductivity = (x) -> 1.1 + sin(x[1]) * cos(x[2])
+    @testset "Quadrilateral" begin
     # project the conductivity function to the finite element space
     cond_vec = project_function_to_fem(fe, conductivity)
 
@@ -30,7 +31,30 @@ using ModularEIT
     Matrix_norm = norm(KD_vec - KD_func)
     println("Norm of Matrix difference: ", Matrix_norm)
     @test Matrix_norm < 10.0
+     
+    end
 
+    @testset "Quadrilateral" begin
+        # project the conductivity function to the finite element space
+        cond_vec = project_function_to_fem(fe_circ, conductivity)
 
+        # assemble the stiffness matrix from the conductivity function
+        KN_func = assemble_L(fe_circ, conductivity)
+        KN_vec = assemble_L(fe_circ, cond_vec)
+        # convert to Dirichlet matrix
+        KD_func = to_dirichlet(KN_func, fe_circ)
+        KD_vec = to_dirichlet(KN_vec, fe_circ)
+
+        # Implement a sanity check if the two matrices assembled from the function and the vector are roughly the same (use relatively coarse ≈ )
+        Matrix_norm = norm(KN_vec - KN_func)
+        println("Norm of Matrix difference: ", Matrix_norm)
+        @test Matrix_norm < 10.0
+
+        # Implement a sanity check if the two matrices assembled from the function and the vector are roughly the same (use relatively coarse ≈ )
+        Matrix_norm = norm(KD_vec - KD_func)
+        println("Norm of Matrix difference: ", Matrix_norm)
+        @test Matrix_norm < 10.0
+        
+    end
     # Define boundary
 end

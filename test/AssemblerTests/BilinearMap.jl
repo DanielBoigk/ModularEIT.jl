@@ -23,14 +23,26 @@ using Ferrite, ModularEIT, Test, TypedPolynomials, SparseArrays, LinearAlgebra
     q_func = get_func(q)
     r_func = get_func(r)
 
+    @testset "Quadilateral" begin
+        p_vec = ModularEIT.project_function_to_fem(fe, p_func)
+        q_vec = ModularEIT.project_function_to_fem(fe, q_func)
+        r_vec = ModularEIT.project_function_to_fem(fe, r_func)
 
-    p_vec = ModularEIT.project_function_to_fem(fe, p_func)
-    q_vec = ModularEIT.project_function_to_fem(fe, q_func)
-    r_vec = ModularEIT.project_function_to_fem(fe, r_func)
+        r_test = calculate_bilinear_map(fe, p_vec, q_vec)
 
-    r_test = calculate_bilinear_map(fe, p_vec, q_vec)
+        norm_of_vec = norm(r_test - r_vec)
+        @test norm_of_vec < 1e-9
+    end
 
-    norm_of_vec = norm(r_test - r_vec)
-    @test norm_of_vec < 1e-9
+    # Do again for other mesh
+    @testset "CustomTriangle" begin
+        p_vec = ModularEIT.project_function_to_fem(fe_circ, p_func)
+        q_vec = ModularEIT.project_function_to_fem(fe_circ, q_func)
+        r_vec = ModularEIT.project_function_to_fem(fe_circ, r_func)
 
+        r_test = calculate_bilinear_map(fe_circ, p_vec, q_vec)
+
+        norm_of_vec = norm(r_test - r_vec)
+        @test norm_of_vec < 1e-9
+    end
 end
