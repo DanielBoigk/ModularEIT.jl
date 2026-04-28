@@ -19,7 +19,7 @@ fe = FerriteFESpace{RefQuadrilateral}(grid, order, qr_order, ∂Ω)
 # Load from .msh file and mesh with Triangular
 grid_circ = togrid("circle.msh")
 ∂Ω_circ = union(getfacetset.((grid_circ,), ["boundary"])...)
-fe_circ = FerriteFESpace{RefTriangle}(grid_circ, 2, 3, ∂Ω_circ)
+fe_circ = FerriteFESpace{RefTriangle}(grid_circ, order, qr_order, ∂Ω_circ)
 
 # Load from .msh file and mesh with Triangular
 
