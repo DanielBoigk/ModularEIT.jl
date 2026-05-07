@@ -5,7 +5,7 @@
 
 using Optim, LineSearches
 
-# Idea: later forthe line search we
+# Idea: later for the line search we
 function determine_box(σ::AbstractVector, δ::AbstractVector, max::Number=1)
     σ_mean = Statistics.mean(σ)
     δ_mean = Statistics.mean(δ)
@@ -19,9 +19,3 @@ function determine_box(σ::AbstractVector, δ::AbstractVector, max::Number=1)
     τ_min, τ_max
 end
 
-function linesearch(f,σ::AbstractVector, δ::AbstractVector ; prev=zeros(n), )
-    τ_min, τ_max = determine_box(σ,δ)
-    prev = max(τ_min, min(τ_max, prev))
-    τ = Optim.optimize(f, [τ_min, τ_max], method = )
-    return τ
-end

@@ -1,4 +1,4 @@
-export create_f∂f
+export create_f∂f, create_proxf
 
 """
 create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false)
@@ -42,7 +42,7 @@ Example
 Note: The `gn` (Gauss–Newton) flag is included in the signature for future behavior changes but is ignored by the current code.
 
 """
-function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!)
+function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!)
     # Flag to force computation on first call to avoid returning sentinel value
     first_call = Ref(true)
 
@@ -61,9 +61,6 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
 
         collect_r!(prblm, num_modes, mode=mode)
         prblm.state.error = sum(prblm.state.opt.r) #/ num_modes
-        if regularize
-            prblm.state.error += prblm.state.opt.β_diff * prblm.state.R_diff(prblm.state.σ)
-        end
         prblm.state.δ_updated = false
         return prblm.state.error
     end
@@ -87,10 +84,35 @@ function create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Boo
             # end
             prblm.state.δ = vec(sum(prblm.state.opt.J; dims=1))
         end
-        if regularize
-            prblm.state.δ .+= (prblm.state.opt.β_diff * prblm.state.∇R(prblm.state.σ))
-        end
         return copy(prblm.state.δ)
     end
     return f, ∂f
 end
+
+using Optim
+
+function create_proxf(f, ∂f)
+    prox_f = (x) -> begin
+        current_val = f(x)
+        direction = ∂f(x)
+        τ_min, τ_max = determine_box(x, direction)
+        
+        # Brent's method in Optim.jl takes a pure scalar function
+        opt_func = (τ) -> f(x + τ * direction)
+        
+        # optimize(f, lower, upper, method)
+        # Note: Brent() is the default for this syntax in Optim
+        results = optimize(opt_func, τ_min, τ_max, Brent())
+        
+        # Extract the scalar minimizer and the minimum value
+        best_τ = Optim.minimizer(results)
+        new_val = Optim.minimum(results)
+        
+        if new_val < current_val
+            return x + best_τ * direction
+        end
+        return x
+    end
+    return prox_f
+end
+

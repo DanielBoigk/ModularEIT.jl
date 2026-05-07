@@ -43,13 +43,19 @@ Import necessary libraries:
 using Ferrite
 using ModularEIT
 ```
-Generate or import some grid: 
+Generate a grid, define where the boundary is:
 ```
 grid = generate_grid(Quadrilateral, (127, 127))
-```
-Define where the boundary is: 
-```
 ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
+```
+Or load it from an existing file
+```
+using FerriteGmsh
+grid = togrid("path to .msh or .geo file")
+```
+define where the boundary is: 
+```
+∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"
 ```
 *Note:  I have no separate electron model defined yet. I assume that the boundary is the electrodes for now. Everything in the force vector outside the boundary nodes will be set to zero by default.*
 with that one can build the finite element space:
