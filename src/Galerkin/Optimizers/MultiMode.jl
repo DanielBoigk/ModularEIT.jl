@@ -1,13 +1,20 @@
 using Optimisers
 
 struct MultiMode{R <: Optimisers.AbstractRule} <: Optimisers.AbstractRule
-    modes::Dict{Int, Tuple{Bool, R}}  # Key: rule index, Value: (is_ready, rule)
+    modes::Vector{Tuple{Bool, R}}
 end
 
 function MultiMode(rules::Vector{<:Optimisers.AbstractRule})
-    modes = Dict{Int, Tuple{Bool, eltype(rules)}}()
+    modes = Vector{Tuple{Bool, eltype(rules)}}(undef,m)
     for (i, rule) in enumerate(rules)
         modes[i] = (true, rule)  # Initially, all rules are ready
+    end
+    return MultiMode{eltype(rules)}(modes)
+end
+function MultiMode(rule::<:Optimisers.AbstractRule, m::Int)
+    modes = Vector{Tuple{Bool, eltype(rules)}}(undef,m)
+    for i in 1:m
+        mode[i] = (true, rule)  # Initially, all rules are ready
     end
     return MultiMode{eltype(rules)}(modes)
 end

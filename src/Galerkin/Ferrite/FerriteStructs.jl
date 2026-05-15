@@ -38,6 +38,7 @@ mutable struct FerriteOptState <: GalerkinOptState
     λ::Float64 # Levenberg-Marquardt parameter
     L::Union{AbstractMatrix,Nothing,LinearMap} # Regularization matrix
     δ::AbstractVector # Proposed update to `σ`
+    num_nodes::Int # how many of the nodes are used for optimization.
     ∇R::Union{AbstractMatrix,Nothing} #Gradient from Regularizer
     x::Union{AbstractVector,Nothing} # Variable for prox scheme
     y::Union{AbstractVector,Nothing} # Regularizer variable for prox scheme

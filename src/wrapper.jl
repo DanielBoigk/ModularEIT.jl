@@ -1,4 +1,4 @@
-export create_f∂f, create_proxf
+export create_f∂f, create_prox_linesearch, create_proximal_gradient_step
 
 """
 create_f∂f(prblm, num_modes::Int=100; regularize::Bool=false, gn::Bool=false)
@@ -42,7 +42,7 @@ Example
 Note: The `gn` (Gauss–Newton) flag is included in the signature for future behavior changes but is ignored by the current code.
 
 """
-function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!)
+function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!, return_grads::Bool = false)
     # Flag to force computation on first call to avoid returning sentinel value
     first_call = Ref(true)
 
@@ -64,41 +64,58 @@ function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann",
         prblm.state.δ_updated = false
         return prblm.state.error
     end
-    ∂f = σ -> begin
-        σc = max.(σ, 1e-6)
-        if σc != prblm.state.σ
-            f(σc)
-        elseif prblm.state.δ_updated
+    if return_grads
+        ∂f = σ -> begin
+            σc = max.(σ, 1e-6)
+            if σc != prblm.state.σ
+                f(σc)
+            elseif prblm.state.δ_updated
+                return copy(prblm.state.δ)
+            end
+            prblm.state.δ_updated = true
+            fill!(prblm.state.δ, 0.0)
+            solve_modes!(prblm, num_modes, grad)
+            collect_J!(prblm, num_modes)
+            if gn
+                gauss_newton(prblm.state.opt)
+                prblm.state.δ = copy(prblm.state.opt.δ)
+            else
+                # for i in 1:num_modes
+                #     prblm.state.δ .-= prblm.modes[i].δσ
+                # end
+                prblm.state.δ = vec(sum(prblm.state.opt.J; dims=1))
+            end
             return copy(prblm.state.δ)
         end
-        prblm.state.δ_updated = true
-        fill!(prblm.state.δ, 0.0)
-        solve_modes!(prblm, num_modes, grad)
-        collect_J!(prblm, num_modes)
-        if gn
-            gauss_newton(prblm.state.opt)
-            prblm.state.δ = copy(prblm.state.opt.δ)
-        else
-            # for i in 1:num_modes
-            #     prblm.state.δ .-= prblm.modes[i].δσ
-            # end
-            prblm.state.δ = vec(sum(prblm.state.opt.J; dims=1))
+    else
+        ∂f = σ -> begin
+            σc = max.(σ, 1e-6)
+            if σc != prblm.state.σ
+                f(σc)
+            elseif prblm.state.δ_updated
+                return copy(prblm.state.δ)
+            end
+            prblm.state.δ_updated = true
+            fill!(prblm.state.δ, 0.0)
+            solve_modes!(prblm, num_modes, grad)
+            collect_J!(prblm, num_modes)
+
+            return copy(prblm.state.opt.J)
         end
-        return copy(prblm.state.δ)
     end
     return f, ∂f
 end
 
 using Optim
 
-function create_proxf(f, ∂f)
-    prox_f = (x) -> begin
+function create_prox_linesearch(f, ∂f; ρ::Number =0.0 ,λ::Number=1.0)
+    prox = (x) -> begin
         current_val = f(x)
         direction = ∂f(x)
         τ_min, τ_max = determine_box(x, direction)
         
         # Brent's method in Optim.jl takes a pure scalar function
-        opt_func = (τ) -> f(x + τ * direction)
+        opt_func = (τ) -> λ * f(x + τ * direction) + 0.5 * ρ * sum(abs2, τ*direction)
         
         # optimize(f, lower, upper, method)
         # Note: Brent() is the default for this syntax in Optim
@@ -109,10 +126,27 @@ function create_proxf(f, ∂f)
         new_val = Optim.minimum(results)
         
         if new_val < current_val
-            return x + best_τ * direction
+            return x + best_τ * direction, new_val
         end
-        return x
+        return x, current_val
     end
-    return prox_f
+    return prox
 end
 
+# Todo: Fix this function rewrite it as a Line search:
+export create_proximal_gradient_step
+function create_proximal_gradient_step(f, ∂f, ρ;λ::Number=1.0)
+    prox = v -> begin
+        if λ != 1.0
+            objective = x -> λ * f(x) + 0.5 * ρ * sum(abs2, x .- v)
+            gradient = x -> λ .* ∂f(x) .+ ρ .* (x .- v)
+        else
+            objective = x -> f(x) + 0.5 * ρ * sum(abs2, x .- v)
+            gradient = x -> ∂f(x) .+ ρ .* (x .- v)
+        end
+        # This is my own private version of box constrained lbfgs:
+        result = lbfgs_b(objective,gradient, v)
+        return result
+    end
+    return prox
+end
