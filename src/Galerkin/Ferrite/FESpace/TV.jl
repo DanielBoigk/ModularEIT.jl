@@ -48,7 +48,6 @@ function normTV(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, ndims
 
         end
     end
-
     return total_residual
 end
 
