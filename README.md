@@ -21,8 +21,8 @@ This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem
 	- [ ] Stochastic Gradient Langevin Dynamics
 - [ ] Galerkin methods:
 	- [x] Ferrite.jl
-    - [ ] Compilation of whole FEM routine with Reactant.jl
-    - [ ] Adaptive Meshing
+		- [ ] Compilation of whole FEM routine with Reactant.jl
+		- [ ] Adaptive Meshing
 	- [ ] GalerkinToolkit/Gridap
 	- [ ] ApproxFun
 	- [ ] FFTA
