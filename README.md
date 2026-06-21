@@ -1,36 +1,41 @@
 # ModularEIT.jl (Under Development)
 
 This is a Julia library for electrical impedance tomography similar in spirit to [PyEIT](https://github.com/eitcom/pyEIT) or [EIDORS](https://eidors3d.sourceforge.net/).
-This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem.github.io/Ferrite.jl/stable/)although one can plug in other Galerkin methods as solvers. Currently this project is still under construction although  multiple things work already. Planned features:
-- [x] Integration with Machine Learning library Lux.jl
-	- [ ] Learned Regularizers
-	- [ ] Learned Metrics
+This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem.github.io/Ferrite.jl/stable/)although  it is planned that one can plug in other Galerkin methods as solvers. Currently this project is still under construction although  multiple things work already. Planned features:
+- [x] Gauss-Newton to resolve Gradients
+- [x] Classical Regularizers:
+  - [x] Tikhonov
+  - [x] TV
+    - [x] Huber smoothed
+    - [ ] Chambolle-Pock
+- [ ] Learned regularizers
+  - [ ] via Diffusion Posteroir Sampling
+    - [ ] CNN trained as VP-SDE for quadrilateral grid.   
 - [ ]  Documentation
 - [ ] Various Optimizers:
-	- [x] Gauss-Newton
+	- [x] Line Search after Gradient
 	- [x] L-BFGS
-	- [ ] Proximal Gauss-Newton
-	- [ ] ...
+	- [x] Wrapper for Prox step
+	- [x] ADMM
+	- [x] Wrapper for Adam, RMSProp, nAdam, ...
+	- [ ] Stochastic Gradient Langevin Dynamics
 - [ ] Galerkin methods:
 	- [x] Ferrite.jl
+    - [ ] Compilation of whole FEM routine with Reactant.jl
+    - [ ] Adaptive Meshing
 	- [ ] GalerkinToolkit/Gridap
-	- [ ] AppoxFun
-- [ ] Adaptive Meshing
-- [ ] Autodiff
-	- [x] for metrics/regularizers
-	- [ ] of full objective 
-- [ ] Performance optimization:
-	- [x] Multithreading
-		- [ ] On GPU
-		- [ ] DeviceAgnostic (i.e. Reactant)
-- [ ] Performance optimizations 
+	- [ ] ApproxFun
+	- [ ] FFTA
+- [x] Helper functions for common domain shapes:
+  - [x] Rectangle
+  - [x] Circle 
 
 This is supposed to be very modular, so just plugin other (pseudo) metrics/loss maps, regularizers, optimizers, ... and run with it.
 
 ## How to use
 
 ### Installation:
-Make sure `gmsh` is installed on your system and added to `PATH`. (If you intend on using Gmsh)
+Make sure `gmsh` is installed on your system and added to `PATH`. (If you intend on using Gmsh else one can load)
 inside Julia run:
 `]activate`
 then 
