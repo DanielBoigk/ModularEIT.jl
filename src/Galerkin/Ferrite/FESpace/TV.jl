@@ -117,12 +117,12 @@ function normTV_diff(fe::FerriteFESpace, a::AbstractVector)
 end
 
 
-function assemble_huber_gradient(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, ndim::Int, ϵ::Float64=1e-6)
+function assemble_huber_gradient(a::AbstractVector, cellvalues::CellValues, dh::DofHandler, n::Int, ϵ::Float64=1e-6)
     n_basefuncs = getnbasefunctions(cellvalues)
     qpoints = getnquadpoints(cellvalues)
     
     # Initialize the global gradient vector
-    global_gradient = zeros(eltype(a), ndim)
+    global_gradient = zeros(eltype(a), n)
     
     # Local element residual vector
     re = zeros(eltype(a), n_basefuncs)
@@ -224,3 +224,6 @@ end
 function assemble_huber_hessian(fe::FerriteFESpace, a::AbstractVector, ϵ::Float64=1e-6)
     assemble_huber_hessian(a, fe.cellvalues, fe.dh, fe.n, ϵ)
 end
+
+include("ChambollePock/CP.jl")
+include("ChambollePock/Google.jl")

@@ -76,16 +76,8 @@ function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann",
             fill!(prblm.state.δ, 0.0)
             solve_modes!(prblm, num_modes, grad)
             collect_J!(prblm, num_modes)
-            if gn
-                gauss_newton(prblm.state.opt)
-                prblm.state.δ = copy(prblm.state.opt.δ)
-            else
-                # for i in 1:num_modes
-                #     prblm.state.δ .-= prblm.modes[i].δσ
-                # end
-                prblm.state.δ = vec(sum(prblm.state.opt.J; dims=1))
-            end
-            return copy(prblm.state.δ)
+
+            return copy(prblm.state.opt.J)
         end
     else
         ∂f = σ -> begin
@@ -99,8 +91,16 @@ function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann",
             fill!(prblm.state.δ, 0.0)
             solve_modes!(prblm, num_modes, grad)
             collect_J!(prblm, num_modes)
-
-            return copy(prblm.state.opt.J)
+            if gn
+                gauss_newton(prblm.state.opt)
+                prblm.state.δ = copy(prblm.state.opt.δ)
+            else
+                # for i in 1:num_modes
+                #     prblm.state.δ .-= prblm.modes[i].δσ
+                # end
+                prblm.state.δ = vec(sum(prblm.state.opt.J; dims=1))
+            end
+            return copy(prblm.state.δ)
         end
     end
     return f, ∂f
@@ -108,7 +108,7 @@ end
 
 using Optim
 
-function create_prox_linesearch(f, ∂f; ρ::Number =0.0 ,λ::Number=1.0)
+function create_prox_linesearch(f, ∂f, ρ::Number =0.0 ;λ::Number=1.0)
     prox = (x) -> begin
         current_val = f(x)
         direction = ∂f(x)
@@ -135,7 +135,7 @@ end
 
 # Todo: Fix this function rewrite it as a Line search:
 export create_proximal_gradient_step
-function create_proximal_gradient_step(f, ∂f, ρ;λ::Number=1.0)
+function create_proximal_gradient_step(f, ∂f, ρ;λ::Number=1.0, kwargs... )
     prox = v -> begin
         if λ != 1.0
             objective = x -> λ * f(x) + 0.5 * ρ * sum(abs2, x .- v)
@@ -145,7 +145,7 @@ function create_proximal_gradient_step(f, ∂f, ρ;λ::Number=1.0)
             gradient = x -> ∂f(x) .+ ρ .* (x .- v)
         end
         # This is my own private version of box constrained lbfgs:
-        result = lbfgs_b(objective,gradient, v)
+        result = lbfgs_b(objective,gradient, v; kwargs...)
         return result
     end
     return prox

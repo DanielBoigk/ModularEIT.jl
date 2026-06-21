@@ -58,6 +58,7 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
 end
 
 include("Norms.jl")
+include("Operators.jl")
 
 function calc_total_volume(dh::DofHandler, cellvalues::CellValues)
     total_volume = 0.0

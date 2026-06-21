@@ -34,12 +34,12 @@ function assemble_M!(M::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
     for cell in CellIterator(dh)
         fill!(Me, 0)
         reinit!(cellvalues, cell)
-        for q_point in 1:getnquadpoints(cellvalues)
-            dΩ = getdetJdV(cellvalues, q_point)
+        for q in 1:getnquadpoints(cellvalues)
+            dΩ = getdetJdV(cellvalues, q)
             for i in 1:n_basefuncs
-                φᵢ = shape_value(cellvalues, q_point, i)
+                φᵢ = shape_value(cellvalues, q, i)
                 for j in 1:n_basefuncs
-                    φⱼ = shape_value(cellvalues, q_point, j)
+                    φⱼ = shape_value(cellvalues, q, j)
                     Me[i, j] += φᵢ * φⱼ * dΩ
                 end
             end
@@ -78,12 +78,12 @@ function assemble_K!(K::AbstractMatrix, dh::DofHandler, cellvalues::CellValues)
     for cell in CellIterator(dh)
         fill!(Ke, 0)
         reinit!(cellvalues, cell)
-        for q_point in 1:getnquadpoints(cellvalues)
-            dΩ = getdetJdV(cellvalues, q_point)
+        for q in 1:getnquadpoints(cellvalues)
+            dΩ = getdetJdV(cellvalues, q)
             for i in 1:n_basefuncs
-                ∇v = shape_gradient(cellvalues, q_point, i)
+                ∇v = shape_gradient(cellvalues, q, i)
                 for j in 1:n_basefuncs
-                    ∇u = shape_gradient(cellvalues, q_point, j)
+                    ∇u = shape_gradient(cellvalues, q, j)
                     Ke[i, j] += (∇v ⋅ ∇u) * dΩ
                 end
             end
@@ -116,12 +116,12 @@ function assemble_K!(K::AbstractMatrix, fe::FerriteFESpace, ϵ::Float64)
     for cell in CellIterator(dh)
         fill!(Ke, 0)
         reinit!(cellvalues, cell)
-        for q_point in 1:getnquadpoints(cellvalues)
-            dΩ = getdetJdV(cellvalues, q_point)
+        for q in 1:getnquadpoints(cellvalues)
+            dΩ = getdetJdV(cellvalues, q)
             for i in 1:n_basefuncs
-                ∇v = shape_gradient(cellvalues, q_point, i)
+                ∇v = shape_gradient(cellvalues, q, i)
                 for j in 1:n_basefuncs
-                    ∇u = shape_gradient(cellvalues, q_point, j)
+                    ∇u = shape_gradient(cellvalues, q, j)
                     Ke[i, j] += (∇v ⋅ ∇u) * dΩ
                 end
             end
@@ -184,15 +184,14 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, 
     for cell in CellIterator(dh)
         fill!(Le, 0)
         reinit!(cellvalues, cell)
-        for q_point in 1:getnquadpoints(cellvalues)
-            dΩ = getdetJdV(cellvalues, q_point)
+        for q in 1:getnquadpoints(cellvalues)
+            dΩ = getdetJdV(cellvalues, q)
             γe = γ[celldofs(cell)] # (Edit) Could be done more efficiently by copying into preallocated array
-            σ = function_value(cellvalues, q_point, γe)
+            σ = function_value(cellvalues, q, γe)
             for i in 1:n_basefuncs
-                ∇v = shape_gradient(cellvalues, q_point, i)
-                #u = shape_value(cellvalues, q_point, i)
+                ∇v = shape_gradient(cellvalues, q, i)
                 for j in 1:n_basefuncs
-                    ∇u = shape_gradient(cellvalues, q_point, j)
+                    ∇u = shape_gradient(cellvalues, q, j)
                     Le[i, j] += σ * (∇v ⋅ ∇u) * dΩ
                 end
             end
@@ -280,12 +279,12 @@ function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace
         reinit!(cv_coarse, cell)
 
         # Assemble local coupling matrix
-        for q_point in 1:getnquadpoints(cv_fine)
-            dΩ = getdetJdV(cv_fine, q_point)
+        for q in 1:getnquadpoints(cv_fine)
+            dΩ = getdetJdV(cv_fine, q)
             for i in 1:n_basefuncs_coarse
-                φ_coarse = shape_value(cv_coarse, q_point, i)
+                φ_coarse = shape_value(cv_coarse, q, i)
                 for j in 1:n_basefuncs_fine
-                    φ_fine = shape_value(cv_fine, q_point, j)
+                    φ_fine = shape_value(cv_fine, q, j)
                     Be[i, j] += φ_coarse * φ_fine * dΩ
                 end
             end

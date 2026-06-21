@@ -135,7 +135,7 @@ then computes ∂J/∂σ = ∇u ⋅ ∇λ elementwise.
 # Returns
 `mode.δσ` — the computed gradient with respect to σ.
 """
-function gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+function gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500; get_gradient = calculate_bilinear_map!)
     d = sol.d
     ∂d = sol.∂d
     L = sol.L
@@ -147,12 +147,12 @@ function gradient_neumann_cg!(mode::FerriteEITMode, sol::FerriteSolverState, fe:
     cg!(mode.λ, L, mode.λrhs; maxiter=maxiter)
     mode.λ .-= Statistics.mean(mode.λ)
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = -calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
+    mode.δσ = - get_gradient(fe, mode.rhs, mode.λ, mode.u_g)
     return mode.δσ
 end
 
 
-function gradient_neumann_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500)
+function gradient_neumann_init!(mode::FerriteEITMode, sol::FerriteSolverState, fe::FerriteFESpace, maxiter=500; get_gradient = calculate_bilinear_map!)
     d = sol.d
     ∂d = sol.∂d
     L = sol.L_fac
@@ -164,7 +164,7 @@ function gradient_neumann_init!(mode::FerriteEITMode, sol::FerriteSolverState, f
     mode.λ = L \ mode.λrhs
     mode.λ .-= Statistics.mean(mode.λ)
     # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ) here:
-    mode.δσ = -calculate_bilinear_map!(fe, mode.rhs, mode.λ, mode.u_g)
+    mode.δσ = - get_gradient(fe, mode.rhs, mode.λ, mode.u_g)
     return mode.δσ
 end
 
