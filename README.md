@@ -35,7 +35,7 @@ This is supposed to be very modular, so just plugin other (pseudo) metrics/loss 
 ## How to use
 
 ### Installation:
-Make sure `gmsh` is installed on your system and added to `PATH`. (If you intend on using Gmsh else one can load)
+Make sure `gmsh` is installed on your system and added to `PATH`. (If you intend on using Gmsh)
 inside Julia run:
 `]activate`
 then 
