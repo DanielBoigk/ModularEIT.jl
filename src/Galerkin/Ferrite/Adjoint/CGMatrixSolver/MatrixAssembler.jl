@@ -12,6 +12,7 @@ end
 mutable struct MatrixAMG
     L # The matrix
     AMG # the Preconditioner
+    LMatrixAssembler # Assembler struct
 end
 
 #=
@@ -46,4 +47,9 @@ function assemble_L!(L::AbstractMatrix, fe::FerriteFESpace, γ::AbstractVector, 
         assemble!(assembler, celldofs(cell), Le)
     end
     return L
+end
+
+function assemble_L!(LAM::MatrixAMG,)
+
+
 end

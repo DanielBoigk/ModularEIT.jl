@@ -1,6 +1,6 @@
 using LinearAlgebra, Optimisers, LinearMaps, Ferrite
 
-# Idea: have a struct that has everything preallocated and solves CG with multiple vectors at once.
+# Idea: have a struct that has everything preallocated and block solves CG with multiple vectors at once.
 # Solve the State equation ∇⋅(σ∇uᵢ) = 0 : σ∂u/∂𝐧 = g
 # Solve the adjoint equation ∇⋅(σ∇λᵢ) = 0 : σ∂λ/∂𝐧 = ∂ₓd(u,f)
 # Calculate ∂J(σ,f,g)/∂σ = ∇(uᵢ)⋅∇(λᵢ)
@@ -15,8 +15,8 @@ mutable struct CGNeumannMatrix
     L₀::MatrixAMG
     L₁::MatrixAMG
     K_map #
-    b_map::AbstractArray # preconditioned righhandside state equation
-    λ_map::AbstractArray # preconditioned righthandside adjoint equation
+    u_rhs::AbstractArray # preconditioned righhandside state equation
+    λ_rhs::AbstractArray # preconditioned righthandside adjoint equation
 
     # Boundary data:
     F::Union{AbstractArray,Nothing} # This is the long vector for dirichlet boundary conditions
@@ -27,7 +27,7 @@ mutable struct CGNeumannMatrix
     # Helper arrays
     b::Union{AbstractArray,Nothing}
 
-    # State equation:
+    #### State equation: ##############################################
     u::AbstractArray
     r::AbstractVector # the residual
     error::Number # sum of residuals
@@ -43,20 +43,20 @@ mutable struct CGNeumannMatrix
 
     error_upd::Bool
 
-    # Adjoint equation:
+    #### Adjoint equation: ###########################################
     λ::AbstractArray
     λrhs::AbstractArray
     # For CG solve
     λ_x::Union{AbstractArray,Nothing}
     λ_r::Union{AbstractArray,Nothing}
     λ_p::Union{AbstractArray,Nothing}
-    λ_r²old::Number
-    λ_r²new::Number
+    λ_r²old::AbstractVector
+    λ_r²new::AbstractVector
     λ_Ap::Union{AbstractArray,Nothing}
-    λ_α::Number
+    λ_α::AbstractVector
 
 
-    # Functional derivative
+    #### Functional derivative ########################################
 
     rhs::AbstractArray # This is a preallocation for calculating the bilinear map
     J::AbstractArray
@@ -64,4 +64,10 @@ mutable struct CGNeumannMatrix
 
     # Stuff for optimization:
     rule::OptRule # State of ADAM, ADAGrad, RMSProp or whatever
+end
+
+
+function swap_matrices!(cgnm::CGNeumannMatrix)
+    cgnm.L₀, cgnm.L₁ = cgnm.L₁, cgnm.L₀
+    nothing
 end

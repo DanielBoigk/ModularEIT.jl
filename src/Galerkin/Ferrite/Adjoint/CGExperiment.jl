@@ -4,7 +4,7 @@
 # The CPU manages updates to σ and assembles a new matrix from the snapshot.
 # It should in theory be super fast. But the problem is that the adjoint state equation currently requires a Ferrite assembly loop to aquire: ∇(u) ⋅ ∇(λ) which doesn't play well with the GPU.
 
-using LinearAlgebra, Optimisers
+using LinearAlgebra, Optimisers, LinearMaps, Ferrite
 
 mutable struct CGNeumannEITMode{OptRule} where {OptRule<:Optimisers.AbstractRule}
     # Boundary data:
@@ -150,7 +150,7 @@ function ask_objective()
 
 end
 #
-function CG_state_step!(L::AbstractArray, mode::CGNeumannEITMode, fe::FerriteFESpace; update_r::Bool=false, update_err::Bool=false, mean_func! = mean_boundary!)
+function CG_state_step!(L::AbstractArray, mode::CGNeumannEITMode, fe::FerriteFESpace; update_r::Bool=false, update_err::Bool=false, (mean_func!)=mean_boundary!)
     d = sol.d
     ∂d = sol.∂d
     L = sol.L
