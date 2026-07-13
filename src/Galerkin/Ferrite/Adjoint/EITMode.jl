@@ -14,23 +14,53 @@ function mean_boundary!(vec, mode, down)
     vec .-= mean
 end
 
-function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K)
+function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K; σ_g::Number = 0.0, σ_f::Number = 0.0, normalize::Bool = true)
     if length(g_vec) == fe.n
         G = copy(g_vec)
         g = fe.down(G)
         mean_g = Statistics.mean(g)
         G .-= mean_g
         g .-= mean_g
+        if normalize
+            norm_g = norm(g)^2
+            G ./= norm_g
+            g ./= norm_g
+            mean_g = Statistics.mean(g)
+            G .-= mean_g
+            g .-= mean_g
+        end
+        if σ_g ≠ 0
+            rand_vec = σ_f * randn(fe.m)
+            rand_mean = Statistics.mean(rand_vec)
+            rand_vec .-= rand_mean
+            g .+= rand_vec
+            mean_g = Statistics.mean(g)
+            g .-= mean_g
+            G = fe.up(g)
+        end
         f = fe.down(K \ G)
     elseif length(g_vec) == fe.m
         g = copy(g_vec)
         mean_g = Statistics.mean(g)
         g .-= mean_g
+        if normalize
+            norm_g = norm(g)^2
+            g ./= norm_g
+            mean_g = Statistics.mean(g)
+            g .-= mean_g
+        end
         G = fe.up(g)
+
         f = fe.down(K \ G)
     end
     mean_f = Statistics.mean(f)
     f .-= mean_f
+    if σ_f ≠ 0.0
+        rand_vec = σ_f * randn(fe.m)
+        rand_mean = Statistics.mean(rand_vec)
+        rand_vec .-= rand_mean
+        f .+= rand_vec
+    end
     u = zeros(fe.n)
     u_g = zeros(fe.n)
     w = zeros(fe.n)

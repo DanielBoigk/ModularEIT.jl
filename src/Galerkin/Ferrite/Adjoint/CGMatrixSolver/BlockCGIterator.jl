@@ -8,9 +8,9 @@ n = rows of A, m = number of RHS columns.
 """
 struct BlockCGIterator{T,M<:AbstractMatrix{T},P}
     # Problem
-    A::M          # n×n system matrix (reference, not owned)
-    B::M          # n×m right-hand side (reference, not owned)
-    X::M          # n×m solution
+    #A::M          # n×n system matrix (reference, not owned)
+    #B::M          # n×m right-hand side (reference, not owned)
+    #X::M          # n×m solution
 
     # n×m working arrays
     R::M          # residual
@@ -67,7 +67,7 @@ function initialize!(bcg::BlockCGIterator)
     bcg.converged[] = false
 end
 
-function state_BlockCG_step!(bcg::BlockCGIterator, atol::Number, max_iter::Number=1000)
+function BlockCG!(bcg::BlockCGIterator, atol::Number, max_iter::Number=1000)
     A = bcg.L₀.L
     B = bcg.u_rhs   # n×m right-hand side matrix
     X = bcg.u       # n×m solution matrix
@@ -75,7 +75,7 @@ function state_BlockCG_step!(bcg::BlockCGIterator, atol::Number, max_iter::Numbe
     P = bcg.u_p     # n×m search direction matrix
     Ap = bcg.u_Ap    # n×m matrix: A*P
 
-    # m×m matrices — must be pre-allocated in CGNeumannMatrix
+    # m×m matrices — must be pre-allocated in BlockCGIterator
     RtR_old = bcg.u_r²old   # R'R
     RtR_new = bcg.u_r²new   # updated R'R
     PtAp = bcg.u_PtAp    # P'AP  (m×m, pre-allocate in struct)

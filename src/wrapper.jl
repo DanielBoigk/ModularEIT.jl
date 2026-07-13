@@ -1,3 +1,4 @@
+using LinearMaps, IterativeSolvers
 export create_f∂f, create_prox_linesearch, create_proximal_gradient_step
 
 """
@@ -149,4 +150,19 @@ function create_proximal_gradient_step(f, ∂f, ρ;λ::Number=1.0, kwargs... )
         return result
     end
     return prox
+end
+
+export create_tikhonov
+function create_tikhonov(K::AbstractArray;β::Float64=1.0, ρ::Float64 = 1.0)
+    R = (x) ->  (β/2) * dot(x, K*x)
+    ∇R = (x) -> β * K*x
+    prox = (x) -> begin
+        A = β*K+ρ*I # This should be LinearMap
+        b = ρ*x
+        out = A \ b
+        err = R(x) + ρ*sum(abs2, x .- out)
+        return out, err
+    end
+
+    return R, ∇R, prox
 end

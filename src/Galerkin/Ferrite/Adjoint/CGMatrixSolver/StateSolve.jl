@@ -70,3 +70,69 @@ function state_BlockCG_step(cgnm::CGNeumannMAtrix, atol::Number, max_iter::Numbe
     error = sum(r²old)
     return error
 end
+
+# Non allocating Block CG version specifically for adjoint solve.
+function state_BlockCG_step!(cgnm::CGNeumannMatrix, atol::Number, max_iter::Number=1000)
+    A = cgnm.L₀.L
+    B = cgnm.u_rhs   # n×m right-hand side matrix
+    X = cgnm.u       # n×m solution matrix
+    R = cgnm.r       # n×m residual matrix
+    P = cgnm.u_p     # n×m search direction matrix
+    Ap = cgnm.u_Ap    # n×m matrix: A*P
+
+    # m×m matrices — must be pre-allocated in CGNeumannMatrix
+    RtR_old = cgnm.u_r²old   # R'R
+    RtR_new = cgnm.u_r²new   # updated R'R
+    PtAp = cgnm.u_PtAp    # P'AP  (m×m, pre-allocate in struct)
+    α = cgnm.u_α       # m×m step size matrix
+    β = cgnm.u_β       # m×m direction update matrix (pre-allocate in struct)
+
+    atol2 = atol^2
+
+    for k in 1:max_iter
+        # Check convergence: norm of R'R as proxy for ‖R‖²_F
+        if norm(RtR_old) < atol2
+            return sum(diag(RtR_old))  # return sum of squared residual norms
+        end
+
+        # Ap = A * P
+        mul!(Ap, A, P)
+
+        # PtAp = P' * Ap  (m×m, no alloc: Adjoint is lazy)
+        mul!(PtAp, P', Ap)
+
+        # α = RtR_old / PtAp  →  solve PtAp' * α' = RtR_old'
+        # i.e. α = RtR_old * inv(PtAp), done via in-place ldiv after factorisation
+        copy!(α, RtR_old)
+        ldiv!(lu!(PtAp), α)    # α ← PtAp \ RtR_old  (modifies PtAp — refactor if needed)
+
+        # X += P * α
+        mul!(X, P, α, 1.0, 1.0)
+
+        # Residual update
+        if k % 16 == 0
+            # Recompute from scratch to avoid floating point drift
+            copy!(R, B)
+            mul!(R, A, X, -1.0, 1.0)   # R = B - A*X
+        else
+            # R -= Ap * α
+            mul!(R, Ap, α, -1.0, 1.0)
+        end
+
+        # RtR_new = R' * R  (m×m)
+        mul!(RtR_new, R', R)
+
+        # β = inv(RtR_old) * RtR_new  →  solve RtR_old * β = RtR_new
+        copy!(β, RtR_new)
+        ldiv!(lu!(copy(RtR_old)), β)   # β ← RtR_old \ RtR_new
+
+        # P = R + P * β
+        mul!(P, P, β, 1.0, 0.0)        # P ← P * β
+        axpy!(1.0, R, P)               # P ← R + P
+
+        # Swap old/new (just copy — both are pre-allocated)
+        copy!(RtR_old, RtR_new)
+    end
+
+    return sum(diag(RtR_old))
+end
