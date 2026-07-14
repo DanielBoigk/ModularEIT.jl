@@ -33,12 +33,12 @@ function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K; σ_g::
             rand_vec = σ_f * randn(fe.m)
             rand_mean = Statistics.mean(rand_vec)
             rand_vec .-= rand_mean
-            g .+= rand_vec
-            mean_g = Statistics.mean(g)
-            g .-= mean_g
-            G = fe.up(g)
+            g_rand = rand_vec + g
+            g_rand .-= Statistics.mean(g_rand)
+            f = fe.down(K \ fe.up(g_rand))
+        else
+            f = fe.down(K \ G)
         end
-        f = fe.down(K \ G)
     elseif length(g_vec) == fe.m
         g = copy(g_vec)
         mean_g = Statistics.mean(g)
@@ -50,8 +50,16 @@ function create_mode_from_g(fe::FerriteFESpace, g_vec::AbstractVector, K; σ_g::
             g .-= mean_g
         end
         G = fe.up(g)
-
-        f = fe.down(K \ G)
+        if σ_g ≠ 0
+            rand_vec = σ_f * randn(fe.m)
+            rand_mean = Statistics.mean(rand_vec)
+            rand_vec .-= rand_mean
+            g_rand = rand_vec + g
+            g_rand .-= Statistics.mean(g_rand)
+            f = fe.down(K \ fe.up(g_rand))
+        else
+            f = fe.down(K \ G)
+        end
     end
     mean_f = Statistics.mean(f)
     f .-= mean_f

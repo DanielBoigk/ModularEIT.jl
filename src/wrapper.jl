@@ -43,7 +43,7 @@ Example
 Note: The `gn` (Gauss–Newton) flag is included in the signature for future behavior changes but is ignored by the current code.
 
 """
-function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!, return_grads::Bool = false)
+function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann", obj=objective_neumann_init!, grad=gradient_neumann_init!, gauss_newton=gauss_newton_svd!, return_grads::Bool = false, normalize = true)
     # Flag to force computation on first call to avoid returning sentinel value
     first_call = Ref(true)
 
@@ -61,7 +61,11 @@ function create_f∂f(prblm, num_modes::Int=100; gn::Bool=false, mode="neumann",
         solve_modes!(prblm, num_modes, obj)
 
         collect_r!(prblm, num_modes, mode=mode)
-        prblm.state.error = sum(prblm.state.opt.r) #/ num_modes
+        if normalize
+            prblm.state.error = sum(prblm.state.opt.r) / (num_modes*prblm.fe.n^2)
+        else
+            prblm.state.error = sum(prblm.state.opt.r)
+        end
         prblm.state.δ_updated = false
         return prblm.state.error
     end
@@ -109,14 +113,14 @@ end
 
 using Optim
 
-function create_prox_linesearch(f, ∂f, ρ::Number =0.0 ;λ::Number=1.0)
+function create_prox_linesearch(f, ∂f, ρ::Number =0.0)
     prox = (x) -> begin
         current_val = f(x)
         direction = ∂f(x)
         τ_min, τ_max = determine_box(x, direction)
         
         # Brent's method in Optim.jl takes a pure scalar function
-        opt_func = (τ) -> λ * f(x + τ * direction) + 0.5 * ρ * sum(abs2, τ*direction)
+        opt_func = (τ) -> f(x + τ * direction) + 0.5 * ρ * sum(abs2, τ*direction)
         
         # optimize(f, lower, upper, method)
         # Note: Brent() is the default for this syntax in Optim
@@ -127,9 +131,9 @@ function create_prox_linesearch(f, ∂f, ρ::Number =0.0 ;λ::Number=1.0)
         new_val = Optim.minimum(results)
         
         if new_val < current_val
-            return x + best_τ * direction, new_val
+            return x + best_τ * direction, new_val, 0.5 * ρ * sum(abs2, best_τ*direction)
         end
-        return x, current_val
+        return x, current_val, 0.0
     end
     return prox
 end
@@ -160,9 +164,22 @@ function create_tikhonov(K::AbstractArray;β::Float64=1.0, ρ::Float64 = 1.0)
         A = β*K+ρ*I # This should be LinearMap
         b = ρ*x
         out = A \ b
-        err = R(x) + ρ*sum(abs2, x .- out)
-        return out, err
+        return out,R(x), ρ*sum(abs2, x .- out)
     end
 
     return R, ∇R, prox
+end
+
+export create_totalvariation
+function create_totalvariation(fe::FerriteFESpace,β::Float64=1.0; ρ::Float64 = 1.0, ϵ::Float64=1e-6)
+    TV = (x) -> (β/2) * normTV(fe, x)
+    ∇TV = (x) -> β * assemble_huber_gradient(fe, x, ϵ)
+    obj = (x) -> TV(x) + 0.5 * ρ * sum(abs2, x .- v)
+    grad = (x) -> ∇TV(x) + ρ * (x - v)
+    prox_TV = (x) -> begin
+        result = optimize(obj, grad, x0, LBFGS())
+        xmin = Optim.minimizer(result)
+        return xmin, TV(xmin), 0.5 * ρ * sum(abs2, x .- xmin)
+    end
+    return TV,∇TV,prox_TV
 end
