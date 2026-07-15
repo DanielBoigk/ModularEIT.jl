@@ -174,12 +174,20 @@ export create_totalvariation
 function create_totalvariation(fe::FerriteFESpace,β::Float64=1.0; ρ::Float64 = 1.0, ϵ::Float64=1e-6)
     TV = (x) -> (β/2) * normTV(fe, x)
     ∇TV = (x) -> β * assemble_huber_gradient(fe, x, ϵ)
-    obj = (x) -> TV(x) + 0.5 * ρ * sum(abs2, x .- v)
-    grad = (x) -> ∇TV(x) + ρ * (x - v)
-    prox_TV = (x) -> begin
-        result = optimize(obj, grad, x0, LBFGS())
+    prox_TV = (v) -> begin
+        # 1. Define the objective specifically for the target vector `v`
+        obj = (x) -> TV(x) + 0.5 * ρ * sum(abs2, x .- v)
+        
+        # 2. Define an in-place gradient function `g!(storage, x)` for Optim
+        grad! = (storage, x) -> begin
+            storage .= ∇TV(x) .+ ρ .* (x .- v)
+        end
+        
+        # 3. Optimize using LBFGS with the in-place gradient
+        result = optimize(obj, grad!, copy(v), LBFGS())
         xmin = Optim.minimizer(result)
-        return xmin, TV(xmin), 0.5 * ρ * sum(abs2, x .- xmin)
+        
+        return xmin, TV(xmin), 0.5 * ρ * sum(abs2, v .- xmin)
     end
     return TV,∇TV,prox_TV
 end
