@@ -114,7 +114,8 @@ end
 using Optim
 
 function create_prox_linesearch(f, ∂f, ρ::Number =0.0)
-    prox = (x) -> begin
+    ρ_internal = ρ
+    prox = (x, ρ = ρ_internal) -> begin
         current_val = f(x)
         direction = ∂f(x)
         τ_min, τ_max = determine_box(x, direction)
