@@ -14,7 +14,7 @@ using ModularEIT
     H½inv = inv(H½)
     Mb  = MΓ |> Matrix |> Symmetric
     IZ = Mb * H½inv * Mb - Hn½
-    @test (maximum(IZ) < 0.01) && (minimum(IZ) > -0.01) # wish it would have better tolerances
+    @test (maximum(IZ) < 1e-10) && (minimum(IZ) > -1e-10) # wish it would have better tolerances
 
     # write some more tests for SVD later
 
