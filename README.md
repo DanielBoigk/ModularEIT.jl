@@ -146,4 +146,4 @@ Original Image:
 Reconstruction with Tikhonov regularisation:
 ![Reconstruction with Tikhonov regularisation](/notebooks/reconstructions/Tikhonov/000Tikhonov64.png)
 Reconstruction with TV regularization:
-![Reconstruction with Tikhonov regularisation](/notebooks/reconstructions/TotalVariation/1.000e-01_0.000e+00_0.000e+00_0.000e+00.png)
+![Reconstruction with Tikhonov regularisation](/notebooks/reconstructions/TotalVariation/1.000e-02_1.000e-07_0.000e+00_0.000e+00.png)
