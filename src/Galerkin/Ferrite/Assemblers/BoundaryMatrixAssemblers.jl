@@ -63,10 +63,17 @@ function assemble_fractional_M(MΓ, KΓ)
     return Hn½, H½
 end
 
+export assemble_boundary_matrices!
+function assemble_boundary_matrices!(fe::FerriteFESpace)
+    MΓ, KΓ =  assemble_boundary_M_K(fe)
+    Hn½, H½ = assemble_fractional_M(MΓ, KΓ)
+    fe.BDO.MΓ, fe.BDO.KΓ, fe.BDO.Hn½, fe.BDO.H½ = MΓ, KΓ, Hn½, H½
+    return MΓ, KΓ, Hn½, H½
+end 
+
 export assemble_boundary_matrices
 function assemble_boundary_matrices(fe::FerriteFESpace)
     MΓ, KΓ =  assemble_boundary_M_K(fe)
     Hn½, H½ = assemble_fractional_M(MΓ, KΓ)
-    fe.BDO.MΓ, fe.BDO.KΓ, fe.BDO.Hn½, fe.BDO.H½ = MΓ, KΓ, Hn½, H½
     return MΓ, KΓ, Hn½, H½
 end 

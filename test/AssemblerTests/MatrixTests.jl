@@ -8,6 +8,18 @@ using SparseArrays
 using LinearAlgebra
 using IterativeSolvers
 using ModularEIT
+
+@testset "Boundary Operators" begin
+    MΓ, KΓ, Hn½, H½ = assemble_boundary_matrices(fe)
+    H½inv = inv(H½)
+    Mb  = MΓ |> Matrix |> Symmetric
+    IZ = Mb * H½inv * Mb - Hn½
+    @test (maximum(IZ) < 0.01) && (minimum(IZ) > -0.01) # wish it would have better tolerances
+
+    # write some more tests for SVD later
+
+end
+
 @testset "Matrix Tests" begin
     #we just take some sample conductivity function:
     conductivity = (x) -> 1.1 + sin(x[1]) * cos(x[2])
