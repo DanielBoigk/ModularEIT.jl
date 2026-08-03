@@ -141,6 +141,8 @@ img_solution = Gray.(max.(0.0, min.(1.0, reshape(evaluate_at_points(ph, prblm.fe
 
 ## Example Reconstruction:
 Original Image:
-![Original Image](assets/TwoSpot_init.png)
-Reconstruction with Tikhonov regularisation and L-BFGS:
-![Reconstruction with Tikhonov regularisation and L-BFGS](/assets/TwoSpotLBFGS_final.png)
+![Original Image](/notebooks/reconstruction/1096.jpg)
+Reconstruction with Tikhonov regularisation:
+![Reconstruction with Tikhonov regularisation](/notebooks/reconstruction/Tikhonov/000Tikhonov64.png)
+Reconstruction with TV regularization:
+![Reconstruction with Tikhonov regularisation](/notebooks/reconstruction/TotalVariation/1.000e-01_0.000e+00_0.000e+00_0.000e+00.png)
