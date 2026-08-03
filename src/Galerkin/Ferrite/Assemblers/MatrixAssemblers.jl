@@ -225,6 +225,8 @@ end
 
 
 
+
+
 """
     build_projection_matrix(fine_space::FerriteFESpace, coarse_space::FerriteFESpace)
 
@@ -249,12 +251,16 @@ function build_projection_matrix(fine_space::FerriteFESpace, coarse_space::Ferri
     return P
 end
 
+
+
+
+
 """
     assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace)
 
 Assemble the coupling mass matrix B where B[i,j] = ∫ φ_coarse[i] * φ_fine[j] dΩ
 """
-function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace) # Careful. This thing only works because it is assumed that the shape & placemants of the elements are exactly identical and only the order is different. This can not project from i.e. triangular to quadrilateral elements.
+function assemble_coupling_mass!(B::AbstractMatrix, coarse_space::FerriteFESpace, fine_space::FerriteFESpace) # Careful! This thing only works because it is assumed that the shape & placemants of the elements are exactly identical and only the order is different. This can not project from i.e. triangular to quadrilateral elements.
     fill!(B, 0.0)
 
     dh_coarse = coarse_space.dh
@@ -315,3 +321,5 @@ function assemble_coupling_mass(coarse_space::FerriteFESpace, fine_space::Ferrit
     assemble_coupling_mass!(B, coarse_space, fine_space)
     return B
 end
+
+
