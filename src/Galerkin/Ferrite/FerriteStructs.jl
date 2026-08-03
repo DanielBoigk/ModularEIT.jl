@@ -88,6 +88,7 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     K::AbstractMatrix
     K_fac
     total_volume::Float64
+    b_dofs::AbstractVector
     down # Projection from force vector to coefficients of the basis functions of boundary
     up # Projection from coefficients of the basis functions of boundary to force vector
     up! # Projection from coefficients of the basis functions of boundary to force vector

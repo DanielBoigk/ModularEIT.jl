@@ -53,8 +53,8 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
     K, K_fac = assemble_K(dh, cellvalues)
     total_volume = calc_total_volume(dh, cellvalues)
 
-    m, _, down, up, up!, _ = produce_nonzero_positions(facetvalues, dh, ∂Ω)
-    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, down, up, up!)
+    m, b_dofs, down, up, up!, _ = produce_nonzero_positions(facetvalues, dh, ∂Ω)
+    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, b_dofs, down, up, up!)
 end
 
 include("Norms.jl")
