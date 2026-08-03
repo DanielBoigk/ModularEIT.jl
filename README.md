@@ -1,29 +1,35 @@
 # ModularEIT.jl (Under Development)
 
 This is a Julia library for electrical impedance tomography similar in spirit to [PyEIT](https://github.com/eitcom/pyEIT) or [EIDORS](https://eidors3d.sourceforge.net/).
-This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem.github.io/Ferrite.jl/stable/)although one can plug in other Galerkin methods as solvers. Currently this project is still under construction although  multiple things work already. Planned features:
-- [x] Integration with Machine Learning library Lux.jl
-	- [ ] Learned Regularizers
-	- [ ] Learned Metrics
+This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem.github.io/Ferrite.jl/stable/)although  it is planned that one can plug in other Galerkin methods as solvers. Currently this project is still under construction although  multiple things work already. Planned features:
+
+- [x] Gauss-Newton to resolve Gradients
+- [x] Classical Regularizers:
+  - [x] Tikhonov
+  - [x] TV
+    - [x] Huber smoothed
+    - [ ] Chambolle-Pock
+- [ ] Learned regularizers
+  - [ ] CNN trained as VP-SDE for quadrilateral grid. 
+    - [ ] via Diffusion Posteroir Sampling
+	- [ ] via Variational Stochastic Sampling 
 - [ ]  Documentation
 - [ ] Various Optimizers:
-	- [x] Gauss-Newton
+	- [x] Line Search after Gradient
 	- [x] L-BFGS
-	- [ ] Proximal Gauss-Newton
-	- [ ] ...
+	- [x] Wrapper for Prox step
+	- [x] ADMM
+	- [x] Wrapper for Adam, RMSProp, nAdam, ...
 - [ ] Galerkin methods:
 	- [x] Ferrite.jl
+		- [ ] Compilation of whole FEM routine with Reactant.jl
+		- [ ] Adaptive Meshing
 	- [ ] GalerkinToolkit/Gridap
-	- [ ] AppoxFun
-- [ ] Adaptive Meshing
-- [ ] Autodiff
-	- [x] for metrics/regularizers
-	- [ ] of full objective 
-- [ ] Performance optimization:
-	- [x] Multithreading
-		- [ ] On GPU
-		- [ ] DeviceAgnostic (i.e. Reactant)
-- [ ] Performance optimizations 
+	- [ ] ApproxFun
+	- [ ] FFTA
+- [x] Helper functions for common domain shapes:
+  - [x] Rectangle
+  - [x] Circle
 
 This is supposed to be very modular, so just plugin other (pseudo) metrics/loss maps, regularizers, optimizers, ... and run with it.
 
@@ -34,7 +40,7 @@ Make sure `gmsh` is installed on your system and added to `PATH`. (If you intend
 inside Julia run:
 `]activate`
 then 
-`] add "github.com/DanielBoigk/ModularEIT.jl"
+`] add "github.com/DanielBoigk/ModularEIT.jl"`
 this instantiates the environment. Inside the enviroment `using ModularEIT` adds the library.
 
 ### General workflow:
@@ -43,19 +49,13 @@ Import necessary libraries:
 using Ferrite
 using ModularEIT
 ```
-Generate a grid, define where the boundary is:
+Generate or import some grid: 
 ```
 grid = generate_grid(Quadrilateral, (127, 127))
+```
+Define where the boundary is: 
+```
 ∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"])...)
-```
-Or load it from an existing file
-```
-using FerriteGmsh
-grid = togrid("path to .msh or .geo file")
-```
-define where the boundary is: 
-```
-∂Ω = union(getfacetset.((grid,), ["left", "top", "right", "bottom"
 ```
 *Note:  I have no separate electron model defined yet. I assume that the boundary is the electrodes for now. Everything in the force vector outside the boundary nodes will be set to zero by default.*
 with that one can build the finite element space:
