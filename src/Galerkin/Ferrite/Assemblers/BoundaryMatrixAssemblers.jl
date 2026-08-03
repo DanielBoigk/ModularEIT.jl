@@ -1,5 +1,7 @@
 using LinearAlgebra, SparseArrays, Ferrite
 
+export assemble_boundary_M_K
+
 function assemble_boundary_M_K(facetvalues::FacetValues, dh::DofHandler, ∂Ω, b_dofs)
     ndof = ndofs(dh)
     M = allocate_matrix(fe.dh)
@@ -37,14 +39,34 @@ function assemble_boundary_M_K(fe::FerriteFESpace)
     assemble_boundary_M_K(fe.facetvalues, fe.dh, fe.∂Ω, fe.b_dofs)
 end
 
+export get_i_dofs
 function get_i_dofs(b_dofs, n::Integer)
     is_boundary = falses(n)
     is_boundary[b_dofs] .= true
     return findall(!, is_boundary)
 end
 
-function get_i_dofs(fe::FerriteFESpace)
+function get_i_dofs(fe::FerriteFESpace) # return dofs for interior points
     get_i_dofs(fe.b_dofs, fe.n)
 end
 
-function assemble_fractional_M(facetvalues::FacetValues, dh::DofHandler, ∂Ω, b_dofs)
+
+export assemble_fractional_M 
+function assemble_fractional_M(M_Γ, K_Γ)
+    Mb = M_Γ |> Matrix |> Symmetric
+    Kb = K_Γ |> Matrix |> Symmetric
+    λ, Φ = eigen(Kb, Mb) 
+    λ = 
+    A(s) = Mb * Φ * Diagonal((1.0 .+ λ).^s) * Φ' * Mb |> Symmetric
+    Hn½ = A(-0.5)
+    H½ = A(0.5)
+    return Hn½, H½
+end
+
+export assemble_boundary_matrices
+function assemble_boundary_matrices(fe::FerriteFESpace)
+    MΓ, KΓ =  assemble_boundary_M_K(fe::FerriteFESpace)
+    Hn½, H½ = assemble_fractional_M(M_Γ, K_Γ)
+    fe.MΓ, fe.KΓ, fe.Hn½, fe.H½ = MΓ, KΓ, Hn½, H½
+    return MΓ, KΓ, Hn½, H½
+end 
