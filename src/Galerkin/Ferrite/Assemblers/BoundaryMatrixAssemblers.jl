@@ -4,8 +4,8 @@ export assemble_boundary_M_K
 
 function assemble_boundary_M_K(facetvalues::FacetValues, dh::DofHandler, ∂Ω, b_dofs)
     ndof = ndofs(dh)
-    M = allocate_matrix(fe.dh)
-    K = allocate_matrix(fe.dh)
+    M = allocate_matrix(dh)
+    K = allocate_matrix(dh)
     n_basefuncs = getnbasefunctions(facetvalues)
     Me = zeros(n_basefuncs, n_basefuncs)
     Ke = zeros(n_basefuncs, n_basefuncs)
@@ -52,11 +52,11 @@ end
 
 
 export assemble_fractional_M 
-function assemble_fractional_M(M_Γ, K_Γ)
-    Mb = M_Γ |> Matrix |> Symmetric
-    Kb = K_Γ |> Matrix |> Symmetric
+function assemble_fractional_M(MΓ, KΓ)
+    Mb = MΓ |> Matrix |> Symmetric
+    Kb = KΓ |> Matrix |> Symmetric
     λ, Φ = eigen(Kb, Mb) 
-    λ = 
+    λ .= max.(0.0, λ)
     A(s) = Mb * Φ * Diagonal((1.0 .+ λ).^s) * Φ' * Mb |> Symmetric
     Hn½ = A(-0.5)
     H½ = A(0.5)
@@ -65,8 +65,8 @@ end
 
 export assemble_boundary_matrices
 function assemble_boundary_matrices(fe::FerriteFESpace)
-    MΓ, KΓ =  assemble_boundary_M_K(fe::FerriteFESpace)
-    Hn½, H½ = assemble_fractional_M(M_Γ, K_Γ)
-    fe.MΓ, fe.KΓ, fe.Hn½, fe.H½ = MΓ, KΓ, Hn½, H½
+    MΓ, KΓ =  assemble_boundary_M_K(fe)
+    Hn½, H½ = assemble_fractional_M(MΓ, KΓ)
+    fe.BDO.MΓ, fe.BDO.KΓ, fe.BDO.Hn½, fe.BDO.H½ = MΓ, KΓ, Hn½, H½
     return MΓ, KΓ, Hn½, H½
 end 

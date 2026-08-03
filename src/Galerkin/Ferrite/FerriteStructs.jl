@@ -45,6 +45,12 @@ mutable struct FerriteOptState <: GalerkinOptState
     u::Union{AbstractVector,Nothing} # Dual variable for prox scheme
 end
 
+mutable struct BoundaryOperators
+    MΓ # L²(∂Ω) mass matrix
+    KΓ # H¹(∂Ω) stiffness matrix
+    Hn½ # H^-½(∂Ω) mass matrix
+    H½ # H^½(∂Ω) mass matrix
+end
 """
     struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
 
@@ -92,10 +98,7 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     down # Projection from force vector to coefficients of the basis functions of boundary
     up # Projection from coefficients of the basis functions of boundary to force vector
     up! # Projection from coefficients of the basis functions of boundary to force vector
-    MΓ # L²(∂Ω) mass matrix
-    KΓ # H¹(∂Ω) stiffness matrix
-    Hn½ # H^-½(∂Ω) mass matrix
-    H½ # H^½(∂Ω) mass matrix
+    BDO::BoundaryOperators
 end
 
 
