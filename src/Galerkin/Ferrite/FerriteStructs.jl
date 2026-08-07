@@ -50,6 +50,8 @@ mutable struct BoundaryOperators
     KΓ # H¹(∂Ω) stiffness matrix
     Hn½ # H^-½(∂Ω) mass matrix
     H½ # H^½(∂Ω) mass matrix
+    eig # Generalized eigen decomposition
+    A # Function that assembles matrix for given power
 end
 """
     struct FerriteFESpace{RefElem} <: AbstractHilbertSpace

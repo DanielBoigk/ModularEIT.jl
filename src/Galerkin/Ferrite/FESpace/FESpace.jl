@@ -54,7 +54,7 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
     total_volume = calc_total_volume(dh, cellvalues)
 
     m, _, down, up, up!, _, b_dofs = produce_nonzero_positions(facetvalues, dh, ∂Ω)
-    BDO = BoundaryOperators(nothing,nothing,nothing,nothing)
+    BDO = BoundaryOperators(nothing,nothing,nothing,nothing,nothing,nothing)
     return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, b_dofs, down, up, up!, BDO)
 end
 

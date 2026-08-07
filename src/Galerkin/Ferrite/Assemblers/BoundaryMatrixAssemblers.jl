@@ -55,25 +55,27 @@ export assemble_fractional_M
 function assemble_fractional_M(MΓ, KΓ)
     Mb = MΓ |> Matrix |> Symmetric
     Kb = KΓ |> Matrix |> Symmetric
-    λ, Φ = eigen(Kb, Mb) 
-    λ .= max.(0.0, λ)
-    A(s) = Mb * Φ * Diagonal((1.0 .+ λ).^s) * Φ' * Mb |> Symmetric
+    eig = eigen(Kb, Mb) 
+    λ = eig.values 
+    Φ = eig.vectors
+    λ = max.(0.0, λ)
+    A(s) = MΓ * Φ * Diagonal((1.0 .+ λ).^s) * Φ' * MΓ |> Symmetric
     Hn½ = A(-0.5)
     H½ = A(0.5)
-    return Hn½, H½
+    return Hn½, H½, eig, A
 end
 
 export assemble_boundary_matrices!
 function assemble_boundary_matrices!(fe::FerriteFESpace)
     MΓ, KΓ =  assemble_boundary_M_K(fe)
-    Hn½, H½ = assemble_fractional_M(MΓ, KΓ)
-    fe.BDO.MΓ, fe.BDO.KΓ, fe.BDO.Hn½, fe.BDO.H½ = MΓ, KΓ, Hn½, H½
+    Hn½, H½ , eig, A = assemble_fractional_M(MΓ, KΓ)
+    fe.BDO.MΓ, fe.BDO.KΓ, fe.BDO.Hn½, fe.BDO.H½, fe.BDO.eig, fe.BDO.A = MΓ, KΓ, Hn½, H½, eig, A
     return MΓ, KΓ, Hn½, H½
-end 
+end
 
 export assemble_boundary_matrices
 function assemble_boundary_matrices(fe::FerriteFESpace)
     MΓ, KΓ =  assemble_boundary_M_K(fe)
-    Hn½, H½ = assemble_fractional_M(MΓ, KΓ)
-    return MΓ, KΓ, Hn½, H½
-end 
+    Hn½, H½, eig , A = assemble_fractional_M(MΓ, KΓ)
+    return MΓ, KΓ, Hn½, H½, eig, A
+end

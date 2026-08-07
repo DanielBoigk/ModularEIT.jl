@@ -10,7 +10,7 @@ using IterativeSolvers
 using ModularEIT
 
 @testset "Boundary Operators" begin
-    MΓ, KΓ, Hn½, H½ = assemble_boundary_matrices(fe)
+    MΓ, KΓ, Hn½, H½, _, _ = assemble_boundary_matrices(fe)
     H½inv = inv(H½)
     Mb  = MΓ |> Matrix |> Symmetric
     IZ = Mb * H½inv * Mb - Hn½
