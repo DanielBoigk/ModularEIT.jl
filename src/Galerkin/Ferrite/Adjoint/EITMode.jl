@@ -183,6 +183,27 @@ function add_noise_g!(mode::FerriteEITMode, n::Int, σ::Real, fe::FerriteFESpace
     noise_vec = σ * randn(n)
     add_noise_g!(mode, noise_vec, fe)
 end
+
+function svd_on_modes(modes::Dict{Int64,FerriteEITMode},fe::FerriteFESpace)
+    n = length(modes)
+    G = hcat([mode_dict_no_noise[i].g for i in 1:n]...)
+    F = hcat([mode_dict_no_noise[i].f for i in 1:n]...)
+    Λ = F * pinv(G)
+    V,Σ, U =  svd(Λ)
+    Σdiag = Diagonal(Σ[1:n])
+    Fnew = V[:,1:n]*Σdiag
+    Gnew = U[:,1:n]
+    mode_dict_svd = Dict{Int64,FerriteEITMode}()
+    @time begin
+        Threads.@threads for i in 1:n
+            mode_dict_svd[i] = create_mode_from_fg(fe,Fnew[:,i],Gnew[:,i])
+        end
+    end
+    mode_dict_svd, Σ[1:n]
+end
+
+
+
 #=
 function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     out = Dict{T,FerriteEITMode}()
