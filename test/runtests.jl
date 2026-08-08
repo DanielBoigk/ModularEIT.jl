@@ -29,6 +29,7 @@ fe_circ = FerriteFESpace{RefTriangle}(grid_circ, order, qr_order, ∂Ω_circ)
     include("AssemblerTests/BilinearMap.jl")
     include("AssemblerTests/MatrixTests.jl")
     include("AssemblerTests/UpDownTest.jl")
+    include("AssemblerTests/SVDTest.jl")
     # #include("AssemblerTests/ExportTest.jl")
     # include("MeshTests/MeshTests.jl")
 
