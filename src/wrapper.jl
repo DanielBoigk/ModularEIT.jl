@@ -139,9 +139,25 @@ function create_prox_linesearch(f, ∂f, ρ::Number =0.0)
     return prox
 end
 
-# Todo: Fix this function rewrite it as a Line search:
+using LBFGSB
 export create_proximal_gradient_step
-function create_proximal_gradient_step(f, ∂f, ρ;λ::Number=1.0, kwargs... )
+function create_proximal_gradient_step(f, ∂f, ρ, n; λ::Number=1.0, lb::Number=1e-6, ub::Union{Number,Nothing}=nothing, m::Int=17, factr::Float64=1e7, pgtol::Float64=1e-5, iprint::Int=-1, maxfun::Int=15000, maxiter::Int=15000)
+
+    optimizer = L_BFGS_B(n, m)
+
+    # Build the bounds matrix once (type, lower, upper per variable)
+    bounds = zeros(3, n)
+    for i in 1:n
+        if ub === nothing
+            bounds[1, i] = 1   # lower bound only
+            bounds[2, i] = lb
+        else
+            bounds[1, i] = 2   # lower and upper bound
+            bounds[2, i] = lb
+            bounds[3, i] = ub
+        end
+    end
+
     prox = v -> begin
         if λ != 1.0
             objective = x -> λ * f(x) + 0.5 * ρ * sum(abs2, x .- v)
@@ -150,12 +166,55 @@ function create_proximal_gradient_step(f, ∂f, ρ;λ::Number=1.0, kwargs... )
             objective = x -> f(x) + 0.5 * ρ * sum(abs2, x .- v)
             gradient = x -> ∂f(x) .+ ρ .* (x .- v)
         end
-        # This is my own private version of box constrained lbfgs:
-        result = lbfgs_b(objective,gradient, v; kwargs...)
+        gradient! = (z, x) -> begin
+            z .= gradient(x)
+            return z
+        end
+
+        # Warm-start from v, clipped into the feasible region
+        x0 = clamp.(copy(v), lb, ub === nothing ? Inf : ub)
+
+        fout, xout = optimizer(objective, gradient!, x0, bounds;
+                                m=m, factr=factr, pgtol=pgtol, iprint=iprint,
+                                maxfun=maxfun, maxiter=maxiter)
+
+        return xout, objective(xout), 0.5 * ρ * sum(abs2, xout .- v)
+    end
+    return prox
+end
+
+#= 
+# old version
+using LBFGSB
+export create_proximal_gradient_step
+function create_proximal_gradient_step(f, ∂f, ρ, n;λ::Number=1.0, kwargs... )
+    prox = v -> begin
+        if λ != 1.0
+            objective = x -> λ * f(x) + 0.5 * ρ * sum(abs2, x .- v)
+            gradient = x -> λ .* ∂f(x) .+ ρ .* (x .- v)
+        else
+            objective = x -> f(x) + 0.5 * ρ * sum(abs2, x .- v)
+            gradient = x -> ∂f(x) .+ ρ .* (x .- v)
+        end
+        gradient! = (z,x) -> begin
+                z .= copy(gradient(x))
+                return z
+            end
+
+        optimizer = L_BFGS_B(n, 17)
+
+        # Implement here:
+
+
+        # This is my own private version of box constrained lbfgswhich I should not use:
+        #result = lbfgs_b(objective,gradient, v; kwargs...)
         return result
     end
     return prox
 end
+=#
+
+
 
 export create_tikhonov
 function create_tikhonov(K::AbstractArray;β::Float64=1.0, ρ::Float64 = 1.0)
