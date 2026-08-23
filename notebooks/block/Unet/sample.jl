@@ -5,7 +5,7 @@ using Optimisers, Random, Statistics, Images, FileIO
 using LinearAlgebra, JLD2, ComponentArrays
 using Dates
 
-include("../model.jl")   # UNet / unet_tinyimagenet64
+include("model.jl")   # UNet / unet_tinyimagenet64
 
 # =============================================================================
 # Euler-Maruyama sampler for the VP-SDE reverse process: draws new 64x64
@@ -45,65 +45,75 @@ const T = 1.0f0
 β(t) = βmin + (βmax - βmin) * t / T
 ᾱ(t) = exp(-βmin * t - (βmax - βmin) / (2 * T) * t^2)
 
+normalize_image(img) = 2 .* (Float32.(img) .- 0.5)
 denormalize_image(img) = (0.5f0 .* img) .+ 0.5f0
 
-"""
-    euler_maruyama_sample(model, ps, st, dev; num_samples=1, num_steps=1000, rng=Random.default_rng())
-
-Draws `num_samples` images from the trained VP-SDE reverse diffusion process
-via the Euler-Maruyama discretization of the reverse-time SDE
-
-    x_{t-Δt} = x_t + [½β(t)x_t - β(t)ε̂(x_t,t)/√(1-ᾱ(t))]·Δt + √(β(t)Δt)·z,   z ~ N(0, I)
-
-starting from the prior `x_1 ~ N(0, I)` (the VP-SDE marginal at t=1 is ≈
-standard normal) and integrating down to `t ≈ Δt`. Returns a
-`(64, 64, 1, num_samples)` array of denormalized images clamped to `[0, 1]`,
-ready to turn into `Gray.(...)` and save.
-"""
-function euler_maruyama_sample(
-    model, ps, st, dev;
-    num_samples::Int=1, num_steps::Int=1000, rng::AbstractRNG=Random.default_rng(),
-)
-    Δt = Float32(T / num_steps)
-    xt = randn(rng, Float32, dim, dim, 1, num_samples)   # x_1 ~ N(0, I)
-
-    # Reactant device arrays must go through a `@compile`d function — calling
-    # the model directly on them (as one normally could on CPU/plain GPU
-    # arrays) fails at run time. The input shapes are the same at every step
-    # (only the noise-level *value* changes), so compiling once here and
-    # reusing it for the whole trajectory is both correct and, incidentally,
-    # far faster than recompiling per step.
-    xt_trial = xt |> dev
-    t_trial = fill(T, 1, 1, 1, num_samples) |> dev
-    model_compiled = @compile model((xt_trial, t_trial), ps, st)
-
-    for step in 1:num_steps
-        t = T - (step - 1) * Δt
-        β_t = Float32(β(t))
-        ᾱ_t = Float32(ᾱ(t))
-
-        t_arr = fill(Float32(t), 1, 1, 1, num_samples)
-        ε_pred, st = model_compiled((xt, t_arr) |> dev, ps, st)
-        ε_pred = ε_pred |> cdev
-
-        drift = 0.5f0 .* β_t .* xt .- (β_t / sqrt(max(1.0f0 - ᾱ_t, 1.0f-5))) .* ε_pred
-        z = randn(rng, Float32, size(xt))
-        xt = xt .+ drift .* Δt .+ sqrt(β_t * Δt) .* z
-    end
-
-    return clamp.(denormalize_image(xt), 0.0f0, 1.0f0)
+function forward_sample(x0, t, ᾱ)
+    αbar = ᾱ(t)
+    ε = randn(Float32, size(x0))
+    xt = sqrt(αbar) .* x0 .+ sqrt(1 - αbar) .* ε
+    return xt, ε
 end
 
-rng = Xoshiro(1)
-num_samples = 8
-num_steps = 1000
+# model.jl's second input argument is named `noise_variances` after the
+# Lux.jl DDIM tutorial it was ported from, but per trainimgnet.jl (both the
+# CNN and U-Net variants: `t_trial = rand(...)` fed straight into the model,
+# with the U-Net one explicitly commented "the per-sample scalar diffusion
+# time is embedded internally") this codebase actually conditions directly
+# on raw t, not on a transformed noise variance/rate. Kept as a named
+# function in case that ever changes.
+noise_variance(t) = t
 
-samples = euler_maruyama_sample(model, ps, st, dev; num_samples, num_steps, rng)
+"""
+    sde(x, t)
 
-mkpath("samples")
-timestamp = now()
-for i in 1:num_samples
-    img = Gray.(samples[:, :, 1, i])
-    save("samples/sample_$(i)_$(timestamp).png", img)
+Evaluate the trained noise predictor ε̂(x_t, t) for a single 64x64 grayscale
+image `x` (accepts a (64,64), (64,64,1), or (64,64,1,1) array) at scalar
+diffusion time `t ∈ [0, T]`. Returns a (64,64) `Array`.
+"""
+function sde(x::AbstractArray, t::Real)
+    x4 = reshape(Float32.(x), dim, dim, 1, 1) |> dev
+    nv = fill(Float32(noise_variance(t)), 1, 1, 1, 1) |> dev
+    ε̂, _ = model((x4, nv), ps, st)
+    return reshape(Array(ε̂ |> cdev), dim, dim)
 end
-println("Saved $num_samples sample(s) to samples/")
+
+"""
+    R_diff(x, T, n; t_min=0.02f0, w=t -> 1.0f0)
+
+RED-Diff regularizer for diffusion posterior sampling / Diff-PIR: draws `n`
+independent `(tᵢ, εᵢ)` pairs with `tᵢ ~ Uniform(t_min, T)` (kept away from 0,
+where the VP-SDE forward marginal degenerates) and `εᵢ ~ N(0,I)`,
+forward-diffuses `x` to `x_{tᵢ} = √ᾱ(tᵢ) x + √(1-ᾱ(tᵢ)) εᵢ` for each, and
+evaluates the noise predictor at every `x_{tᵢ}` in a single batched call
+(this is the "parallelized" part — the n samples only differ along the batch
+dimension the network already has, so they're one forward pass, not a loop).
+
+RED-Diff treats the network's dependence on `x_t` as fixed (stop-gradient) —
+that's what makes it cheap, no backprop through the U-Net is needed — so the
+gradient contribution of sample `i` w.r.t. `x` is exactly
+`w(tᵢ) √ᾱ(tᵢ) (ε̂(x_{tᵢ},tᵢ) - εᵢ)`, the plain chain-rule factor from
+`x_{tᵢ} = √ᾱ(tᵢ) x + ...` times the (stopped) noise-prediction residual.
+
+Returns `(err, grad)`:
+- `err`  : the n noise-prediction residuals `ε̂(x_t,t) - ε`, size (64,64,1,n)
+- `grad` : the RED-Diff gradient estimate w.r.t. `x`, size (64,64), averaged over the n samples
+"""
+function R_diff(x::AbstractArray, T::Real, n::Int; t_min::Real=0.02f0, w=t -> 1.0f0)
+    x2 = Float32.(reshape(x, dim, dim))
+    ts = t_min .+ (T - t_min) .* rand(Float32, n)
+    ε = randn(Float32, dim, dim, 1, n)
+
+    αbar = reshape(Float32.(ᾱ.(ts)), 1, 1, 1, n)
+    x_batch = reshape(x2, dim, dim, 1, 1) .* sqrt.(αbar) .+ sqrt.(1 .- αbar) .* ε
+    nv = reshape(Float32.(noise_variance.(ts)), 1, 1, 1, n)
+
+    ε̂, _ = model((x_batch |> dev, nv |> dev), ps, st)
+    err = Array(ε̂ |> cdev) .- ε
+
+    weights = reshape(Float32.(w.(ts)), 1, 1, 1, n) .* sqrt.(αbar)
+    grad = dropdims(sum(weights .* err; dims=4); dims=(3, 4)) ./ n
+
+    return err, grad
+end
+
