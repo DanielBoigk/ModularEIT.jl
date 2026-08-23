@@ -26,8 +26,12 @@ function FerriteFESpace{RefElem}(grid, order::Int, order_σ::Int, qr_order::Int,
     dim = Ferrite.getspatialdim(grid)
 
     # reference element interpolation
+    # Ferrite's `Lagrange` only supports order ≥ 1 (continuous nodal basis);
+    # order 0 (piecewise constant) is `DiscontinuousLagrange` instead. `u`
+    # must stay continuous (it needs gradients and boundary traces), but σ
+    # is commonly order 0 to match per-cell/per-pixel conductivity data.
     ip = Lagrange{RefElem,order}()
-    σp = Lagrange{RefElem,order_σ}()
+    σp = order_σ == 0 ? DiscontinuousLagrange{RefElem,0}() : Lagrange{RefElem,order_σ}()
     # quadrature
     qr = QuadratureRule{RefElem}(qr_order)
     qr_face = FacetQuadratureRule{RefElem}(qr_order)

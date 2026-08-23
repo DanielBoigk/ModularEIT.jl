@@ -3,13 +3,28 @@ export project_function_to_fem, assemble_rhs_func
 
 
 
-function project_function_to_fem(fe::FerriteFESpace, f)
-    F = zeros(fe.n)
-    cellvalues = fe.cellvalues
-    dh = fe.dh
+"""
+    project_function_to_fem(fe, f; space=:u)
+
+L² projection of `f` (a function of physical coordinates) onto an FE space of
+`fe`. `space=:u` (default) projects onto the potential field's space
+(`fe.dh`/`fe.cellvalues`, reusing the cached `fe.M_fac`); `space=:σ` projects
+onto the conductivity field's space (`fe.dh_σ`/`fe.cellvalues_σ`), which may
+have a different (e.g. piecewise-constant) order.
+"""
+function project_function_to_fem(fe::FerriteFESpace, f; space::Symbol=:u)
+    if space === :u
+        cellvalues, dh, n, M_fac = fe.cellvalues, fe.dh, fe.n, fe.M_fac
+    elseif space === :σ
+        cellvalues, dh, n = fe.cellvalues_σ, fe.dh_σ, fe.n_σ
+        _, M_fac = assemble_M(dh, cellvalues)
+    else
+        throw(ArgumentError("space must be :u or :σ, got $space"))
+    end
+
+    F = zeros(n)
     n_basefuncs = getnbasefunctions(cellvalues)
     Fe = zeros(n_basefuncs)
-    cdofs = zeros(Int, n_basefuncs)
 
     for cell in CellIterator(dh)
         fill!(Fe, 0.0)
@@ -27,7 +42,7 @@ function project_function_to_fem(fe::FerriteFESpace, f)
         end
         assemble!(F, cdofs, Fe)
     end
-    return fe.M_fac \ F
+    return M_fac \ F
 end
 
 # This assembles ∫(g*v)d∂Ω
