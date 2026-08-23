@@ -98,7 +98,10 @@ the gradient contribution of sample `i` w.r.t. `x` is exactly
 `x_{tᵢ} = √ᾱ(tᵢ) x + ...` times the (stopped) noise-prediction residual.
 
 Returns `(err, grad)`:
-- `err`  : the n noise-prediction residuals `ε̂(x_t,t) - ε`, size (64,64,1,n)
+- `err`  : scalar mean squared noise-prediction residual `mean((ε̂(x_t,t) - ε)²)`
+           over all pixels and the n samples — how well the network can
+           currently denoise `x` (small ⇒ `x` already looks plausible under
+           the diffusion model at the sampled noise levels).
 - `grad` : the RED-Diff gradient estimate w.r.t. `x`, size (64,64), averaged over the n samples
 """
 function R_diff(x::AbstractArray, T::Real, n::Int; t_min::Real=0.02f0, w=t -> 1.0f0)
@@ -110,10 +113,11 @@ function R_diff(x::AbstractArray, T::Real, n::Int; t_min::Real=0.02f0, w=t -> 1.
     x_batch = reshape(x2, dim, dim, 1, 1) .* sqrt.(αbar) .+ sqrt.(1 .- αbar) .* ε
 
     ε̂, _ = model((x_batch |> dev, ts |> dev), ps, st)
-    err = Array(ε̂ |> cdev) .- ε
+    residual = Array(ε̂ |> cdev) .- ε
+    err = sum(abs2, residual) / length(residual)
 
     weights = reshape(Float32.(w.(ts)), 1, 1, 1, n) .* sqrt.(αbar)
-    grad = dropdims(sum(weights .* err; dims=4); dims=(3, 4)) ./ n
+    grad = dropdims(sum(weights .* residual; dims=4); dims=(3, 4)) ./ n
 
     return err, grad
 end
