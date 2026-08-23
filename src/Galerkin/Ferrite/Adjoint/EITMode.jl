@@ -220,7 +220,19 @@ function svd_on_modes(modes::Vector{Any},fe::FerriteFESpace)
     mode_vec_svd, Σ[1:n]
 end
 
-
+function svd_on_modes(F::AbstractArray,G::AbstractArray)
+    if sizeof(F) ≠ size(G)
+        println("Dimensions do not match!")
+        return nothing
+    end
+    n = sizeof(G)[2]
+    Λ = F * pinv(G)
+    V,Σ, U =  svd(Λ)
+    Σdiag = Diagonal(Σ[1:n])
+    Fnew = V[:,1:n]*Σdiag
+    Gnew = U[:,1:n]
+    Fnew, Gnew, Σ[1:n]
+end
 #=
 function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     out = Dict{T,FerriteEITMode}()

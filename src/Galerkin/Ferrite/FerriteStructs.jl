@@ -101,6 +101,9 @@ struct FerriteFESpace{RefElem} <: AbstractHilbertSpace
     up # Projection from coefficients of the basis functions of boundary to force vector
     up! # Projection from coefficients of the basis functions of boundary to force vector
     BDO::BoundaryOperators
+    cellvalues_σ::CellValues # shape functions/quadrature for the conductivity field
+    dh_σ::DofHandler # DofHandler for the conductivity field (own space, own order)
+    n_σ::Int # number of conductivity degrees of freedom
 end
 
 

@@ -22,12 +22,12 @@ Constructs a type-stable finite element space.
 Initializes cell/facet values, DOFs, constraints, mass/stiffness matrices,
 and projection operators.
 """
-function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {RefElem}
+function FerriteFESpace{RefElem}(grid, order::Int, order_σ::Int, qr_order::Int, ∂Ω) where {RefElem}
     dim = Ferrite.getspatialdim(grid)
 
     # reference element interpolation
     ip = Lagrange{RefElem,order}()
-
+    σp = Lagrange{RefElem,order_σ}()
     # quadrature
     qr = QuadratureRule{RefElem}(qr_order)
     qr_face = FacetQuadratureRule{RefElem}(qr_order)
@@ -36,10 +36,20 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
     cellvalues = CellValues(qr, ip)
     facetvalues = FacetValues(qr_face, ip)
 
+    cellvalues_σ = CellValues(qr, σp)
+
     # degrees of freedom
     dh = DofHandler(grid)
     add!(dh, :u, ip)
     close!(dh)
+
+    # σ (conductivity) lives on its own DofHandler, since it may use a
+    # different polynomial order than u and must not perturb the sizing
+    # of the potential-field operators (n, M, K, up/down, ...).
+    dh_σ = DofHandler(grid)
+    add!(dh_σ, :σ, σp)
+    close!(dh_σ)
+    n_σ = ndofs(dh_σ)
 
     # constraints
     ch = ConstraintHandler(dh)
@@ -55,7 +65,7 @@ function FerriteFESpace{RefElem}(grid, order::Int, qr_order::Int, ∂Ω) where {
 
     m, _, down, up, up!, _, b_dofs = produce_nonzero_positions(facetvalues, dh, ∂Ω)
     BDO = BoundaryOperators(nothing,nothing,nothing,nothing,nothing,nothing)
-    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, b_dofs, down, up, up!, BDO)
+    return FerriteFESpace{RefElem}(cellvalues, dh, ∂Ω, facetvalues, ch, order, qr_order, dim, n, num_facet, m, M, M_fac, K, K_fac, total_volume, b_dofs, down, up, up!, BDO, cellvalues_σ, dh_σ, n_σ)
 end
 
 include("Norms.jl")
