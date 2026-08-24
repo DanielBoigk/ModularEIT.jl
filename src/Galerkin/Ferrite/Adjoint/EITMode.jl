@@ -221,11 +221,11 @@ function svd_on_modes(modes::Vector{Any},fe::FerriteFESpace)
 end
 
 function svd_on_modes(F::AbstractArray,G::AbstractArray)
-    if sizeof(F) ≠ size(G)
+    if size(F, 2) ≠ size(G, 2)
         println("Dimensions do not match!")
         return nothing
     end
-    n = sizeof(G)[2]
+    n = size(G, 2)
     Λ = F * pinv(G)
     V,Σ, U =  svd(Λ)
     Σdiag = Diagonal(Σ[1:n])

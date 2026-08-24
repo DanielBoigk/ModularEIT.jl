@@ -26,22 +26,45 @@ function produce_nonzero_positions(v, atol=1e-8, rtol=1e-5)
     non_zero_count = count(x -> !approx_zero(x), v)
     non_zero_positions = zeros(Int, non_zero_count)
     non_zero_indices = findall(x -> !approx_zero(x), v)
-    down = (x) -> x[non_zero_indices]
-    up = (x) -> begin
-        v = zeros(eltype(x), length(v))
-        v[non_zero_indices] = x
-        return v
+    n = length(v)
+
+    # `down`/`up`/`up!` each get a matrix method alongside the vector one, so
+    # they batch over modes (columns) in a single call: e.g. `up(G)` for
+    # `G::AbstractMatrix` of size (non_zero_count, num_modes) lifts every
+    # column at once instead of looping `up.(eachcol(G))`.
+    down(x::AbstractVector) = x[non_zero_indices]
+    down(X::AbstractMatrix) = X[non_zero_indices, :]
+
+    up(x::AbstractVector) = begin
+        out = zeros(eltype(x), n)
+        out[non_zero_indices] = x
+        return out
     end
-    up! = (out, x) -> begin
-            @assert length(out) == length(v)
-            @assert length(x) == non_zero_count
-            fill!(out, zero(eltype(out)))          # reset (optional)
-            @inbounds for (i, idx) in enumerate(non_zero_indices)
-                out[idx] = x[i]
-            end
-            return out
+    up(X::AbstractMatrix) = begin
+        out = zeros(eltype(X), n, size(X, 2))
+        out[non_zero_indices, :] = X
+        return out
+    end
+
+    up!(out::AbstractVector, x::AbstractVector) = begin
+        @assert length(out) == n
+        @assert length(x) == non_zero_count
+        fill!(out, zero(eltype(out)))          # reset (optional)
+        @inbounds for (i, idx) in enumerate(non_zero_indices)
+            out[idx] = x[i]
         end
-    return non_zero_count, non_zero_positions, down, up,up!, non_zero_indices 
+        return out
+    end
+    up!(out::AbstractMatrix, X::AbstractMatrix) = begin
+        @assert size(out, 1) == n
+        @assert size(X, 1) == non_zero_count
+        @assert size(out, 2) == size(X, 2)
+        fill!(out, zero(eltype(out)))
+        @views out[non_zero_indices, :] .= X
+        return out
+    end
+
+    return non_zero_count, non_zero_positions, down, up, up!, non_zero_indices
 end
 
 function produce_nonzero_positions(facetvalues::FacetValues, dh::DofHandler, ∂Ω)

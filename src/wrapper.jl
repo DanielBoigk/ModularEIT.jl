@@ -141,21 +141,26 @@ end
 
 using LBFGSB
 export create_proximal_gradient_step
-function create_proximal_gradient_step(f, ∂f, ρ, n; λ::Number=1.0, lb::Number=1e-6, ub::Union{Number,Nothing}=nothing, m::Int=17, factr::Float64=1e7, pgtol::Float64=1e-5, iprint::Int=-1, maxfun::Int=15000, maxiter::Int=15000)
+function create_proximal_gradient_step(f, ∂f, ρ, n; λ::Number=1.0, box::Bool=true, lb::Number=1e-6, ub::Union{Number,Nothing}=nothing, m::Int=17, factr::Float64=1e7, pgtol::Float64=1e-5, iprint::Int=-1, maxfun::Int=15000, maxiter::Int=15000)
 
-    optimizer = L_BFGS_B(n, m)
+    optimizer = box ? L_BFGS_B(n, m) : nothing
 
     # Build the bounds matrix once (type, lower, upper per variable)
-    bounds = zeros(3, n)
-    for i in 1:n
-        if ub === nothing
-            bounds[1, i] = 1   # lower bound only
-            bounds[2, i] = lb
-        else
-            bounds[1, i] = 2   # lower and upper bound
-            bounds[2, i] = lb
-            bounds[3, i] = ub
+    bounds = if box
+        b = zeros(3, n)
+        for i in 1:n
+            if ub === nothing
+                b[1, i] = 1   # lower bound only
+                b[2, i] = lb
+            else
+                b[1, i] = 2   # lower and upper bound
+                b[2, i] = lb
+                b[3, i] = ub
+            end
         end
+        b
+    else
+        nothing
     end
 
     prox = v -> begin
@@ -171,12 +176,17 @@ function create_proximal_gradient_step(f, ∂f, ρ, n; λ::Number=1.0, lb::Numbe
             return z
         end
 
-        # Warm-start from v, clipped into the feasible region
-        x0 = clamp.(copy(v), lb, ub === nothing ? Inf : ub)
-
-        fout, xout = optimizer(objective, gradient!, x0, bounds;
-                                m=m, factr=factr, pgtol=pgtol, iprint=iprint,
-                                maxfun=maxfun, maxiter=maxiter)
+        if box
+            # Warm-start from v, clipped into the feasible region
+            x0 = clamp.(copy(v), lb, ub === nothing ? Inf : ub)
+            fout, xout = optimizer(objective, gradient!, x0, bounds;
+                                    m=m, factr=factr, pgtol=pgtol, iprint=iprint,
+                                    maxfun=maxfun, maxiter=maxiter)
+        else
+            result = optimize(objective, gradient!, copy(v), LBFGS(m=m),
+                               Optim.Options(g_tol=pgtol, iterations=maxiter))
+            xout = Optim.minimizer(result)
+        end
 
         return xout, objective(xout), 0.5 * ρ * sum(abs2, xout .- v)
     end
