@@ -113,28 +113,47 @@ end
 
 using Optim
 
-function create_prox_linesearch(f, ∂f, ρ::Number =0.0)
+function create_prox_linesearch(f, ∂f, ρ::Number=0.0; maxiter::Int=20, tol::Float64=1e-10, lb::Number=1e-6, ub::Union{Number,Nothing}=nothing, verbose::Bool=true)
     ρ_internal = ρ
-    prox = (x, ρ = ρ_internal) -> begin
-        current_val = f(x)
-        direction = ∂f(x)
-        τ_min, τ_max = determine_box(x, direction)
-        
-        # Brent's method in Optim.jl takes a pure scalar function
-        opt_func = (τ) -> f(x + τ * direction) + 0.5 * ρ * sum(abs2, τ*direction)
-        
-        # optimize(f, lower, upper, method)
-        # Note: Brent() is the default for this syntax in Optim
-        results = optimize(opt_func, τ_min, τ_max, Brent())
-        
-        # Extract the scalar minimizer and the minimum value
-        best_τ = Optim.minimizer(results)
-        new_val = Optim.minimum(results)
-        
-        if new_val < current_val
-            return x + best_τ * direction, new_val, 0.5 * ρ * sum(abs2, best_τ*direction)
+    maxiter_internal = maxiter
+    tol_internal = tol
+    lb_internal = lb
+    ub_internal = ub
+    verbose_internal = verbose
+    function prox(x, ρ::Number=ρ_internal; maxiter::Int=maxiter_internal, tol::Float64=tol_internal,
+                  lb::Number=lb_internal, ub::Union{Number,Nothing}=ub_internal, verbose::Bool=verbose_internal)
+        v = x  # proximal anchor: penalize deviation from the point passed in, not from x_cur
+        x_cur = copy(x)
+        obj_at = y -> f(y) + 0.5 * ρ * sum(abs2, y .- v)
+        current_val = obj_at(x_cur)
+        verbose && println("linesearch  iter=0  err=$(current_val)")
+
+        for k in 1:maxiter
+            direction = ∂f(x_cur)
+            τ_min, τ_max = determine_box(x_cur, direction; lb=lb, ub=ub)
+
+            # Brent's method in Optim.jl takes a pure scalar function
+            opt_func = (τ) -> obj_at(x_cur + τ * direction)
+
+            # optimize(f, lower, upper, method)
+            # Note: Brent() is the default for this syntax in Optim
+            results = optimize(opt_func, τ_min, τ_max, Brent())
+
+            # Extract the scalar minimizer and the minimum value
+            best_τ = Optim.minimizer(results)
+            new_val = Optim.minimum(results)
+
+            if new_val < current_val - tol
+                x_cur = x_cur + best_τ * direction
+                current_val = new_val
+                verbose && println("linesearch  iter=$k  τ=$(best_τ)  err=$(current_val)")
+            else
+                verbose && println("linesearch  iter=$k  no improvement (err=$(new_val) ≥ $(current_val) - tol), stopping")
+                break
+            end
         end
-        return x, current_val, 0.0
+
+        return x_cur, current_val, 0.5 * ρ * sum(abs2, x_cur .- v)
     end
     return prox
 end
