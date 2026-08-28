@@ -1,5 +1,5 @@
-using Pkg
-Pkg.activate("../../../")
+#using Pkg
+#Pkg.activate("../../")
 using Lux, Reactant, Enzyme, NNlib
 using Optimisers, Random, Statistics, Images, FileIO
 using LinearAlgebra, JLD2, ComponentArrays
@@ -26,16 +26,21 @@ model = unet_tinyimagenet64(; embedding_dims=emb_dim)
 if isfile("ps_latestvn.jld2") && isfile("st_latestvn.jld2")
     @load "ps_latestvn.jld2" ps_cpu
     @load "st_latestvn.jld2" st_cpu
+    st_cpu = Lux.testmode(st_cpu)   # BatchNorm must use running stats, not batch stats, when sampling
     ps = ps_cpu |> dev
-    st = Lux.testmode(st_cpu) |> dev   # BatchNorm must use running stats, not batch stats, when sampling
+    st = st_cpu |> dev
     println("Loaded checkpoint from ps_latestvn.jld2 / st_latestvn.jld2.")
 else
     @warn "No checkpoint found (ps_latestvn.jld2 / st_latestvn.jld2 not present in this directory) — " *
           "sampling from a randomly initialized model, so the output will be pure noise. " *
           "Run trainimgnet.jl first to get meaningful samples."
-    ps, st = Lux.setup(Xoshiro(), model) |> dev
-    st = Lux.testmode(st)
+    ps_cpu, st_cpu = Lux.setup(Xoshiro(), model)
+    st_cpu = Lux.testmode(st_cpu)
+    ps = ps_cpu |> dev
+    st = st_cpu |> dev
 end
+# ps_cpu/st_cpu (plain CPU arrays) back `sde` below; ps/st (on `dev`) back R_diff.
+# Keeping sde on CPU sidesteps a Reactant scalar-indexing crash on batch-size-1 calls.
 
 # --- VP-SDE noise schedule (must match the one trainimgnet.jl was trained with) ---
 const βmin = 0.1f0
@@ -72,10 +77,10 @@ image `x` (accepts a (64,64), (64,64,1), or (64,64,1,1) array) at scalar
 diffusion time `t ∈ [0, T]`. Returns a (64,64) `Array`.
 """
 function sde(x::AbstractArray, t::Real)
-    x4 = reshape(Float32.(x), dim, dim, 1, 1) |> dev
-    nv = fill(Float32(noise_variance(t)), 1, 1, 1, 1) |> dev
-    ε̂, _ = model((x4, nv), ps, st)
-    return reshape(Array(ε̂ |> cdev), dim, dim)
+    x4 = reshape(Float32.(x), dim, dim, 1, 1)
+    nv = fill(Float32(noise_variance(t)), 1, 1, 1, 1)
+    ε̂, _ = model((x4, nv), ps_cpu, st_cpu)
+    return reshape(Array(ε̂), dim, dim)
 end
 
 """

@@ -233,6 +233,14 @@ function svd_on_modes(F::AbstractArray,G::AbstractArray)
     Gnew = U[:,1:n]
     Fnew, Gnew, Σ[1:n]
 end
+
+function svd_on_modes(Λ::AbstractArray,n::Int)
+    V,Σ, U =  svd(Λ)
+    Σdiag = Diagonal(Σ[1:n])
+    Fnew = V[:,1:n]*Σdiag
+    Gnew = U[:,1:n]
+    Fnew, Gnew, Σ[1:n]
+end
 #=
 function svd(modes::Dict{T,FerriteEITMode}, fe::FerriteFESpace) where {T}
     out = Dict{T,FerriteEITMode}()
