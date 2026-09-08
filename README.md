@@ -9,10 +9,12 @@ This library is build on top of the FEM library [Ferrite.jl](https://ferrite-fem
   - [x] TV
     - [x] Huber smoothed
     - [ ] Chambolle-Pock
+  - [ ] SVD 
 - [ ] Learned regularizers
   - [ ] CNN trained as VP-SDE for quadrilateral grid. 
     - [ ] via Diffusion Posteroir Sampling
-	- [ ] via Variational Stochastic Sampling 
+	  - [ ] via Diff-PIR
+	  - [ ] via RED-Diff 
 - [ ]  Documentation
 - [ ] Various Optimizers:
 	- [x] Line Search after Gradient
