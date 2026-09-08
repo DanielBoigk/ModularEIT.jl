@@ -58,7 +58,7 @@ LAMBDA_GN    = 1e-4
 RHO_OBJ      = 1.0e-3
 
 # --- diffusion prior ---
-MODEL_KIND = :unet   # :cnn or :unet — which pretrained score network to load
+MODEL_KIND = :cnn   # :cnn or :unet — which pretrained score network to load
 DIM        = 64      # image side length the network was trained on
 
 const βmin = 0.1f0
@@ -305,8 +305,11 @@ else
     ps = ps_cpu |> dev
     st = st_cpu |> dev
 end
-# ps_cpu/st_cpu (plain CPU arrays) back `sde` below; ps/st (on `dev`) back R_diff.
-# Keeping sde on CPU sidesteps a Reactant scalar-indexing crash on batch-size-1 calls.
+# ps_cpu/st_cpu (plain CPU arrays) back both `sde` and `R_diff` below; ps/st (on
+# `dev`) are kept only for callers that @compile the model themselves. Running the
+# Lux model eagerly on `dev` arrays hits a Reactant scalar-indexing crash (the
+# model's internal `view(...)` calls fall back to scalar getindex on a
+# ConcretePJRTArray), so every eager call in this file stays on CPU.
 
 β(t) = βmin + (βmax - βmin) * t / T
 ᾱ(t) = exp(-βmin * t - (βmax - βmin) / (2 * T) * t^2)
@@ -348,12 +351,12 @@ function R_diff(x::AbstractArray, T::Real, n::Int; t_min::Real=0.02f0, w=t -> 1.
     x_batch = reshape(x2, DIM, DIM, 1, 1) .* sqrt.(αbar) .+ sqrt.(1 .- αbar) .* ε
 
     if MODEL_KIND === :cnn
-        ε̂, _ = model((x_batch |> dev, ts |> dev), ps, st)
+        ε̂, _ = model((x_batch, ts), ps_cpu, st_cpu)
     else
         nv = reshape(Float32.(ts), 1, 1, 1, n)
-        ε̂, _ = model((x_batch |> dev, nv |> dev), ps, st)
+        ε̂, _ = model((x_batch, nv), ps_cpu, st_cpu)
     end
-    residual = Array(ε̂ |> cdev) .- ε
+    residual = Array(ε̂) .- ε
     err = sum(abs2, residual) / length(residual)
 
     weights = reshape(Float32.(w.(ts)), 1, 1, 1, n) .* sqrt.(αbar)
