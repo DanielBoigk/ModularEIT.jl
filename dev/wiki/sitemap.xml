@@ -36,7 +36,7 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-to-Dirichlet-Map</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
@@ -125,8 +125,11 @@
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</loc>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
+  </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Krylov-Methods</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Boundary-Mass-and-Stiffness-Matrices</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
@@ -149,6 +152,9 @@
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Green's-Identities</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</loc>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
+  </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/L2-Projection</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
@@ -168,10 +174,16 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Quadrature-and-Assembly</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</loc>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient</loc>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Stiffness-Matrix</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
@@ -390,5 +402,5 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-27T21:16:25.000Z</lastmod>
   </url></urlset>
