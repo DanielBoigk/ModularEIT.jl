@@ -18,11 +18,16 @@ export Electrode, ring_electrodes
 export ForwardProblem, solve_forward, jacobian
 export Regularizer, Tikhonov, TotalVariation, penalty, gradient
 export ReconstructionResult, reconstruct
+export BlockCGWorkspace, BlockCGStats, pbcg, pbcg!, boundary_grounding
+export JacobiPreconditioner, AMGPreconditioner
+export ProjectedCholesky, projected_cholesky, refactor!
 
 include("mesh.jl")
 include("electrodes.jl")
 include("forward.jl")
 include("regularization.jl")
 include("reconstruction.jl")
+include("LinearSolvers/ProjectedBlockCG.jl")
+include("LinearSolvers/ProjectedCholesky.jl")
 
 end # module ModularEIT

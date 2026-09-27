@@ -18,7 +18,7 @@ $$
 
 that is, the injected current equals the extracted current ([[Continuity Equation|charge conservation]]).
 
-**Non-uniqueness up to constants.** If $u$ solves the problem, so does $u + c$ for every $c\in\mathbb R$. Only potential *differences* are physical. Uniqueness is restored by *grounding*: fix $\int_{\partial\Omega}u\,\mathrm ds = 0$, or fix $u$ at one point, or work in $H^1(\Omega)/\mathbb R$.
+**Non-uniqueness up to constants.** If $u$ solves the problem, so does $u + c$ for every $c\in\mathbb R$. Only potential *differences* are physical. Uniqueness is restored by [[Grounding of the Potential|grounding]]: fix $\int_{\partial\Omega}u\,\mathrm ds = 0$, or fix $u$ at one point, or work in $H^1(\Omega)/\mathbb R$.
 
 **Weak form.** Find $u\in H^1(\Omega)/\mathbb R$ such that
 

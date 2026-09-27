@@ -6,12 +6,12 @@ aliases: [Grounding, Pinning]
 The discrete [[Neumann Problem]] $L_\gamma\mathbf u = \mathbf g$ is singular: $L_\gamma\mathbf 1 = 0$. It is solvable iff $\mathbf g\perp\mathbf 1$, that is, $\sum_i g_i = \int_{\partial\Omega} g = 0$. Then the solution is unique up to adding a constant. Ways to handle this:
 
 1. **Project the data.** Remove the mean of the current pattern, $\mathbf g\leftarrow\mathbf g - \frac{\mathbf 1^\top\mathbf g}{\mathbf 1^\top\mathbf 1}\mathbf 1$ (or the $M_\Gamma$-weighted version). Without this, the system is inconsistent, and a regularised solver silently returns the solution to a different problem.
-2. **Krylov on the singular system.** CG and MINRES converge on consistent singular symmetric systems if started in $\operatorname{range}(L)$. Projecting the iterates and the preconditioner output onto $\mathbf 1^\perp$ keeps round-off from drifting into the kernel. MINRES handles semidefinite and nearly singular cases more robustly.
-3. **Pinning.** Fix one DOF, $u_k = 0$, by replacing its row and column as for [[Enforcing Dirichlet Conditions|a Dirichlet condition]]. This gives an SPD matrix and is simple, but the grounding is attached to an arbitrary node. The solution is re-grounded afterwards.
+2. **Krylov on the singular system** (see [[Projected Conjugate Gradient]]). CG and MINRES converge on consistent singular symmetric systems if started in $\operatorname{range}(L)$. Projecting the iterates and the preconditioner output onto $\mathbf 1^\perp$ keeps round-off from drifting into the kernel. MINRES handles semidefinite and nearly singular cases more robustly.
+3. **Pinning.** Fix one DOF, $u_k = 0$, by replacing its row and column as for [[Enforcing Dirichlet Conditions|a Dirichlet condition]]. This gives an SPD matrix and is simple, but the grounding is attached to an arbitrary node. The solution is re-grounded afterwards. With a sparse direct solver this is the [[Projected Cholesky Factorization]].
 4. **Mean-value constraint.** Add a Lagrange multiplier for $\int_{\partial\Omega}u = 0$ (or $\int_\Omega u = 0$), which gives a saddle-point system of size $n+1$.
 5. **Shift $L+\varepsilon I$.** Makes the matrix SPD, but it solves a slightly different problem. The relative perturbation of the solution is of order $\varepsilon/\lambda_2$, where $\lambda_2$ is the smallest nonzero eigenvalue of $L$. It is therefore used with very small $\varepsilon$, together with the projection in 1.
 
-After solving, **ground** the solution by subtracting its boundary mean, so voltages are comparable to measurements that are themselves mean-free.
+After solving, **ground** the solution, for example by subtracting its boundary mean or making its boundary nodal values sum to zero, so voltages are comparable to measurements that are themselves mean-free (see [[Grounding of the Potential]]).
 
 ## References
 

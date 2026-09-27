@@ -13,7 +13,7 @@ $$
 **Batching strategies.**
 
 - **Direct factorisation.** Factor $L_\sigma$ once (sparse Cholesky, or $LDL^\top$ after grounding) and do $2N$ triangular solves. This pays off when $N$ is large relative to the matrix size or high accuracy is needed. The factorisation must be redone whenever $\sigma$ changes.
-- **Block Krylov methods** (block CG, block MINRES). They iterate on all right-hand sides together, sharing a larger Krylov space, and turn $N$ matrix–vector products into one sparse matrix–*matrix* product (SpMM). This uses memory bandwidth and caches much better and maps well to GPUs. Care is needed with rank deficiency (deflation) when right-hand sides become nearly dependent.
+- **Block Krylov methods** (block CG, block MINRES; see [[Block Conjugate Gradient]]). They iterate on all right-hand sides together, sharing a larger Krylov space, and turn $N$ matrix–vector products into one sparse matrix–*matrix* product (SpMM). This uses memory bandwidth and caches much better and maps well to GPUs. Care is needed with rank deficiency (deflation) when right-hand sides become nearly dependent.
 - **Independent parallel solves** of the individual systems, for example one per thread.
 
 Since state and adjoint solves use the same matrix and preconditioner, both can be batched together once the residuals are known. Stacking the patterns also reduces the per-pattern overhead of assembling the gradient $-\nabla u_i\cdot\nabla\lambda_i$ (see [[Functional Derivative of the Data Misfit]]).

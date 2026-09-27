@@ -16,6 +16,7 @@ makedocs(
             "Forward Problem" => "api/forward.md",
             "Regularization" => "api/regularization.md",
             "Reconstruction" => "api/reconstruction.md",
+            "Linear Solvers" => "api/linear_solvers.md",
         ],
     ],
 )
