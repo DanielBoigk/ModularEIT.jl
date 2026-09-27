@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>ModularEIT Wiki</title>
+      <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki</link>
+      <description>Last 10 notes on ModularEIT Wiki</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Complete Electrode Model</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Complete-Electrode-Model</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Complete-Electrode-Model</guid>
+    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard model for the Forward Problem of Electrical Impedance Tomography. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+  </item><item>
+    <title>Electrical Impedance Tomography</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Electrical-Impedance-Tomography</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Electrical-Impedance-Tomography</guid>
+    <description><![CDATA[ Electrical Impedance Tomography (EIT) recovers the conductivity \sigma inside a body \Omega \subset \mathbb{R}^d from voltage measurements taken with electrodes on its boundary \partial\Omega. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+  </item><item>
+    <title>Forward Problem</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Forward-Problem</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Forward-Problem</guid>
+    <description><![CDATA[ The forward problem maps a conductivity \sigma and a current pattern I to the electrode voltages U = F(\sigma) I. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+  </item><item>
+    <title>Tikhonov Regularization</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Tikhonov-Regularization</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Tikhonov-Regularization</guid>
+    <description><![CDATA[ Tikhonov regularization penalises the distance to a reference conductivity \sigma_0: R(\sigma) = \frac{\alpha}{2} \lVert \sigma - \sigma_0 \rVert_2^2 . ]]></description>
+    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+  </item><item>
+    <title>Total Variation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Total-Variation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Total-Variation</guid>
+    <description><![CDATA[ Total variation regularization favours piecewise-constant conductivities, which makes it well suited to Electrical Impedance Tomography of organs or inclusions with sharp boundaries: R(\sigma) = \alpha \int_\Omega \lvert \nabla \sigma \rvert \,\mathrm{d}x \approx \alpha \sum_{k} \sqrt{(\sigma_{k+1} ... ]]></description>
+    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+  </item><item>
+    <title>ModularEIT Wiki</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
+    <description><![CDATA[ Welcome to the theory wiki of ModularEIT.jl. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
