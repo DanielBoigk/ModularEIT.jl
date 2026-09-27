@@ -6,41 +6,65 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Applications of EIT</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Applications-of-EIT</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Applications-of-EIT</guid>
+    <description><![CDATA[ Electrical Impedance Tomography is used wherever conductivity contrasts show up and a cheap, fast, non-invasive measurement matters more than fine spatial resolution. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
     <title>Complete Electrode Model</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Complete-Electrode-Model</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Complete-Electrode-Model</guid>
-    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard model for the Forward Problem of Electrical Impedance Tomography. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
+    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
+    <title>Complex Conductivity</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complex-Conductivity</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complex-Conductivity</guid>
+    <description><![CDATA[ Biological tissue both conducts and stores charge: cell membranes act as capacitors. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
+    <title>Conductivity Equation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conductivity-Equation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conductivity-Equation</guid>
+    <description><![CDATA[ Combining the steady-state Continuity Equation \nabla\cdot\mathbf J = 0 with Ohm’s law \mathbf J = -\gamma\nabla u gives the conductivity equation \nabla\cdot(\gamma\nabla u) = 0 \qquad \text{in } \Omega , for the electric potential u:\Omega\to\mathbb R in a bounded Lipschitz domain \Omega\subset\ma... ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
+    <title>Continuity Equation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Continuity-Equation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Continuity-Equation</guid>
+    <description><![CDATA[ Conservation of electric charge is expressed by the continuity equation \frac{\partial \rho_q}{\partial t} + \nabla\cdot \mathbf J = 0 , where \rho_q is the volume charge density and \mathbf J the current density. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
+    <title>Current Patterns</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns</guid>
+    <description><![CDATA[ A current pattern is a boundary current g with \int_{\partial\Omega} g\,\mathrm ds = 0 (or electrode currents with \sum_\ell I_\ell = 0). ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
+    <title>Dirichlet Problem</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</guid>
+    <description><![CDATA[ In the Dirichlet problem the voltage on the boundary is prescribed. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
+    <title>Dirichlet and Thomson Principles</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-and-Thomson-Principles</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-and-Thomson-Principles</guid>
+    <description><![CDATA[ Both forward problems have energy characterisations. Dirichlet principle. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+  </item><item>
+    <title>Dirichlet-to-Neumann Map</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map</guid>
+    <description><![CDATA[ For a conductivity \gamma, the Dirichlet-to-Neumann (DtN) map sends a boundary voltage to the boundary current it produces: \Lambda_\gamma : H^{1/2}(\partial\Omega)\to H^{-1/2}(\partial\Omega), \qquad f \mapsto \gamma\,\partial_\nu u_f\big|_{\partial\Omega}, where u_f solves the Dirichlet Problem wi... ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
   </item><item>
     <title>Electrical Impedance Tomography</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Electrical-Impedance-Tomography</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Electrical-Impedance-Tomography</guid>
-    <description><![CDATA[ Electrical Impedance Tomography (EIT) recovers the conductivity \sigma inside a body \Omega \subset \mathbb{R}^d from voltage measurements taken with electrodes on its boundary \partial\Omega. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
-  </item><item>
-    <title>Forward Problem</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Forward-Problem</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Forward-Problem</guid>
-    <description><![CDATA[ The forward problem maps a conductivity \sigma and a current pattern I to the electrode voltages U = F(\sigma) I. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
-  </item><item>
-    <title>Tikhonov Regularization</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Tikhonov-Regularization</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Tikhonov-Regularization</guid>
-    <description><![CDATA[ Tikhonov regularization penalises the distance to a reference conductivity \sigma_0: R(\sigma) = \frac{\alpha}{2} \lVert \sigma - \sigma_0 \rVert_2^2 . ]]></description>
-    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
-  </item><item>
-    <title>Total Variation</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Total-Variation</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Total-Variation</guid>
-    <description><![CDATA[ Total variation regularization favours piecewise-constant conductivities, which makes it well suited to Electrical Impedance Tomography of organs or inclusions with sharp boundaries: R(\sigma) = \alpha \int_\Omega \lvert \nabla \sigma \rvert \,\mathrm{d}x \approx \alpha \sum_{k} \sqrt{(\sigma_{k+1} ... ]]></description>
-    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
-  </item><item>
-    <title>ModularEIT Wiki</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
-    <description><![CDATA[ Welcome to the theory wiki of ModularEIT.jl. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 09:57:14 GMT</pubDate>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrical-Impedance-Tomography</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrical-Impedance-Tomography</guid>
+    <description><![CDATA[ Electrical Impedance Tomography (EIT) is an imaging method that recovers the electrical conductivity \gamma inside a body \Omega from measurements made only on its boundary \partial\Omega. ]]></description>
+    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
   </item>
     </channel>
   </rss>
