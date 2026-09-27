@@ -1,0 +1,47 @@
+name: Documentation
+
+# Builds the Documenter API docs (docs/) and the Quartz wiki (markdown/ via site/)
+# and deploys both to the gh-pages branch: API docs at /dev/, wiki at /dev/wiki/.
+on:
+  push:
+    branches:
+      - master
+      - redo
+    tags: ["*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write # push to gh-pages
+  statuses: write # preview/deploy status
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Quartz uses git history for the wiki's created/modified dates
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install wiki (Quartz) dependencies
+        working-directory: site
+        run: npm ci
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1"
+      - uses: julia-actions/cache@v2
+      - name: Install Julia dependencies
+        run: julia --project=docs/ -e 'using Pkg; Pkg.instantiate()'
+      - name: Build and deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
+        run: julia --project=docs/ docs/make.jl
