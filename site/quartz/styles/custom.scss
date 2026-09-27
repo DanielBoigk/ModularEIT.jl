@@ -1,0 +1,49 @@
+@use "./base.scss";
+
+// Obsidian "Markdown Tabs" blocks
+.obsidian-tabs {
+  margin: 1rem 0;
+  border: 1px solid var(--lightgray);
+  border-radius: 5px;
+  overflow: hidden;
+  .tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    background: var(--lightgray);
+    .tab-button {
+      border: none;
+      background: transparent;
+      color: var(--darkgray);
+      font-family: var(--bodyFont);
+      font-size: 0.9rem;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      &.active {
+        background: var(--light);
+        color: var(--dark);
+        font-weight: 600;
+      }
+    }
+  }
+  .tab-panel {
+    display: none;
+    padding: 0 0.75rem;
+    &.active { display: block; }
+    pre { margin: 0.75rem 0; }
+  }
+}
+
+// TikZ diagrams rendered to SVG at build time
+figure.tikz {
+  margin: 1.5rem auto;
+  text-align: center;
+  overflow-x: auto;
+  svg { max-width: 100%; height: auto; }
+}
+// Light and dark variants are both emitted; show the one matching the theme
+figure.tikz svg.tikz-dark { display: none; }
+:root[saved-theme="dark"] figure.tikz {
+  svg.tikz-light { display: none; }
+  svg.tikz-dark { display: inline; }
+}
+pre.tikz-error { border-left: 3px solid #c33; }

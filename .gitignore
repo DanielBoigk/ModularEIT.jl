@@ -39,3 +39,15 @@ Manifest.toml
 #*.msh
 *.vtk
 *.vtu
+
+# Quartz build artefacts (wiki site in site/)
+site/node_modules/
+site/public/
+site/.quartz-cache/
+site/quartz/.quartz-cache/
+site/tsconfig.tsbuildinfo
+
+# Obsidian vault state and community plugin bundles (install via Obsidian)
+markdown/.obsidian/workspace.json
+markdown/.obsidian/plugins/*/main.js
+markdown/.obsidian/plugins/*/styles.css

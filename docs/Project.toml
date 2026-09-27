@@ -1,0 +1,9 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+ModularEIT = "7608eb13-d8ec-417a-a672-b3f475c1af64"
+
+[sources]
+ModularEIT = {path = ".."}
+
+[compat]
+Documenter = "1"
