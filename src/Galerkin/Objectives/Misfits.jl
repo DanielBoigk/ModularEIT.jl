@@ -37,3 +37,16 @@ function _remove_mean!(X)
     X .-= sum(X; dims = 1) ./ size(X, 1)
     return X
 end
+
+# Π X = X - 1 (wᵀX)/(wᵀ1): removes the w-weighted mean of every column (Π1 = 0). With w the
+# boundary lengths of the measurements this is the discrete ∫_Γ-mean, consistent with the
+# grounding ∫_Γ u ds = 0; with w = 1 it is the plain mean.
+function _project!(X, w::AbstractVector)
+    X .-= (w' * X) ./ sum(w)
+    return X
+end
+# Πᵀ G = G - w (1ᵀG)/(wᵀ1)
+function _project_adjoint!(G, w::AbstractVector)
+    G .-= w .* (sum(G; dims = 1) ./ sum(w))
+    return G
+end

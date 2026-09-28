@@ -121,6 +121,16 @@ function _electrode_angle(disc::FerriteDiscretization, facets)
     return _angles(disc, [m[1]], [m[2]])[1]
 end
 
+# boundary load vector wᵢ = ∫_Γ φᵢ ds of the u space: wᵀu = ∫_Γ u ds
+_boundary_weights(disc::FerriteDiscretization) =
+    _condense(disc, assemble_boundary_load!(zeros(ndofs(disc.dh_u)), disc.dh_u, disc.fv_u, disc.boundary_facets))
+
+function _grounding(disc::FerriteDiscretization, kind::Symbol)
+    kind === :integral && return _boundary_weights(disc)
+    kind === :nodal && return boundary_grounding(ndofs_u(disc), disc.boundary_dofs)
+    throw(ArgumentError("grounding must be :integral or :nodal, got :$kind"))
+end
+
 # nᵤ × L matrix with columns ∫_{e_ℓ} φᵢ ds / |e_ℓ|
 function _electrode_averages(disc::FerriteDiscretization, electrodes)
     nu = ndofs_u(disc)
@@ -137,7 +147,21 @@ function _nearest_boundary_dofs(disc::FerriteDiscretization, points)
     return [disc.boundary_dofs[argmin((bx .- p[1]) .^ 2 .+ (by .- p[2]) .^ 2)] for p in points]
 end
 
-function ForwardModel(disc::FerriteDiscretization, model::ContinuumModel)
+"""
+    ForwardModel(disc, model; grounding = :integral)
+
+Discrete forward model of an electrode model on a Ferrite discretization (see
+[`ForwardModel`](@ref)). `grounding` fixes the additive constant of the current-driven
+potential for the continuum, point and gap models:
+
+- `:integral` (default): zero boundary mean, `∫_Γ u ds = 0`. It does not depend on the mesh,
+  so voltages computed on different meshes (e.g. adaptively refined ones) are comparable.
+- `:nodal`: the boundary nodal values sum to zero. Equal to `:integral` up to a constant factor
+  on meshes with uniformly spaced boundary nodes.
+
+The complete electrode model always grounds the electrode voltages, `Σ U_ℓ = 0`.
+"""
+function ForwardModel(disc::FerriteDiscretization, model::ContinuumModel; grounding::Symbol = :integral)
     nu, bd = ndofs_u(disc), disc.boundary_dofs
     nb = length(bd)
     MΓ = _condense(disc, assemble_boundary_mass(disc.dh_u, disc.fv_u, disc.boundary_facets))
@@ -146,10 +170,11 @@ function ForwardModel(disc::FerriteDiscretization, model::ContinuumModel)
     ct = ConductivityTensor(disc)
     θ = _angles(disc, _dof_coordinates(disc, bd)...)
     return _forward_model(model, nu, ndofs_σ(disc), copy(ct.pattern), nothing, ct, P, Q, ones(nu),
-                          boundary_grounding(nu, bd), bd, sparse(1.0I, nb, nb), θ, true)
+                          _grounding(disc, grounding), bd, sparse(1.0I, nb, nb), θ, true;
+                          measure_weights = _boundary_weights(disc)[bd])
 end
 
-function ForwardModel(disc::FerriteDiscretization, model::PointElectrodeModel)
+function ForwardModel(disc::FerriteDiscretization, model::PointElectrodeModel; grounding::Symbol = :integral)
     nu = ndofs_u(disc)
     inj = _nearest_boundary_dofs(disc, model.inject)
     meas = _nearest_boundary_dofs(disc, model.measure)
@@ -160,11 +185,11 @@ function ForwardModel(disc::FerriteDiscretization, model::PointElectrodeModel)
     ct = ConductivityTensor(disc)
     θ = _angles(disc, _dof_coordinates(disc, inj)...)
     return _forward_model(model, nu, ndofs_σ(disc), copy(ct.pattern), nothing, ct, P, Q, ones(nu),
-                          boundary_grounding(nu, disc.boundary_dofs), inj, sparse(1.0I, m, m), θ,
+                          _grounding(disc, grounding), inj, sparse(1.0I, m, m), θ,
                           sort(inj) == sort(meas))
 end
 
-function ForwardModel(disc::FerriteDiscretization, model::GapModel)
+function ForwardModel(disc::FerriteDiscretization, model::GapModel; grounding::Symbol = :integral)
     nu = ndofs_u(disc)
     P = _electrode_averages(disc, model.inject)
     Q = sparse(_electrode_averages(disc, model.measure)')
@@ -177,7 +202,7 @@ function ForwardModel(disc::FerriteDiscretization, model::GapModel)
     ct = ConductivityTensor(disc)
     θ = [_electrode_angle(disc, e) for e in model.inject]
     return _forward_model(model, nu, ndofs_σ(disc), copy(ct.pattern), nothing, ct, P, Q, ones(nu),
-                          boundary_grounding(nu, disc.boundary_dofs), B, E, θ, false)
+                          _grounding(disc, grounding), B, E, θ, false)
 end
 
 # Complete electrode model, unknowns (u, U) ∈ ℝ^{nᵤ} × ℝ^L:
@@ -186,7 +211,7 @@ end
 #   [ -d_ℓᵀ / z_ℓ               |e_ℓ| / z_ℓ δ_ℓk  ] [U] = [I]
 #
 # with the electrode mass matrices M_ℓ = ∫_{e_ℓ} φᵢ φⱼ ds and d_ℓ = ∫_{e_ℓ} φᵢ ds.
-function ForwardModel(disc::FerriteDiscretization, model::CompleteElectrodeModel)
+function ForwardModel(disc::FerriteDiscretization, model::CompleteElectrodeModel; grounding::Symbol = :integral)
     nu, L = ndofs_u(disc), length(model.electrodes)
     n = nu + L
     Cuu = spzeros(nu, nu)

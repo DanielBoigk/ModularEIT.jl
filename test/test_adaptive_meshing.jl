@@ -137,6 +137,32 @@ using Test
         @test trigonometric_patterns(fmc, 1) ≈ trigonometric_patterns(fmf, 1)
     end
 
+    @testset "grounded voltages converge on boundary-refined meshes" begin
+        # gap model on the four sides: raw voltages (not mean-removed) of a mesh with refined
+        # boundary cells converge to the uniform reference, because ∫_Γ u ds = 0 does not depend
+        # on the boundary node distribution
+        # electrodes: the middle half of every side (edges on mesh lines of the 8 × 8 base mesh)
+        function middles(g)
+            mid(f) = ModularEIT._facet_midpoint(g, f)
+            [[f for f in getfacetset(g, n) if abs(mid(f)[n in ("left", "right") ? 2 : 1]) < 0.5]
+             for n in ("right", "top", "left", "bottom")]
+        end
+        function volt(g)
+            d = FerriteDiscretization(g)
+            fm = ForwardModel(d, GapModel(middles(g)))
+            return forward_neumann(fm, ones(ndofs_σ(d)), trigonometric_patterns(fm, 1))[1]
+        end
+        Vref = volt(generate_grid(Quadrilateral, (128, 128)))
+        err = Float64[]
+        amg = AdaptiveMesh(generate_grid(Quadrilateral, (8, 8)); maxlevel = 8)
+        refine_mesh!(amg, [1, 2, 3, 9, 17])
+        for k in 0:2
+            push!(err, norm(volt(current_grid(amg)) - Vref) / norm(Vref))
+            refine_mesh!(amg)
+        end
+        @test err[3] < err[1] / 4
+    end
+
     @testset "conductivity transfer after refinement" begin
         am2 = AdaptiveMesh(generate_grid(Quadrilateral, (4, 4)); maxlevel = 6)
         g_old = current_grid(am2)

@@ -19,7 +19,9 @@ Discrete forward model of the electrode model `model` on the discretization `dis
 Fields: `n` (system size; `n_u` for most models, `n_u + L` for the complete electrode model),
 `n_u`, `n_σ`, `A` (system matrix, updated by [`system_matrix!`](@ref)), `A₀` (constant part of
 its stored values or `nothing`), `tensor` ([`ConductivityTensor`](@ref)), `P` (injection,
-`n × n_inject`), `Q` (measurement, `n_measure × n`), `nullspace`, `grounding`,
+`n × n_inject`), `Q` (measurement, `n_measure × n`), `nullspace`, `grounding`
+(the functional `w` with `wᵀx = 0` for the current-driven solution), `measure_weights`
+(weights of the mean removed from measured voltages),
 `dirichlet_dofs`, `free_dofs`, `E` (Dirichlet expansion), `C` (current representation),
 `angles` (angular positions of the injection sites, used by [`trigonometric_patterns`](@ref)).
 
@@ -46,9 +48,11 @@ struct ForwardModel{M <: AbstractElectrodeModel, CT, CF} <: AbstractForwardModel
     ff_map::Vector{Int}
     angles::Vector{Float64}
     kohn_vogelius_consistent::Bool
+    measure_weights::Vector{Float64}
 end
 
-function _forward_model(model, n_u, n_σ, A, A₀, tensor, P, Q, nullspace, grounding, B, E, angles, kv)
+function _forward_model(model, n_u, n_σ, A, A₀, tensor, P, Q, nullspace, grounding, B, E, angles, kv;
+                        measure_weights = ones(size(Q, 1)))
     n = size(A, 1)
     free = setdiff(1:n, B)
     Aidx = SparseMatrixCSC(n, n, A.colptr, A.rowval, collect(1.0:nnz(A)))
@@ -58,7 +62,8 @@ function _forward_model(model, n_u, n_σ, A, A₀, tensor, P, Q, nullspace, grou
     C = sparse(E' * P[B, :])
     C_fac = isapprox(C, I) ? nothing : cholesky(Symmetric(C))
     return ForwardModel(model, n, n_u, n_σ, A, A₀, tensor, sparse(P), sparse(Q), nullspace, grounding,
-                        collect(B), free, sparse(E), C, C_fac, A_ff, ff_map, angles, kv)
+                        collect(B), free, sparse(E), C, C_fac, A_ff, ff_map, angles, kv,
+                        collect(Float64, measure_weights))
 end
 
 """

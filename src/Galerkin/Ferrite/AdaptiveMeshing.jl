@@ -198,7 +198,7 @@ Goal-oriented indicator for the measured voltages, one value per cell:
 
     η_K = η_K(u) η_K(z),   η_K(u)² = Σₛ ‖J*ₛ - σ∇uₛ‖²_K,   η_K(z)² = Σₘ ‖J*(zₘ) - σ∇zₘ‖²_K,
 
-where `zₘ` are the dual solutions of the measurements (`A zₘ = Qᵀ Π eₘ`, the adjoint fields of
+where `zₘ` are the dual solutions of the measurements (`A zₘ = Qᵀ Πᵀ eₘ`, the adjoint fields of
 the Jacobian rows). Both factors are [`flux_recovery_indicator`](@ref)s (`estimator = :recovery`)
 or [`residual_indicator`](@ref)s (`estimator = :residual`, needs the injected `currents`). The voltage error is
 bounded by products of primal and dual errors, so cells are refined where errors are made *and*
@@ -216,7 +216,7 @@ function goal_oriented_indicator(disc::FerriteDiscretization, fm::ForwardModel, 
         throw(ArgumentError("estimator = :residual needs the injected currents"))
     system_matrix!(fm, σ)
     st = _init_neumann_solver(solver, fm)
-    Πt = _remove_mean!(Matrix(1.0I, n_measure(fm), n_measure(fm)))
+    Πt = _project_adjoint!(Matrix(1.0I, n_measure(fm), n_measure(fm)), fm.measure_weights)
     Z = zeros(fm.n, n_measure(fm))
     _solve!(Z, st, fm.Q' * Πt)
     if estimator === :residual

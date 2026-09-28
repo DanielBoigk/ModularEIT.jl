@@ -20,7 +20,9 @@ $$
 | one grounded node / electrode | $u(x_0) = 0$ | $w = e_{i_0}$ |
 | CEM electrode voltages | $\sum_\ell U_\ell = 0$ | see [[Complete Electrode Model]] |
 
-The boundary sum and the boundary mean agree on a uniform boundary mesh. In general they differ by the weights of the [[Boundary Mass and Stiffness Matrices|boundary mass matrix]].
+The boundary sum and the boundary mean agree, up to a factor, on a uniform boundary mesh. In general they differ by the weights of the [[Boundary Mass and Stiffness Matrices|boundary mass matrix]]: $w = M_\Gamma\mathbf 1$ has the entries $w_i = \int_{\partial\Omega}\varphi_i\,\mathrm ds$, and $w^\top\mathbf u = \int_{\partial\Omega}u_h\,\mathrm ds$ holds exactly.
+
+**Mesh independence.** The boundary mean is a functional of the potential alone. The nodal sum depends on how the boundary nodes are distributed: refining the mesh near one electrode adds nodes there and pulls the reference potential towards the local voltage. Solutions on different meshes then differ by a constant that has nothing to do with discretisation accuracy. This matters whenever voltages from different meshes are compared, as in convergence studies, [[Adaptive Meshing in EIT|adaptive refinement]], or data simulated on a fine mesh and inverted on a coarse one. The boundary mean is therefore the robust choice. The nodal sum is a convenient approximation of it on uniform boundary meshes.
 
 **Changing the grounding afterwards.** All solutions differ by constants, so any solution $\tilde{\mathbf u}$ can be regrounded with the (oblique) projection
 
@@ -33,7 +35,7 @@ For a general null space with basis $V$ and $k$ grounding functionals $W$ this b
 **Why the boundary grounding is natural for EIT.**
 
 - The [[Neumann-to-Dirichlet Map]] is defined with $\int_{\partial\Omega}u = 0$: only boundary voltages are measured, so the reference should be fixed by boundary values, not by the (unmeasured) interior.
-- The boundary misfit $\|u|_{\partial\Omega}-f\|^2$ is *not* invariant under $u\mapsto u+c$. Minimising it over the constant gives $\int_{\partial\Omega}(u+c-f) = 0$. If the measured voltages $f$ have zero boundary mean, grounding $u$ with zero boundary mean automatically picks the best-fitting constant, so the misfit only measures the physically meaningful voltage differences. With Euclidean nodal norms the same holds for the zero *sum* of boundary nodal values.
+- The boundary misfit $\|u|_{\partial\Omega}-f\|^2$ is *not* invariant under $u\mapsto u+c$. Minimising it over the constant gives $\int_{\partial\Omega}(u+c-f) = 0$. If the measured voltages $f$ have zero boundary mean, grounding $u$ with zero boundary mean automatically picks the best-fitting constant, so the misfit only measures the physically meaningful voltage differences. Discretely, the constant that is removed from the voltage error should be taken with the same weights as the grounding: the $w$-weighted mean $\mathbf e - \mathbf 1\,w^\top\mathbf e/w^\top\mathbf 1$. With unit weights this reduces to the zero *sum* of boundary nodal values and the plain mean.
 - Grounding with the interior mean, or with the full nodal sum, adds a constant offset that depends on the conductivity in the interior. That spurious offset then appears in the data misfit.
 
 ## References

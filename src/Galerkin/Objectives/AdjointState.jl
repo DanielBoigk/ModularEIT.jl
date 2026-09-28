@@ -2,8 +2,9 @@
 #
 # Neumann (current-driven) mode, data = measured voltages:
 #     A(σ) xₛ = P Iₛ,   eₛ = Π (Q xₛ - Vₛ),   J = ½ Σₛ ‖U eₛ‖²
-#     (Π removes the mean: voltages are only defined up to a constant)
-#     adjoint:  A λₛ = Qᵀ Π Uᵀ rₛ,   ∂J/∂σₐ = -Σₛ λₛᵀ (∂A/∂σₐ) xₛ
+#     (Π removes the weighted mean with the forward model's measurement weights: voltages are
+#     only defined up to a constant)
+#     adjoint:  A λₛ = Qᵀ Πᵀ Uᵀ rₛ,   ∂J/∂σₐ = -Σₛ λₛᵀ (∂A/∂σₐ) xₛ
 #
 # Dirichlet (voltage-driven) mode, data = measured currents:
 #     xₛ = Dirichlet solution with x_B = E Vₛ,   eₛ = C⁻¹ Eᵀ (A xₛ)_B - Iₛ
@@ -12,7 +13,7 @@
 #     λₛ = Dirichlet solution with x_B = E C⁻¹ Uᵀ rₛ,   ∂J/∂σₐ = +Σₛ λₛᵀ (∂A/∂σₐ) xₛ
 #
 # Jacobian rows (one per measurement m and pattern s) use the same identity with rₛ replaced by
-# unit vectors: Z = A⁺ Qᵀ Π Uᵀ (Neumann) or Z = Dirichlet solutions for E C⁻¹ Uᵀ, one block
+# unit vectors: Z = A⁺ Qᵀ Πᵀ Uᵀ (Neumann) or Z = Dirichlet solutions for E C⁻¹ Uᵀ, one block
 # solve with n_obs right-hand sides, then J[(s, m), a] = ∓ zₘᵀ (∂A/∂σₐ) xₛ via the
 # ConductivityTensor. The misfit metric enters only through U, so other metrics plug in by
 # new AbstractMisfit types.
@@ -25,7 +26,8 @@ Least-squares misfit `J(σ) = ½ Σₛ ‖U eₛ(σ)‖²` between predicted and
 forward model `fm`, with the gradient from one adjoint solve and the Jacobian on request.
 
 - `mode = :neumann`: `inputs` are current patterns (`n_inject × s`), `data` the measured voltages
-  (`n_measure × s`). Voltages are compared after removing their mean (the ground is arbitrary).
+  (`n_measure × s`). Voltages are compared after removing their mean (the ground is arbitrary),
+  weighted by `fm.measure_weights` (boundary lengths for the continuum model).
 - `mode = :dirichlet`: `inputs` are voltage patterns (`n_control × s`), `data` the measured
   currents (`n_inject × s`, in the representation of `fm.P`).
 
@@ -104,7 +106,7 @@ function _forward!(obj::AdjointStateObjective, σ)
         _solve!(obj.X, obj.state, obj.B)
         mul!(obj.E, fm.Q, obj.X)
         obj.E .-= obj.data
-        _remove_mean!(obj.E)
+        _project!(obj.E, fm.measure_weights)
     else
         _dirichlet_solve!(obj.X, obj.state, fm, obj.inputs, obj.AX, obj.Xf, obj.Rf)
         _dirichlet_currents!(obj.E, fm, obj.X, obj.AX)
@@ -132,8 +134,8 @@ function value_and_gradient!(g::AbstractVector, obj::AdjointStateObjective, σ::
     fm = obj.fm
     _whiten_adjoint!(obj.G, obj.misfit, obj.R)          # Uᵀ r
     if obj.mode === :neumann
-        _remove_mean!(obj.G)                             # Π Uᵀ r
-        mul!(obj.B, fm.Q', obj.G)                        # Qᵀ Π Uᵀ r
+        _project_adjoint!(obj.G, fm.measure_weights)     # Πᵀ Uᵀ r
+        mul!(obj.B, fm.Q', obj.G)                        # Qᵀ Πᵀ Uᵀ r
         _solve!(obj.Λ, obj.state, obj.B)
         tensor_gradient!(g, fm.tensor, obj.Λ, obj.X; α = -1)
     else
@@ -172,7 +174,7 @@ function residual_and_jacobian!(r::AbstractVector, Jm::AbstractMatrix, obj::Adjo
     jb = _jacobian_buffers!(obj)
     Ut = _whitening_adjoint_matrix(obj.misfit, n_obs)
     if obj.mode === :neumann
-        _remove_mean!(Ut)                                  # Π Uᵀ
+        _project_adjoint!(Ut, fm.measure_weights)          # Πᵀ Uᵀ
         mul!(jb.B, fm.Q', Ut)
         _solve!(jb.Z, obj.state, jb.B)
         sgn = -1.0

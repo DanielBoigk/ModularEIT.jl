@@ -198,6 +198,8 @@ was not the refinement but the *current patterns*: electrode angles were compute
 averages of facet midpoints and boundary-node coordinates, which shift when boundary cells are
 refined, so `trigonometric_patterns` generated slightly different patterns on every mesh.
 Angles now use length-weighted boundary centroids and are mesh independent (regression test in
-`test/test_adaptive_meshing.jl`). Remaining mesh dependence: the gap/point/continuum models
-ground voltages by the *nodal* boundary sum, which shifts all voltages by a constant when the
-boundary node distribution changes; the objectives remove the mean, and comparisons should too.
+`test/test_adaptive_meshing.jl`). The gap, point and continuum models originally grounded voltages by the *nodal* boundary sum,
+which shifts all voltages by a mesh-dependent constant when boundary cells are refined. They now
+default to the zero boundary mean `∫_Γ u ds = 0` (`ForwardModel(...; grounding = :integral)`):
+on a boundary-refined mesh the raw gap-model voltages converge (1.6e-2 → 4.7e-3 → 1.3e-3 under
+uniform refinement) instead of stalling at 0.12 as with the nodal sum.

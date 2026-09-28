@@ -68,6 +68,16 @@ central_fd(f, σ, δ, h) = (f(σ .+ h .* δ) .- f(σ .- h .* δ)) ./ 2h
         @test Jm' * r ≈ g rtol = 1e-8
     end
 
+    @testset "voltage misfit ignores constant offsets (weighted by boundary length)" begin
+        disc = discs[1][2]
+        fm = build_model(:continuum, disc)
+        inputs, obs = synthetic_data(fm, 1 .+ rand(rng, ndofs_σ(disc)), :neumann)
+        obj = AdjointStateObjective(fm, inputs, obs)
+        obj_shift = AdjointStateObjective(fm, inputs, obs .+ 3.0)
+        σ = 1 .+ rand(rng, ndofs_σ(disc))
+        @test objective_value(obj, σ) ≈ objective_value(obj_shift, σ)
+    end
+
     @testset "L² gradient = M_σ⁻¹ × coefficient gradient" begin
         disc = discs[1][2]
         fm = build_model(:cem, disc)

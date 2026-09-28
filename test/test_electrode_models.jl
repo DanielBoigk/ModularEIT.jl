@@ -49,8 +49,15 @@ end
         @test size(V) == size(G) && size(X, 1) == fm.n
         @test norm(V[:, 1] - G[:, 1]) / norm(G[:, 1]) < 0.02
         @test norm(V[:, 3] - G[:, 3] / 2) / norm(G[:, 3] / 2) < 0.02
-        # grounding: boundary nodal values sum to zero
-        @test maximum(abs, sum(X[disc.boundary_dofs, :]; dims = 1)) < 1e-10
+        # grounding (default): zero boundary mean, ∫_Γ u ds = 0
+        w = FEMatrices(disc).M_Γ * ones(ndofs_u(disc))
+        @test maximum(abs, w' * X) < 1e-10
+        @test fm.measure_weights ≈ w[disc.boundary_dofs]
+        # the old convention on request: boundary nodal values sum to zero
+        fm_nodal = ForwardModel(disc, ContinuumModel(); grounding = :nodal)
+        _, Xn = forward_neumann(fm_nodal, σ1, G)
+        @test maximum(abs, sum(Xn[disc.boundary_dofs, :]; dims = 1)) < 1e-10
+        @test_throws ArgumentError ForwardModel(disc, ContinuumModel(); grounding = :foo)
         # Dirichlet (voltage-driven) solve inverts the Neumann solve (DtN ∘ NtD = I on the data)
         V2, _ = forward_neumann(fm, σ, G)
         G2, _ = forward_dirichlet(fm, σ, V2)
@@ -82,6 +89,8 @@ end
         V, _ = forward_neumann(fm, σ, I)
         @test dot(I[:, 2], V[:, 1]) ≈ dot(I[:, 1], V[:, 2])
         @test dot(I[:, 1], V[:, 1]) > 0            # dissipated power
+        wΓ = FEMatrices(disc).M_Γ * ones(ndofs_u(disc))
+        @test maximum(abs, wΓ' * forward_neumann(fm, σ, I)[2]) < 1e-10   # ∫_Γ u ds = 0
 
         # separate injection and measurement electrodes: inject on odd, measure on even electrodes
         inj, meas = els[1:2:end], els[2:2:end]

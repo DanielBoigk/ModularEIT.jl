@@ -76,7 +76,7 @@ function _dual_boundary(disc::FerriteDiscretization, fm::ForwardModel, Z)
     model, nu = fm.model, ndofs_u(disc)
     if model isa GapModel
         lens = [electrode_length(disc, e) for e in model.measure]
-        Πt = _remove_mean!(Matrix(1.0I, n_measure(fm), n_measure(fm)))
+        Πt = _project_adjoint!(Matrix(1.0I, n_measure(fm), n_measure(fm)), fm.measure_weights)
         return _ElectrodeCurrents(_facet_map(model.measure), lens, Πt)
     elseif model isa CompleteElectrodeModel
         return _Robin(_facet_map(model.electrodes), model.z, Matrix(Z[nu+1:end, :]))

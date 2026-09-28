@@ -86,7 +86,7 @@ function _forward!(obj::KohnVogeliusObjective, σ)
     if size(obj.berr, 1) == size(obj.voltages, 1)
         mul!(obj.berr, fm.Q, obj.XN)
         obj.berr .-= obj.voltages
-        _remove_mean!(obj.berr)
+        _project!(obj.berr, fm.measure_weights)
     end
     return sum(obj.values)
 end
