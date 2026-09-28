@@ -6,65 +6,65 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Block Conjugate Gradient</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</guid>
-    <description><![CDATA[ The block conjugate gradient method (O’Leary 1980) solves A X = B for s right-hand sides simultaneously. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 10:26:52 GMT</pubDate>
+    <title>A Posteriori Error Estimation and Adaptive Meshing</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</guid>
+    <description><![CDATA[ A finite element solution u_h satisfies the discrete equations exactly. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>MINRES</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES</guid>
-    <description><![CDATA[ MINRES (Paige &amp; Saunders 1975) solves A\mathbf x = \mathbf b for a symmetric, possibly indefinite or singular, matrix. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 09:39:11 GMT</pubDate>
+    <title>Adaptive Meshing in EIT</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</guid>
+    <description><![CDATA[ Adaptive mesh refinement repeats SOLVE → ESTIMATE → MARK → REFINE (see A Posteriori Error Estimation and Adaptive Meshing). ]]></description>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>Projected Cholesky Factorization</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</guid>
-    <description><![CDATA[ Direct solver for A\mathbf x = \mathbf b when A is symmetric positive semidefinite with a known null space V = \ker A of dimension k and positive definite on V^\perp. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 09:39:11 GMT</pubDate>
+    <title>Dörfler Marking</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/D%C3%B6rfler-Marking</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/D%C3%B6rfler-Marking</guid>
+    <description><![CDATA[ Dörfler (bulk) marking decides which cells to refine from the local error indicators \eta_K. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>Neumann Problem</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</guid>
-    <description><![CDATA[ In the Neumann problem the current density on the boundary is prescribed. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
+    <title>Goal-Oriented Error Estimation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Goal-Oriented-Error-Estimation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Goal-Oriented-Error-Estimation</guid>
+    <description><![CDATA[ Energy-norm estimators control the error everywhere in \Omega. EIT, however, only uses a few numbers: the electrode voltages. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>Block Krylov Methods</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Krylov-Methods</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Krylov-Methods</guid>
-    <description><![CDATA[ An EIT iteration solves the same matrix L_\sigma against many right-hand sides: one state solve per current pattern and one adjoint solve per pattern, L_\sigma\,[\mathbf u_1\ \cdots\ \mathbf u_N] = [\mathbf g_1\ \cdots\ \mathbf g_N],\qquad L_\sigma\,[\boldsymbol\lambda_1\ \cdots\ \boldsymbol\lambda_... ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
+    <title>Hanging Nodes</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Hanging-Nodes</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Hanging-Nodes</guid>
+    <description><![CDATA[ Refining a quadrilateral into four children places a new vertex at the midpoint of each edge. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>Grounding of the Potential</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</guid>
-    <description><![CDATA[ The solution of the Neumann Problem is unique only up to an additive constant: if u solves it, so does u+c. Only potential differences are physical. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
+    <title>Newest Vertex Bisection</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection</guid>
+    <description><![CDATA[ Newest vertex bisection (NVB) refines triangular meshes without creating Hanging Nodes. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>Null Space of the Neumann Problem</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem</guid>
-    <description><![CDATA[ The discrete Neumann Problem L_\gamma\mathbf u = \mathbf g is singular: L_\gamma\mathbf 1 = 0. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
-  </item><item>
-    <title>Projected Conjugate Gradient</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient</guid>
-    <description><![CDATA[ Let A\in\mathbb R^{n\times n} be symmetric positive semidefinite with null space V = \ker A (orthonormal basis V\in\mathbb R^{n\times k}), and positive definite on V^\perp = \operatorname{range}A. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
+    <title>Zienkiewicz-Zhu Estimator</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Zienkiewicz-Zhu-Estimator</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Zienkiewicz-Zhu-Estimator</guid>
+    <description><![CDATA[ The Zienkiewicz–Zhu (ZZ) estimator compares the discrete gradient with a recovered, smoother gradient. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
     <title>ModularEIT Wiki</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
     <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
+    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>Applications of EIT</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Applications-of-EIT</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Applications-of-EIT</guid>
-    <description><![CDATA[ Electrical Impedance Tomography is used wherever conductivity contrasts show up and a cheap, fast, non-invasive measurement matters more than fine spatial resolution. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
+    <title>Complete Electrode Model</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
+    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
+    <pubDate>Mon, 28 Sep 2026 14:43:44 GMT</pubDate>
+  </item><item>
+    <title>Electrode Models</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</guid>
+    <description><![CDATA[ The mathematical boundary conditions have to model how current actually enters the body through L metal electrodes e_1,\dots,e_L\subset\partial\Omega. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 14:43:44 GMT</pubDate>
   </item>
     </channel>
   </rss>
