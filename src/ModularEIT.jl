@@ -22,6 +22,7 @@ export BlockCGWorkspace, BlockCGStats, pbcg, pbcg!, boundary_grounding
 export JacobiPreconditioner, AMGPreconditioner
 export ProjectedCholesky, projected_cholesky, projected_ldl, refactor!
 export ProjectedMinresWorkspace, BlockMinresStats, pbminres, pbminres!
+export DeviceSparseMatrixCSR, device_converter
 
 include("mesh.jl")
 include("electrodes.jl")
@@ -30,6 +31,7 @@ include("regularization.jl")
 include("reconstruction.jl")
 include("LinearSolvers/ProjectedBlockCG.jl")
 include("LinearSolvers/ProjectedCholesky.jl")
+include("LinearSolvers/DeviceSparse.jl")
 include("LinearSolvers/ProjectedBlockMinres.jl")
 
 end # module ModularEIT

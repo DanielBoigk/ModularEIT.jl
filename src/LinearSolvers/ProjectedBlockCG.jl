@@ -8,8 +8,9 @@
 # "Block Conjugate Gradient" and "Grounding of the Potential".
 #
 # All O(n) work is done with generic array operations (sparse × dense products, BLAS-3,
-# broadcasting), so the same code runs on the CPU and on the GPU (e.g. with
-# `CuSparseMatrixCSR` / `CuMatrix`). Only s×s and k×s matrices are moved to the host.
+# broadcasting), so the same code runs on the CPU and on any GPUArrays backend (sparse matrices
+# as DeviceSparseMatrixCSR or vendor types such as CuSparseMatrixCSR). Only s×s and k×s matrices
+# are moved to the host.
 
 using LinearAlgebra
 using SparseArrays
@@ -220,7 +221,7 @@ apply_preconditioner!(Z, ::Nothing, R) = copyto!(Z, R)
     JacobiPreconditioner(A; to_device = identity)
 
 Diagonal (Jacobi) preconditioner `M = diag(A)`. `A` must be a host matrix; `to_device`
-converts the stored inverse diagonal (e.g. `CuArray`).
+converts the stored inverse diagonal (e.g. `device_converter(CuArray)`).
 """
 struct JacobiPreconditioner{VT}
     dinv::VT
@@ -249,9 +250,9 @@ Symmetric smoothed-aggregation AMG V-cycle for `s` right-hand sides at once.
 The hierarchy (aggregation, prolongations `P`, Galerkin coarse operators `PᵀAP`) is built on the
 host with AlgebraicMultigrid.jl, using the constants as near-null space. The cycle itself only
 uses sparse × dense products, damped Jacobi smoothing and a dense pseudo-inverse on the
-coarsest level, so it runs unchanged on the GPU when `to_device` moves matrices there, e.g.
-
-    to_device = x -> x isa SparseMatrixCSC ? CuSparseMatrixCSR(x) : CuArray(x)
+coarsest level, so it runs unchanged on any GPU backend when `to_device` moves matrices there,
+e.g. `to_device = device_converter(CuArray)` (or `ROCArray`, `oneArray`, `MtlArray`); see
+[`device_converter`](@ref).
 
 With the same number of pre- and post-smoothing sweeps and `R = Pᵀ` the cycle is a symmetric
 operator, positive definite on the complement of the constants, as required by CG. The

@@ -65,7 +65,9 @@ a block of right-hand sides.
   (default `W = V`: solution orthogonal to `V`). For EIT, `boundary_grounding(n, boundary_dofs)`
   makes the boundary values sum to zero; see [`boundary_grounding`](@ref).
 - `nrhs`: number of right-hand sides to preallocate buffers for (other sizes reallocate once).
-- `to_device`: converts matrices/vectors to a device. With CUDA.jl and CUDSS.jl loaded,
+- `to_device`: converts matrices/vectors to a device, e.g. `device_converter(ROCArray)`. Without a
+  device factorisation for the matrix type, the factorisation runs on the host and solves copy the
+  right-hand sides (works on every GPUArrays backend). With CUDA.jl and CUDSS.jl loaded,
   `to_device = x -> x isa SparseMatrixCSC ? CuSparseMatrixCSR(x) : CuArray(x)` factorises and
   solves on the GPU with cuDSS.
 - `backend`: `:cholmod` (CPU, Float64, supernodal), `:ldl` (CPU, LDLFactorizations.jl, any

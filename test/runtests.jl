@@ -18,3 +18,4 @@ end
 include("test_projected_block_cg.jl")
 include("test_projected_cholesky.jl")
 include("test_krylov_ldl.jl")
+include("test_gpu_agnostic.jl")
