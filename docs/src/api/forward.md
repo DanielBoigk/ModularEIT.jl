@@ -33,3 +33,16 @@ trigonometric_patterns
 forward_neumann
 forward_dirichlet
 ```
+
+## Regrounding and pattern SVD
+
+Voltages under different groundings differ by one constant per pattern, so they can be shifted
+back and forth exactly. Linear combinations of measured pairs are measured pairs as well; the
+SVD rotates them into orthonormal patterns, either in the Euclidean inner product (matches the
+nodal-sum ground) or in L²(Γ) (matches the boundary-mean ground, independent of the mesh).
+
+```@docs
+reground
+pattern_svd
+```
+
