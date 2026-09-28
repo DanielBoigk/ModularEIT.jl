@@ -17,12 +17,13 @@
 # representative M_σ⁻¹ Tᵀ w of the same dual vector; see L2Gradient.
 
 """
-    ConductivityTensor(disc; pattern = allocate_matrix(disc.dh_u), to_device = identity)
+    ConductivityTensor(disc; pattern = <u-space pattern>, to_device = identity)
 
 Sparse tensor `T` (`nnz(pattern) × n_σ`) with `nzval(L(σ)) = T σ` for the weighted stiffness
 matrix `L(σ) = ∫ σ ∇φᵢ⋅∇φⱼ` in the storage order of `pattern`. `pattern` may be larger than the
 u–u block (e.g. the augmented matrix of the complete electrode model), as long as the u dofs come
-first; entries outside the u–u block get zero rows.
+first; entries outside the u–u block get zero rows. On non-conforming grids the tensor is
+condensed with the conformity constraints (`Cᵀ L(σ) C`).
 
 Fields: `pattern` (host `SparseMatrixCSC`), `T` and `Tt` (`T` and `Tᵀ`, on the device if
 `to_device` is given), `rows`, `cols` (row/column of each stored entry) and a buffer `w`.
@@ -38,7 +39,7 @@ struct ConductivityTensor{MS <: SparseMatrixCSC{Float64, Int}, MT, MTt, VI, VW}
     w::VW
 end
 
-function ConductivityTensor(disc::FerriteDiscretization; pattern = allocate_matrix(disc.dh_u),
+function ConductivityTensor(disc::FerriteDiscretization; pattern = _u_pattern(disc),
                             to_device = identity)
     T = _conductivity_tensor(disc, pattern)
     rows = copy(pattern.rowval)
@@ -53,9 +54,33 @@ function ConductivityTensor(disc::FerriteDiscretization; pattern = allocate_matr
                               to_device(cols), to_device(zeros(nnz(pattern))))
 end
 
-# COO assembly of T: for every cell the local tensor ∫ ψₐ ∇φᵢ⋅∇φⱼ, scattered to (nz index of
-# (i, j) in the pattern, σ dof a); duplicates are summed by `sparse`.
+# COO assembly of T on the unconstrained pattern of dh_u: for every cell the local tensor
+# ∫ ψₐ ∇φᵢ⋅∇φⱼ, scattered to (nz index of (i, j), σ dof a); duplicates are summed by `sparse`.
+# Then T = R T_full with the sparse map R from the stored entries (i, j) of the full pattern to
+# the entries (p, q) of `pattern`, weighted by the conformity constraints C[i, p] C[j, q]
+# (R is a 0/1 selection on conforming grids).
 function _conductivity_tensor(disc::FerriteDiscretization, pattern::SparseMatrixCSC)
+    full = allocate_matrix(disc.dh_u)
+    T_full = _conductivity_tensor_full(disc, full)
+    Ct = disc.C_u === nothing ? nothing : sparse(disc.C_u')     # column i of Cᵀ = row i of C
+    Ir, Jr, Vr = Int[], Int[], Float64[]
+    for j in 1:size(full, 2), k in nzrange(full, j)
+        i = full.rowval[k]
+        if Ct === nothing
+            push!(Ir, _nz_index(pattern, i, j)); push!(Jr, k); push!(Vr, 1.0)
+        else
+            for a in nzrange(Ct, i), b in nzrange(Ct, j)
+                push!(Ir, _nz_index(pattern, Ct.rowval[a], Ct.rowval[b]))
+                push!(Jr, k)
+                push!(Vr, Ct.nzval[a] * Ct.nzval[b])
+            end
+        end
+    end
+    R = sparse(Ir, Jr, Vr, nnz(pattern), nnz(full))
+    return R * T_full
+end
+
+function _conductivity_tensor_full(disc::FerriteDiscretization, pattern::SparseMatrixCSC)
     cv_u, cv_σ = disc.cv_u, disc.cv_σ
     nu, nσ = getnbasefunctions(cv_u), getnbasefunctions(cv_σ)
     nq = getnquadpoints(cv_u)

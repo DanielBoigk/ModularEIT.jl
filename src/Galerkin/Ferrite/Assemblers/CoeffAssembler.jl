@@ -17,7 +17,7 @@ function interpolate_function(d::FerriteDiscretization, f; field::Symbol = :σ)
     dh = _field_dh(d, field)
     a = zeros(ndofs(dh))
     apply_analytical!(a, dh, field, f)
-    return a
+    return field === :u ? _restrict(d, a) : a
 end
 
 """
@@ -43,8 +43,12 @@ function l2_project(d::FerriteDiscretization, f; field::Symbol = :σ, mats = not
         end
         assemble!(b, celldofs(cell), be)
     end
+    if field === :u
+        b = _condense(d, b)
+    end
     if mats === nothing
         M = assemble_mass(dh, cv)
+        M = field === :u ? _condense(d, M) : M
         return cholesky(Symmetric(M)) \ b
     end
     return field === :σ ? mats.M_σ_fac \ b : cholesky(Symmetric(mats.M_u)) \ b

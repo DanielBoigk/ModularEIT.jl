@@ -121,7 +121,7 @@ function _electrode_averages(disc::FerriteDiscretization, electrodes)
     nu = ndofs_u(disc)
     cols = map(electrodes) do e
         isempty(e) && throw(ArgumentError("empty electrode"))
-        f = assemble_boundary_load!(zeros(nu), disc.dh_u, disc.fv_u, e)
+        f = _condense(disc, assemble_boundary_load!(zeros(ndofs(disc.dh_u)), disc.dh_u, disc.fv_u, e))
         sparse(f ./ sum(f))
     end
     return reduce(hcat, cols)
@@ -135,7 +135,7 @@ end
 function ForwardModel(disc::FerriteDiscretization, model::ContinuumModel)
     nu, bd = ndofs_u(disc), disc.boundary_dofs
     nb = length(bd)
-    MΓ = assemble_boundary_mass(disc.dh_u, disc.fv_u, disc.boundary_facets)
+    MΓ = _condense(disc, assemble_boundary_mass(disc.dh_u, disc.fv_u, disc.boundary_facets))
     P = MΓ[:, bd]
     Q = sparse(1:nb, bd, ones(nb), nb, nu)
     ct = ConductivityTensor(disc)
@@ -164,7 +164,7 @@ function ForwardModel(disc::FerriteDiscretization, model::GapModel)
     P = _electrode_averages(disc, model.inject)
     Q = sparse(_electrode_averages(disc, model.measure)')
     # Dirichlet (voltage-driven) version: u = U_ℓ on all dofs of electrode ℓ (shunt model)
-    edofs = [_facet_dofs(disc.dh_u, disc.ip_u, e) for e in model.inject]
+    edofs = [disc.full_to_free[_facet_dofs(disc.dh_u, disc.ip_u, e)] for e in model.inject]
     B = reduce(vcat, edofs)
     allunique(B) || throw(ArgumentError("injection electrodes share boundary dofs"))
     E = sparse(1:length(B), reduce(vcat, [fill(ℓ, length(d)) for (ℓ, d) in enumerate(edofs)]),
@@ -190,14 +190,14 @@ function ForwardModel(disc::FerriteDiscretization, model::CompleteElectrodeModel
     for (ℓ, e) in enumerate(model.electrodes)
         isempty(e) && throw(ArgumentError("electrode $ℓ is empty"))
         z = model.z[ℓ]
-        Cuu += assemble_boundary_mass(disc.dh_u, disc.fv_u, e) ./ z
-        d = assemble_boundary_load!(zeros(nu), disc.dh_u, disc.fv_u, e)
+        Cuu += _condense(disc, assemble_boundary_mass(disc.dh_u, disc.fv_u, e)) ./ z
+        d = _condense(disc, assemble_boundary_load!(zeros(ndofs(disc.dh_u)), disc.dh_u, disc.fv_u, e))
         D[:, ℓ] = sparse(d ./ z)
         lens[ℓ] = sum(d)
     end
     A0 = [Cuu -D; -D' spdiagm(lens ./ model.z)]
     # pattern: stiffness pattern of the u block ∪ pattern of A0
-    Ipat, Jpat, _ = findnz(allocate_matrix(disc.dh_u))
+    Ipat, Jpat, _ = findnz(_u_pattern(disc))
     I0, J0, V0 = findnz(A0)
     pattern = sparse(vcat(Ipat, I0), vcat(Jpat, J0), ones(length(Ipat) + length(I0)), n, n)
     fill!(nonzeros(pattern), 0)

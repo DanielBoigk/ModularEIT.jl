@@ -15,6 +15,7 @@ makedocs(
             "Discretization" => "api/discretization.md",
             "Electrode Models & Forward Problem" => "api/forward.md",
             "Objectives" => "api/objectives.md",
+            "Adaptive Meshing" => "api/adaptivity.md",
             "Linear Solvers" => "api/linear_solvers.md",
         ],
     ],

@@ -30,9 +30,9 @@ struct FEMatrices{MT <: SparseMatrixCSC{Float64, Int}, F}
 end
 
 function FEMatrices(disc::FerriteDiscretization)
-    M_u = assemble_mass(disc.dh_u, disc.cv_u)
-    K_u = assemble_stiffness(disc.dh_u, disc.cv_u)
-    M_Γ = assemble_boundary_mass(disc.dh_u, disc.fv_u, disc.boundary_facets)
+    M_u = _condense(disc, assemble_mass(disc.dh_u, disc.cv_u))
+    K_u = _condense(disc, assemble_stiffness(disc.dh_u, disc.cv_u))
+    M_Γ = _condense(disc, assemble_boundary_mass(disc.dh_u, disc.fv_u, disc.boundary_facets))
     M_σ = assemble_mass(disc.dh_σ, disc.cv_σ)
     K_σ = assemble_stiffness(disc.dh_σ, disc.cv_σ)
     return FEMatrices(M_u, K_u, M_Γ, M_σ, K_σ, cholesky(Symmetric(M_σ)))
@@ -148,8 +148,11 @@ end
     assemble_weighted_stiffness(disc, σ)
 
 Weighted stiffness matrix `∫ σ ∇φᵢ⋅∇φⱼ dΩ` by a classical element loop, with σ given by its
-coefficients in the σ space of `disc`. For repeated assembly on a fixed mesh, the
-[`ConductivityTensor`](@ref) method is a single sparse matrix-vector product.
+coefficients in the σ space of `disc`. The `!` version fills a matrix with the pattern of
+`allocate_matrix(disc.dh_u)` (all dofs, before conformity constraints); the allocating version
+returns the matrix of the u space of `disc` (condensed on non-conforming grids). For repeated
+assembly on a fixed mesh, the [`ConductivityTensor`](@ref) method is a single sparse
+matrix-vector product.
 """
 function assemble_weighted_stiffness!(L::SparseMatrixCSC, disc::FerriteDiscretization, σ::AbstractVector)
     cv_u, cv_σ = disc.cv_u, disc.cv_σ
@@ -181,4 +184,4 @@ function assemble_weighted_stiffness!(L::SparseMatrixCSC, disc::FerriteDiscretiz
     return L
 end
 assemble_weighted_stiffness(disc::FerriteDiscretization, σ::AbstractVector) =
-    assemble_weighted_stiffness!(allocate_matrix(disc.dh_u), disc, σ)
+    _condense(disc, assemble_weighted_stiffness!(allocate_matrix(disc.dh_u), disc, σ))

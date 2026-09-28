@@ -24,8 +24,9 @@ function _gram_matrix(d::FerriteDiscretization, field::Symbol, kind::Symbol, mat
     kind in (:L2, :H1semi, :H1) || throw(ArgumentError("kind must be :L2, :H1semi or :H1, got :$kind"))
     if mats === nothing
         dh, cv = _field_dh(d, field), _field_cv(d, field)
-        M = kind === :H1semi ? nothing : assemble_mass(dh, cv)
-        K = kind === :L2 ? nothing : assemble_stiffness(dh, cv)
+        cond(A) = field === :u ? _condense(d, A) : A
+        M = kind === :H1semi ? nothing : cond(assemble_mass(dh, cv))
+        K = kind === :L2 ? nothing : cond(assemble_stiffness(dh, cv))
     else
         M = field === :σ ? mats.M_σ : mats.M_u
         K = field === :σ ? mats.K_σ : mats.K_u

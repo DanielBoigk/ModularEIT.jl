@@ -19,9 +19,9 @@ $$
 
 where the second term contains the jumps of the normal flux across interior faces. On boundary faces the jump is replaced by $g - \sigma\partial_\nu u_h$. Then $\|u-u_h\|_{a}\lesssim\big(\sum_K\eta_K^2\big)^{1/2}$ (reliability), and $\eta_K$ also bounds the local error from below (efficiency).
 
-**Adaptive loop.** SOLVE → ESTIMATE → MARK (for example Dörfler marking: the smallest set of cells carrying a fixed fraction of the total error) → REFINE ($h$-refinement by splitting, or $p$-refinement by raising the polynomial degree).
+**Adaptive loop.** SOLVE → ESTIMATE → MARK (for example [[Dörfler Marking]]: the smallest set of cells carrying a fixed fraction of the total error) → REFINE ($h$-refinement by splitting, with [[Hanging Nodes]] on quadrilaterals or [[Newest Vertex Bisection]] on triangles, or $p$-refinement by raising the polynomial degree). Recovery-based estimators such as the [[Zienkiewicz-Zhu Estimator]] are a cheap alternative to residual estimators.
 
-**In EIT.** Errors concentrate near electrodes, where currents are singular at the electrode edges, and at conductivity jumps. Goal-oriented (dual-weighted residual) estimators, which weight residuals with the adjoint solution, target exactly the error in the measured boundary voltages.
+**In EIT.** Errors concentrate near electrodes, where currents are singular at the electrode edges, and at conductivity jumps. [[Goal-Oriented Error Estimation|Goal-oriented (dual-weighted residual) estimators]], which weight residuals with the adjoint solution, target exactly the error in the measured boundary voltages. See [[Adaptive Meshing in EIT]].
 
 ## References
 
