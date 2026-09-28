@@ -10,7 +10,7 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</guid>
     <description><![CDATA[ The block conjugate gradient method (O’Leary 1980) solves A X = B for s right-hand sides simultaneously. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 09:39:11 GMT</pubDate>
+    <pubDate>Mon, 28 Sep 2026 10:26:52 GMT</pubDate>
   </item><item>
     <title>MINRES</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES</link>
