@@ -10,7 +10,7 @@ using Test
 @testset "pattern SVD" begin
     rng = MersenneTwister(17)
     circle = redirect_stdout(devnull) do
-        togrid(joinpath(@__DIR__, "circle.msh"))
+        togrid(joinpath(@__DIR__, "..", "data", "circle.msh"))
     end
 
     @testset "regrounding is exact and reversible" begin

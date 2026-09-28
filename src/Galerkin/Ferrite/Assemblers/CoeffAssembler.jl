@@ -20,14 +20,23 @@ function interpolate_function(d::FerriteDiscretization, f; field::Symbol = :σ)
     return field === :u ? _restrict(d, a) : a
 end
 
+# Ferrite's default triangle rules (Dunavant) end at order 8; Gauss–Jacobi covers 9–15
+_quadrature_rule(shape, order) =
+    shape === RefTriangle && order > 8 ? QuadratureRule{shape}(:gaussjacobi, order) : QuadratureRule{shape}(order)
+
 """
-    l2_project(disc, f; field = :σ, mats = nothing)
+    l2_project(disc, f; field = :σ, mats = nothing, quadrature_order = nothing)
 
 Coefficients of the L² projection of `f(x)` onto the `:u` or `:σ` space, `M a = (∫ f φᵢ)ᵢ`.
-Pass `mats = FEMatrices(disc)` to reuse assembled mass matrices.
+Pass `mats = FEMatrices(disc)` to reuse assembled mass matrices. `quadrature_order` sets the
+rule for `∫ f φᵢ` (default: the rule of the discretization), e.g. higher for rough `f`.
 """
-function l2_project(d::FerriteDiscretization, f; field::Symbol = :σ, mats = nothing)
+function l2_project(d::FerriteDiscretization, f; field::Symbol = :σ, mats = nothing, quadrature_order = nothing)
     dh, cv = _field_dh(d, field), _field_cv(d, field)
+    if quadrature_order !== nothing
+        shape = Ferrite.getrefshape(getcelltype(d.grid))
+        cv = CellValues(_quadrature_rule(shape, quadrature_order), field === :u ? d.ip_u : d.ip_σ)
+    end
     b = zeros(ndofs(dh))
     n = getnbasefunctions(cv)
     be = zeros(n)
@@ -47,7 +56,7 @@ function l2_project(d::FerriteDiscretization, f; field::Symbol = :σ, mats = not
         b = _condense(d, b)
     end
     if mats === nothing
-        M = assemble_mass(dh, cv)
+        M = assemble_mass(dh, _field_cv(d, field))
         M = field === :u ? _condense(d, M) : M
         return cholesky(Symmetric(M)) \ b
     end

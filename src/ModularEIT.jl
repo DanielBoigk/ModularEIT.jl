@@ -32,6 +32,7 @@ export ContinuumModel, PointElectrodeModel, GapModel, CompleteElectrodeModel
 export angular_electrodes, electrode_length
 export ForwardModel, system_matrix!, n_inject, n_measure, n_control, trigonometric_patterns
 export forward_neumann, forward_dirichlet, reground, pattern_svd
+export ImageMap, to_image, from_image
 export AdaptiveMesh, current_grid, refine_mesh!, coarsen_mesh!, is_nonconforming, cell_levels, max_level
 export residual_indicator, flux_recovery_indicator, goal_oriented_indicator, jump_indicator, dorfler_marking, transfer_conductivity
 export SquaredEuclidean, WeightedSquaredEuclidean

@@ -109,7 +109,7 @@ end
         @test Set(disc.boundary_facets) == union(Set.(getfacetset(g, n) for n in ("left", "right", "top", "bottom"))...)
 
         circle = redirect_stdout(devnull) do
-            togrid(joinpath(@__DIR__, "circle.msh"))
+            togrid(joinpath(@__DIR__, "..", "data", "circle.msh"))
         end
         amc = AdaptiveMesh(circle)
         refine_mesh!(amc, collect(1:50))

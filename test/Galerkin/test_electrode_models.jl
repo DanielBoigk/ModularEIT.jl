@@ -17,7 +17,7 @@ end
 @testset "electrode models" begin
     rng = MersenneTwister(5)
     grid = redirect_stdout(devnull) do
-        togrid(joinpath(@__DIR__, "circle.msh"))          # unit disc, P1 triangles
+        togrid(joinpath(@__DIR__, "..", "data", "circle.msh"))          # unit disc, P1 triangles
     end
     disc = FerriteDiscretization(grid)
     nσ = ndofs_σ(disc)

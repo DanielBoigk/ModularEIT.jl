@@ -1,6 +1,6 @@
 # Uniform vs adaptive refinement on triangle meshes (newest vertex bisection).
 #
-# Unit disc (test/circle.msh, 2972 triangles), complete electrode model with 16 electrodes
+# Unit disc (test/data/circle.msh, 2972 triangles), complete electrode model with 16 electrodes
 # (half the boundary covered, contact impedance 1e-3). Electrodes are named facet sets of the
 # base mesh and σ is a piecewise constant on the base mesh (two inclusions); both are carried
 # exactly through bisection (facet sets are split, children inherit σ), so every mesh describes
@@ -15,7 +15,7 @@ const Z = 1e-3
 const MAXLEVEL = 8
 
 base = redirect_stdout(devnull) do
-    togrid(joinpath(@__DIR__, "..", "test", "circle.msh"))
+    togrid(joinpath(@__DIR__, "..", "test", "data", "circle.msh"))
 end
 d0 = FerriteDiscretization(base)
 for (ℓ, e) in enumerate(angular_electrodes(d0, L; coverage = 0.5))

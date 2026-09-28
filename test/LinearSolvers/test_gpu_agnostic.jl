@@ -9,7 +9,7 @@ using Test
 using JLArrays
 import Ferrite
 
-include("helpers.jl")
+isdefined(Main, :neumann_laplacian) || include("helpers.jl")
 
 JLArrays.allowscalar(false)
 

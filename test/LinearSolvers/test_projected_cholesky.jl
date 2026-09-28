@@ -4,7 +4,7 @@ using SparseArrays
 using Random
 using Test
 
-include("helpers.jl")
+isdefined(Main, :neumann_laplacian) || include("helpers.jl")
 
 @testset "Projected Cholesky" begin
     rng = MersenneTwister(4)
