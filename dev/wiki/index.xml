@@ -6,6 +6,12 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Grounding of the Potential</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</guid>
+    <description><![CDATA[ The solution of the Neumann Problem is unique only up to an additive constant: if u solves it, so does u+c. Only potential differences are physical. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 17:22:18 GMT</pubDate>
+  </item><item>
     <title>A Posteriori Error Estimation and Adaptive Meshing</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</guid>
@@ -59,12 +65,6 @@
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Zienkiewicz-Zhu-Estimator</guid>
     <description><![CDATA[ The Zienkiewicz–Zhu (ZZ) estimator compares the discrete gradient with a recovered, smoother gradient. ]]></description>
     <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
-  </item><item>
-    <title>Complete Electrode Model</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
-    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
-    <pubDate>Mon, 28 Sep 2026 14:43:44 GMT</pubDate>
   </item>
     </channel>
   </rss>
