@@ -1,161 +1,203 @@
 # Adaptive vs uniform refinement (forward problem)
 
-`benchmark/adaptive_meshing.jl`, 2026-09-28, Ryzen 7 7800X3D, single process, otherwise idle.
-Every adaptive run is shown with every 4th step plus the last one; the full logs are in the
-scratchpad archive.
+`benchmark/adaptive_meshing.jl` (quadrilaterals, Ferrite AMR with hanging nodes) and
+`benchmark/adaptive_meshing_triangles.jl` (triangles, newest vertex bisection), 2026-09-28,
+Ryzen 7 7800X3D, single process, otherwise idle. Adaptive runs are shown with every 4th step
+and the last one; full logs are in the scratchpad archive.
 
-**Setup.** Square [-1, 1]², complete electrode model with 16 electrodes (4 per side, width 0.25,
-edges on mesh lines of every mesh, so the electrode geometry is identical on all meshes),
-contact impedance 1e-3, 16 trigonometric current patterns. Q1 potential, piecewise constant σ.
-Error: relative error of all electrode voltages against a uniform 1024 × 1024 reference
-(1.05M unknowns, 11 s). Adaptive runs start at 16 × 16 and refine at most 6 levels (never below
-the reference cell size); Dörfler marking with θ = 0.3; cells at the maximum level are excluded
-from marking. Strategies: uniform, ZZ (flux recovery), GO (goal-oriented product indicator),
-σ-jump (conductivity jumps only), GO+σ-jump (sum of normalised indicators).
+**Setup (quadrilaterals).** Square [-1, 1]², complete electrode model with 16 electrodes
+(4 per side, width 0.25, edges on mesh lines of every mesh), contact impedance 1e-3, 16
+trigonometric current patterns, Q1 potential, piecewise constant σ. Error: relative error of all
+electrode voltages against a uniform 1024 × 1024 reference (1.05M unknowns, 10 s). Adaptive runs
+start at 16 × 16 and refine at most 6 levels (the reference cell size). Dörfler marking,
+θ = 0.3; cells at the maximum level are excluded from marking.
 
-## Scenario "circles": round inclusions sampled at cell centroids
+**Setup (triangles).** Unit disc (`test/circle.msh`, 2972 triangles), CEM with 16 electrodes
+defined as facet sets of the base mesh, σ piecewise constant on the base mesh; both carried
+exactly through bisection. Reference: base mesh bisected uniformly 8 times (381k unknowns);
+adaptive runs refine at most 8 bisections.
 
-The discrete inclusion shape changes with every mesh.
+Strategies: uniform; ZZ (flux recovery); RES (residual indicator); GO (goal-oriented, recovery
+estimates of states × measurement duals); GO-res (the same with residual estimates); σ-jump
+(conductivity jumps only); GO+σ-jump (sum of normalised indicators).
 
-| strategy | unknowns | rel. voltage error | ZZ estimate | solve [s] | indicator [s] |
-|:--|--:|--:|--:|--:|--:|
-| uniform | 305 | 6.86e-02 | 2.41e+00 | 0.00 | 0.00 |
-| uniform | 1105 | 3.56e-02 | 1.85e+00 | 0.01 | 0.00 |
-| uniform | 4241 | 1.75e-02 | 1.28e+00 | 0.02 | 0.00 |
-| uniform | 16657 | 8.08e-03 | 8.57e-01 | 0.12 | 0.00 |
-| uniform | 66065 | 3.08e-03 | 5.59e-01 | 0.53 | 0.00 |
-| uniform | 263185 | 8.93e-04 | 3.61e-01 | 1.82 | 0.00 |
-| ZZ | 305 | 6.86e-02 | 2.41e+00 | 0.31 | 0.01 |
-| ZZ | 655 | 6.96e-02 | 1.89e+00 | 0.01 | 0.02 |
-| ZZ | 1685 | 5.18e-02 | 1.09e+00 | 0.03 | 0.06 |
-| ZZ | 5554 | 2.53e-02 | 6.18e-01 | 0.06 | 0.25 |
-| ZZ | 16082 | 1.71e-02 | 3.87e-01 | 0.15 | 0.77 |
-| ZZ | 38519 | 1.39e-02 | 2.79e-01 | 0.32 | 1.56 |
-| ZZ | 92905 | 1.27e-02 | 2.47e-01 | 1.03 | 3.85 |
-| ZZ | 208918 | 9.77e-03 | 2.37e-01 | 2.18 | 8.86 |
-| ZZ | 304251 | 9.04e-03 | 2.35e-01 | 3.02 | 13.48 |
-| GO | 305 | 6.86e-02 | 2.41e+00 | 0.00 | 0.34 |
-| GO | 705 | 7.13e-02 | 1.81e+00 | 0.01 | 0.05 |
-| GO | 1834 | 5.40e-02 | 1.07e+00 | 0.04 | 0.17 |
-| GO | 5920 | 2.54e-02 | 6.03e-01 | 0.07 | 0.53 |
-| GO | 16783 | 1.70e-02 | 3.79e-01 | 0.17 | 1.53 |
-| GO | 40120 | 1.32e-02 | 2.77e-01 | 0.50 | 3.31 |
-| GO | 97426 | 1.26e-02 | 2.46e-01 | 1.07 | 8.33 |
-| GO | 216923 | 1.45e-02 | 2.36e-01 | 2.07 | 18.87 |
-| GO | 315291 | 9.87e-03 | 2.35e-01 | 3.08 | 28.09 |
-| σ-jump | 305 | 6.86e-02 | 2.41e+00 | 0.00 | 0.06 |
-| σ-jump | 441 | 7.15e-02 | 2.31e+00 | 0.00 | 0.00 |
-| σ-jump | 900 | 7.42e-02 | 2.23e+00 | 0.03 | 0.00 |
-| σ-jump | 2350 | 7.03e-02 | 2.17e+00 | 0.02 | 0.00 |
-| σ-jump | 5086 | 7.05e-02 | 2.15e+00 | 0.08 | 0.00 |
-| σ-jump | 6764 | 7.05e-02 | 2.14e+00 | 0.08 | 0.00 |
-| σ-jump | 8402 | 7.03e-02 | 2.14e+00 | 0.09 | 0.00 |
-| σ-jump | 9390 | 7.03e-02 | 2.14e+00 | 0.11 | 0.00 |
-| σ-jump | 9799 | 7.03e-02 | 2.14e+00 | 0.09 | 0.00 |
-| σ-jump | 9973 | 7.03e-02 | 2.14e+00 | 0.10 | 0.00 |
-| σ-jump | 10012 | 7.03e-02 | 2.14e+00 | 0.10 | 0.00 |
-| σ-jump | 10018 | 7.03e-02 | 2.14e+00 | 0.10 | 0.00 |
-| GO+σ-jump | 305 | 6.86e-02 | 2.41e+00 | 0.00 | 0.08 |
-| GO+σ-jump | 662 | 1.58e-01 | 2.00e+00 | 0.03 | 0.05 |
-| GO+σ-jump | 1824 | 4.68e-02 | 1.32e+00 | 0.02 | 0.15 |
-| GO+σ-jump | 5957 | 8.07e-03 | 7.62e-01 | 0.06 | 0.56 |
-| GO+σ-jump | 12426 | 1.42e-02 | 4.71e-01 | 0.12 | 1.12 |
-| GO+σ-jump | 24851 | 1.63e-02 | 3.17e-01 | 0.22 | 2.22 |
-| GO+σ-jump | 56229 | 1.62e-02 | 2.60e-01 | 0.47 | 4.77 |
-| GO+σ-jump | 136707 | 7.79e-03 | 2.41e-01 | 1.34 | 11.97 |
-| GO+σ-jump | 294599 | 1.23e-02 | 2.35e-01 | 2.77 | 26.59 |
-| GO+σ-jump | 346868 | 1.15e-02 | 2.35e-01 | 3.39 | 31.89 |
+**Reading the numbers.** The adaptive meshes and the references have the same finest cells at
+the singularities, so errors below ≈ 5e-4 measure agreement with the reference rather than the
+true error (the reference itself differs from the next-coarser uniform mesh by ≈ 9e-4 on quads).
+Speed-ups are therefore quoted at accuracies of ≈ 1e-3.
 
-## Scenario "aligned": square inclusions made of base-mesh cells
-
-σ is identical on every mesh; only the discretisation error of the potential remains.
+## Quadrilaterals, square inclusions made of base-mesh cells (σ identical on all meshes)
 
 | strategy | unknowns | rel. voltage error | ZZ estimate | solve [s] | indicator [s] |
 |:--|--:|--:|--:|--:|--:|
 | uniform | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.00 |
 | uniform | 1105 | 3.53e-02 | 1.81e+00 | 0.01 | 0.00 |
 | uniform | 4241 | 1.69e-02 | 1.24e+00 | 0.02 | 0.00 |
-| uniform | 16657 | 7.57e-03 | 8.30e-01 | 0.09 | 0.00 |
-| uniform | 66065 | 2.98e-03 | 5.39e-01 | 0.49 | 0.00 |
-| uniform | 263185 | 8.78e-04 | 3.45e-01 | 1.78 | 0.00 |
-| ZZ | 305 | 7.11e-02 | 2.36e+00 | 0.32 | 0.01 |
-| ZZ | 617 | 7.47e-02 | 1.83e+00 | 0.01 | 0.05 |
-| ZZ | 1539 | 5.12e-02 | 1.05e+00 | 0.01 | 0.08 |
-| ZZ | 5072 | 3.00e-02 | 5.80e-01 | 0.06 | 0.22 |
-| ZZ | 15279 | 2.44e-02 | 3.59e-01 | 0.13 | 0.70 |
-| ZZ | 37838 | 1.32e-02 | 2.65e-01 | 0.48 | 1.49 |
-| ZZ | 92537 | 1.25e-02 | 2.33e-01 | 0.88 | 3.77 |
-| ZZ | 212272 | 1.37e-02 | 2.23e-01 | 2.19 | 9.10 |
-| ZZ | 307920 | 1.01e-02 | 2.22e-01 | 3.12 | 13.40 |
-| GO | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.35 |
-| GO | 687 | 7.05e-02 | 1.71e+00 | 0.03 | 0.04 |
-| GO | 1743 | 3.90e-02 | 9.91e-01 | 0.02 | 0.16 |
-| GO | 5758 | 2.62e-02 | 5.50e-01 | 0.06 | 0.54 |
-| GO | 17448 | 1.39e-02 | 3.40e-01 | 0.14 | 1.45 |
-| GO | 42188 | 7.25e-03 | 2.59e-01 | 0.50 | 3.46 |
-| GO | 104165 | 1.12e-02 | 2.31e-01 | 1.12 | 9.00 |
-| GO | 234772 | 5.28e-03 | 2.23e-01 | 2.36 | 20.71 |
-| GO | 335190 | 1.35e-02 | 2.21e-01 | 3.29 | 30.17 |
-| σ-jump | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.06 |
+| uniform | 16657 | 7.57e-03 | 8.30e-01 | 0.23 | 0.00 |
+| uniform | 66065 | 2.98e-03 | 5.39e-01 | 0.32 | 0.00 |
+| uniform | 263185 | 8.78e-04 | 3.45e-01 | 1.60 | 0.00 |
+| ZZ | 305 | 7.11e-02 | 2.36e+00 | 0.22 | 0.01 |
+| ZZ | 638 | 2.68e-02 | 1.79e+00 | 0.01 | 0.02 |
+| ZZ | 1580 | 7.35e-03 | 1.03e+00 | 0.01 | 0.05 |
+| ZZ | 5377 | 1.53e-03 | 5.68e-01 | 0.05 | 0.24 |
+| ZZ | 16033 | 4.51e-04 | 3.52e-01 | 0.13 | 0.65 |
+| ZZ | 39551 | 1.36e-04 | 2.63e-01 | 0.26 | 1.67 |
+| ZZ | 97155 | 3.60e-05 | 2.32e-01 | 0.82 | 3.94 |
+| ZZ | 221436 | 9.27e-06 | 2.23e-01 | 2.06 | 9.55 |
+| ZZ | 319022 | 4.84e-06 | 2.22e-01 | 2.91 | 13.60 |
+| RES | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 1.09 |
+| RES | 487 | 4.33e-02 | 1.85e+00 | 0.00 | 0.00 |
+| RES | 768 | 1.70e-02 | 1.56e+00 | 0.01 | 0.00 |
+| RES | 1769 | 4.60e-03 | 1.06e+00 | 0.01 | 0.01 |
+| RES | 5963 | 1.06e-03 | 6.64e-01 | 0.06 | 0.04 |
+| RES | 19084 | 2.66e-04 | 4.52e-01 | 0.14 | 0.12 |
+| RES | 55968 | 6.91e-05 | 3.47e-01 | 0.54 | 0.34 |
+| RES | 146905 | 1.85e-05 | 2.95e-01 | 1.26 | 0.90 |
+| RES | 322838 | 4.70e-06 | 2.55e-01 | 2.88 | 2.00 |
+| GO | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.27 |
+| GO | 697 | 2.24e-02 | 1.70e+00 | 0.01 | 0.04 |
+| GO | 1823 | 5.69e-03 | 9.67e-01 | 0.01 | 0.16 |
+| GO | 5923 | 1.42e-03 | 5.44e-01 | 0.07 | 0.52 |
+| GO | 17952 | 3.84e-04 | 3.37e-01 | 0.29 | 1.47 |
+| GO | 43228 | 1.18e-04 | 2.58e-01 | 0.48 | 3.51 |
+| GO | 106601 | 3.15e-05 | 2.31e-01 | 1.04 | 8.96 |
+| GO | 239779 | 8.12e-06 | 2.23e-01 | 2.17 | 20.88 |
+| GO | 340689 | 4.27e-06 | 2.22e-01 | 2.99 | 30.03 |
+| GO-res | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.06 |
+| GO-res | 499 | 4.23e-02 | 1.83e+00 | 0.01 | 0.01 |
+| GO-res | 788 | 1.59e-02 | 1.55e+00 | 0.01 | 0.01 |
+| GO-res | 1938 | 4.07e-03 | 1.02e+00 | 0.02 | 0.03 |
+| GO-res | 6444 | 9.79e-04 | 6.52e-01 | 0.07 | 0.09 |
+| GO-res | 20753 | 2.42e-04 | 4.42e-01 | 0.15 | 0.29 |
+| GO-res | 60588 | 6.22e-05 | 3.37e-01 | 0.40 | 0.82 |
+| GO-res | 156593 | 1.67e-05 | 2.91e-01 | 1.35 | 2.14 |
+| GO-res | 338576 | 4.33e-06 | 2.55e-01 | 3.01 | 4.71 |
+| σ-jump | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.02 |
 | σ-jump | 436 | 7.08e-02 | 2.27e+00 | 0.00 | 0.00 |
 | σ-jump | 770 | 7.07e-02 | 2.22e+00 | 0.01 | 0.00 |
 | σ-jump | 1522 | 7.03e-02 | 2.19e+00 | 0.01 | 0.00 |
-| σ-jump | 3305 | 7.01e-02 | 2.16e+00 | 0.04 | 0.00 |
-| σ-jump | 5207 | 7.01e-02 | 2.16e+00 | 0.07 | 0.00 |
-| σ-jump | 5783 | 7.01e-02 | 2.16e+00 | 0.05 | 0.03 |
-| σ-jump | 6422 | 7.01e-02 | 2.16e+00 | 0.06 | 0.00 |
-| σ-jump | 7432 | 7.01e-02 | 2.16e+00 | 0.07 | 0.00 |
-| σ-jump | 7730 | 7.01e-02 | 2.16e+00 | 0.07 | 0.00 |
-| σ-jump | 7820 | 7.01e-02 | 2.16e+00 | 0.06 | 0.00 |
-| σ-jump | 7841 | 7.01e-02 | 2.16e+00 | 0.08 | 0.00 |
-| GO+σ-jump | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.09 |
-| GO+σ-jump | 607 | 8.60e-02 | 2.27e+00 | 0.01 | 0.07 |
-| GO+σ-jump | 1415 | 6.62e-02 | 1.34e+00 | 0.03 | 0.11 |
-| GO+σ-jump | 3607 | 3.10e-02 | 8.48e-01 | 0.05 | 0.33 |
-| GO+σ-jump | 8694 | 1.21e-02 | 5.86e-01 | 0.09 | 0.79 |
-| GO+σ-jump | 17092 | 1.66e-02 | 3.61e-01 | 0.15 | 1.48 |
-| GO+σ-jump | 38851 | 1.31e-02 | 2.64e-01 | 0.31 | 3.30 |
-| GO+σ-jump | 95581 | 1.58e-02 | 2.32e-01 | 0.88 | 8.58 |
-| GO+σ-jump | 217669 | 1.36e-02 | 2.23e-01 | 2.06 | 19.56 |
-| GO+σ-jump | 315225 | 9.30e-03 | 2.22e-01 | 3.10 | 28.74 |
+| σ-jump | 3305 | 7.01e-02 | 2.16e+00 | 0.02 | 0.00 |
+| σ-jump | 5207 | 7.01e-02 | 2.16e+00 | 0.04 | 0.00 |
+| σ-jump | 5783 | 7.01e-02 | 2.16e+00 | 0.07 | 0.00 |
+| σ-jump | 6422 | 7.01e-02 | 2.16e+00 | 0.07 | 0.00 |
+| σ-jump | 7432 | 7.01e-02 | 2.16e+00 | 0.06 | 0.00 |
+| σ-jump | 7730 | 7.01e-02 | 2.16e+00 | 0.08 | 0.00 |
+| σ-jump | 7820 | 7.01e-02 | 2.16e+00 | 0.08 | 0.00 |
+| σ-jump | 7841 | 7.01e-02 | 2.16e+00 | 0.09 | 0.00 |
+| GO+σ-jump | 305 | 7.11e-02 | 2.36e+00 | 0.00 | 0.08 |
+| GO+σ-jump | 607 | 6.35e-02 | 2.27e+00 | 0.00 | 0.04 |
+| GO+σ-jump | 1409 | 1.53e-02 | 1.35e+00 | 0.01 | 0.10 |
+| GO+σ-jump | 3587 | 5.07e-03 | 8.48e-01 | 0.03 | 0.32 |
+| GO+σ-jump | 8653 | 2.07e-03 | 5.89e-01 | 0.08 | 0.74 |
+| GO+σ-jump | 17007 | 5.59e-04 | 3.63e-01 | 0.14 | 1.60 |
+| GO+σ-jump | 38586 | 1.41e-04 | 2.64e-01 | 0.26 | 3.28 |
+| GO+σ-jump | 94727 | 3.73e-05 | 2.33e-01 | 0.77 | 8.42 |
+| GO+σ-jump | 215998 | 9.67e-06 | 2.23e-01 | 1.88 | 18.98 |
+| GO+σ-jump | 313199 | 5.03e-06 | 2.22e-01 | 2.63 | 28.20 |
 
-## Diagnostics
+## Quadrilaterals, round inclusions sampled at the cell centroids of each mesh
 
-**The constrained (hanging-node) space is correct.** Refinement nests conforming spaces, so the
-discrete dissipated power Σ Iᵀ U must increase monotonically. It does (aligned scenario, GO
-steps): 117.31 → 118.25 → 119.18 → 119.30 → 122.72 → 123.97 → 124.78 → 125.68, and the adaptive
-mesh with 1311 unknowns matches the energy of the uniform 64² mesh (4241 unknowns, 125.71).
+| strategy | unknowns | rel. voltage error | ZZ estimate | solve [s] | indicator [s] |
+|:--|--:|--:|--:|--:|--:|
+| uniform | 305 | 6.86e-02 | 2.41e+00 | 0.00 | 0.00 |
+| uniform | 1105 | 3.56e-02 | 1.85e+00 | 0.01 | 0.00 |
+| uniform | 4241 | 1.75e-02 | 1.28e+00 | 0.02 | 0.00 |
+| uniform | 16657 | 8.08e-03 | 8.57e-01 | 0.08 | 0.00 |
+| uniform | 66065 | 3.08e-03 | 5.59e-01 | 0.44 | 0.00 |
+| uniform | 263185 | 8.93e-04 | 3.61e-01 | 1.57 | 0.00 |
+| RES | 305 | 6.86e-02 | 2.41e+00 | 0.22 | 1.15 |
+| RES | 487 | 4.11e-02 | 1.91e+00 | 0.03 | 0.00 |
+| RES | 778 | 1.48e-02 | 1.63e+00 | 0.01 | 0.01 |
+| RES | 1805 | 5.39e-03 | 1.12e+00 | 0.03 | 0.01 |
+| RES | 6016 | 1.20e-03 | 6.71e-01 | 0.08 | 0.05 |
+| RES | 16251 | 5.69e-04 | 4.05e-01 | 0.13 | 0.13 |
+| RES | 43258 | 2.92e-04 | 2.97e-01 | 0.48 | 0.34 |
+| RES | 106084 | 1.19e-04 | 2.56e-01 | 1.02 | 0.76 |
+| RES | 235221 | 1.31e-04 | 2.41e-01 | 2.14 | 1.59 |
+| RES | 336885 | 1.31e-04 | 2.38e-01 | 3.17 | 2.32 |
+| GO-res | 305 | 6.86e-02 | 2.41e+00 | 0.00 | 0.25 |
+| GO-res | 502 | 4.00e-02 | 1.89e+00 | 0.01 | 0.01 |
+| GO-res | 798 | 1.39e-02 | 1.62e+00 | 0.01 | 0.01 |
+| GO-res | 1852 | 4.45e-03 | 1.04e+00 | 0.01 | 0.03 |
+| GO-res | 6238 | 1.15e-03 | 6.60e-01 | 0.05 | 0.10 |
+| GO-res | 16658 | 5.55e-04 | 4.04e-01 | 0.13 | 0.27 |
+| GO-res | 43716 | 2.54e-04 | 2.94e-01 | 0.32 | 0.68 |
+| GO-res | 107996 | 1.22e-04 | 2.56e-01 | 1.04 | 1.67 |
+| GO-res | 240263 | 1.31e-04 | 2.40e-01 | 2.16 | 3.59 |
+| GO-res | 341773 | 1.31e-04 | 2.38e-01 | 3.01 | 5.16 |
+| σ-jump | 305 | 6.86e-02 | 2.41e+00 | 0.00 | 0.02 |
+| σ-jump | 441 | 7.15e-02 | 2.31e+00 | 0.00 | 0.00 |
+| σ-jump | 900 | 7.42e-02 | 2.23e+00 | 0.01 | 0.00 |
+| σ-jump | 2350 | 7.03e-02 | 2.17e+00 | 0.02 | 0.00 |
+| σ-jump | 5086 | 7.05e-02 | 2.15e+00 | 0.06 | 0.00 |
+| σ-jump | 6764 | 7.05e-02 | 2.14e+00 | 0.08 | 0.00 |
+| σ-jump | 8402 | 7.03e-02 | 2.14e+00 | 0.08 | 0.00 |
+| σ-jump | 9390 | 7.03e-02 | 2.14e+00 | 0.12 | 0.00 |
+| σ-jump | 9799 | 7.03e-02 | 2.14e+00 | 0.09 | 0.00 |
+| σ-jump | 9973 | 7.03e-02 | 2.14e+00 | 0.08 | 0.03 |
+| σ-jump | 10012 | 7.03e-02 | 2.14e+00 | 0.11 | 0.00 |
+| σ-jump | 10018 | 7.03e-02 | 2.14e+00 | 0.10 | 0.00 |
 
-**Per pattern** (aligned scenario, GO adaptive mesh with ~15k unknowns vs uniform 128², 16.7k):
+## Triangles (newest vertex bisection), unit disc
 
-| pattern (k) | error uniform 128² | error GO adaptive |
-|:--|--:|--:|
-| cos θ, sin θ | 3.4e-2, 3.4e-2 | 7.0e-3, 8.3e-3 |
-| cos 2θ, sin 2θ | 2.0e-2, 4.1e-2 | 2.1e-2, 1.8e-2 |
-| k = 5 … 7 | 1.5e-2 – 2.9e-2 | 2.8e-2 – 1.2e-1 |
-
-Normalising the indicator per pattern and per measurement (`normalize = true`) did not help:
-with 25.7k cells the k ≥ 2 patterns were still worse than uniform 128².
+| strategy | unknowns | rel. voltage error | solve [s] | indicator [s] |
+|:--|--:|--:|--:|--:|
+| uniform | 1566 | 4.57e-02 | 0.02 | 0.00 |
+| uniform | 3652 | 3.45e-02 | 0.04 | 0.00 |
+| uniform | 8156 | 2.12e-02 | 0.09 | 0.00 |
+| uniform | 17720 | 1.39e-02 | 0.18 | 0.00 |
+| uniform | 37919 | 8.24e-03 | 0.39 | 0.00 |
+| uniform | 79858 | 4.81e-03 | 0.94 | 0.00 |
+| uniform | 165114 | 2.27e-03 | 2.05 | 0.00 |
+| RES | 1566 | 4.57e-02 | 0.02 | 1.11 |
+| RES | 1705 | 3.34e-02 | 0.02 | 0.01 |
+| RES | 2076 | 1.47e-02 | 0.02 | 0.01 |
+| RES | 3569 | 6.09e-03 | 0.04 | 0.02 |
+| RES | 7620 | 2.50e-03 | 0.08 | 0.05 |
+| RES | 16324 | 1.01e-03 | 0.16 | 0.12 |
+| RES | 33385 | 3.90e-04 | 0.49 | 0.25 |
+| RES | 64945 | 1.45e-04 | 0.73 | 0.49 |
+| RES | 116918 | 4.92e-05 | 1.59 | 0.91 |
+| RES | 185216 | 1.50e-05 | 2.58 | 1.49 |
+| RES | 202697 | 1.13e-05 | 2.89 | 1.71 |
+| GO-res | 1566 | 4.57e-02 | 0.02 | 1.37 |
+| GO-res | 1705 | 3.34e-02 | 0.02 | 0.03 |
+| GO-res | 2076 | 1.47e-02 | 0.05 | 0.03 |
+| GO-res | 3561 | 6.12e-03 | 0.05 | 0.05 |
+| GO-res | 7591 | 2.51e-03 | 0.07 | 0.12 |
+| GO-res | 16264 | 1.02e-03 | 0.16 | 0.27 |
+| GO-res | 33266 | 3.92e-04 | 0.53 | 0.56 |
+| GO-res | 64669 | 1.46e-04 | 0.70 | 1.28 |
+| GO-res | 116441 | 4.96e-05 | 1.42 | 2.26 |
+| GO-res | 184661 | 1.51e-05 | 2.60 | 3.47 |
+| GO-res | 202308 | 1.13e-05 | 2.79 | 3.86 |
 
 ## Findings
 
-1. **Energy accuracy:** adaptive refinement works as expected. The ZZ estimate and the
-   dissipated power converge with 3–13× fewer unknowns than uniform refinement.
-2. **Electrode voltages:** for low-frequency patterns the goal-oriented indicator gives about 5×
-   smaller errors than a uniform mesh of the same size. For high-frequency patterns the
-   recovery-based indicators under-resolve the solution, and the total relative voltage error
-   stagnates near 1e-2 for every adaptive strategy, while uniform refinement keeps converging
-   (8.8e-4 at 263k unknowns). Recovery estimators are not reliable enough for this goal; a
-   residual-based dual-weighted estimator (with the measurement duals that the Jacobian
-   already computes) is the next thing to try.
-3. **σ-jump refinement alone** does not improve the forward accuracy at all (7e-2, the 16²
-   level): it never refines at the electrodes. It is a tool for the conductivity parametrisation,
-   not for the forward model.
-4. **Re-sampling σ** on every mesh ("circles") adds a geometry error that no forward indicator
-   sees; for reconstructions the conductivity should be transferred (`transfer_conductivity`),
-   not re-sampled.
-5. **Cost:** the indicators cost more than the solves (GO at 300k unknowns: 28 s vs 3 s for
-   the solve with 16 patterns; ZZ: 13 s). The L² projections of the recovery run on one core.
+1. **Adaptivity pays off.** For about 1e-3 voltage accuracy, the adaptive quadrilateral meshes
+   need about 6k unknowns and the uniform ones about 250k (≈ 40×). On triangles: 2.5e-3 with
+   7.6k adaptive unknowns vs 2.3e-3 with 165k uniform ones (≈ 20×). The error is dominated by
+   the electrode edges; all forward-error indicators find them.
+2. **Indicator choice.** ZZ, RES, GO and GO-res give nearly the same meshes and errors here
+   (for smooth-ish σ the energy error and the voltage error are driven by the same singularities).
+   The residual indicators are much cheaper: RES 2 s and GO-res 5 s at 330k unknowns vs 14 s
+   (ZZ) and 30 s (GO), i.e. about the cost of one forward solve with 16 patterns.
+3. **σ-jump refinement alone** does not improve the forward accuracy (7e-2, the level of the
+   16² mesh): it never refines at the electrodes. It serves the conductivity parametrisation.
+4. **Re-sampling σ** on every mesh ("round inclusions") adds a geometry error that no forward
+   indicator sees: the adaptive error levels off at 1.3e-4 (still 7× below uniform at 263k).
+   In reconstructions σ is transferred between meshes (`transfer_conductivity`), not re-sampled.
+5. **Hanging nodes are consistent**: refining one cell and then everything uniformly reproduces
+   the uniform errors (6.3e-3 vs 6.5e-3 after three uniform steps), and the discrete dissipated
+   power increases monotonically under adaptive refinement.
 
-**Practical recommendation for now:** a uniform (or a priori graded towards the boundary) mesh
-for the forward problem, and adaptivity for the conductivity parametrisation only.
+## A bug found through this comparison
+
+A first version of this study showed all adaptive strategies stagnating near 1e-2. The cause
+was not the refinement but the *current patterns*: electrode angles were computed from plain
+averages of facet midpoints and boundary-node coordinates, which shift when boundary cells are
+refined, so `trigonometric_patterns` generated slightly different patterns on every mesh.
+Angles now use length-weighted boundary centroids and are mesh independent (regression test in
+`test/test_adaptive_meshing.jl`). Remaining mesh dependence: the gap/point/continuum models
+ground voltages by the *nodal* boundary sum, which shifts all voltages by a constant when the
+boundary node distribution changes; the objectives remove the mean, and comparisons should too.

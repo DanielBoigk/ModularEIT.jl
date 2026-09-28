@@ -72,7 +72,7 @@ end
 """
     angular_electrodes(disc, L; coverage = 0.5, offset = 0.0, center = nothing)
 
-`L` electrodes around `center` (default: centroid of the boundary facet midpoints), centred at
+`L` electrodes around `center` (default: centroid of the boundary curve), centred at
 the angles `offset + 2π(ℓ-1)/L`. Electrode ℓ is the set of boundary facets whose midpoint lies
 within `± coverage π / L` of its angle, so `coverage` is the fraction of the boundary covered.
 """
@@ -80,7 +80,7 @@ function angular_electrodes(disc::FerriteDiscretization, L::Integer; coverage::R
                             offset::Real = 0.0, center = nothing)
     0 < coverage < 1 || throw(ArgumentError("coverage must be in (0, 1)"))
     mids = [_facet_midpoint(disc.grid, f) for f in disc.boundary_facets]
-    c = center === nothing ? sum(mids) / length(mids) : Vec{2}(Tuple(center))
+    c = center === nothing ? _centroid(disc, disc.boundary_facets) : Vec{2}(Tuple(center))
     θ = [atan(m[2] - c[2], m[1] - c[1]) for m in mids]
     half = coverage * π / L
     return map(1:L) do ℓ
@@ -103,16 +103,21 @@ function _dof_coordinates(disc::FerriteDiscretization, dofs)
     return x[dofs], y[dofs]
 end
 
-# angles around the boundary centroid
+# length-weighted centroid of a set of (straight) boundary facets: mesh independent, unlike
+# averages over facets or nodes, which shift when the boundary is refined
+function _centroid(disc::FerriteDiscretization, facets)
+    lens = [_facet_measure(disc, f) for f in facets]
+    return sum(l * _facet_midpoint(disc.grid, f) for (l, f) in zip(lens, facets)) / sum(lens)
+end
+
+# angles around the centroid of the boundary curve
 function _angles(disc::FerriteDiscretization, xs, ys)
-    bx, by = _dof_coordinates(disc, disc.boundary_dofs)
-    cx, cy = sum(bx) / length(bx), sum(by) / length(by)
-    return atan.(ys .- cy, xs .- cx)
+    c = _centroid(disc, disc.boundary_facets)
+    return atan.(ys .- c[2], xs .- c[1])
 end
 
 function _electrode_angle(disc::FerriteDiscretization, facets)
-    mids = [_facet_midpoint(disc.grid, f) for f in facets]
-    m = sum(mids) / length(mids)
+    m = _centroid(disc, facets)
     return _angles(disc, [m[1]], [m[2]])[1]
 end
 

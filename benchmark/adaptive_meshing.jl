@@ -13,12 +13,15 @@
 # excluded from marking):
 #   uniform    refine all cells
 #   ZZ         flux-recovery (Zienkiewicz–Zhu) indicator: energy-norm error of the states
+#   RES        residual indicator (element residuals, current-density jumps, boundary residuals)
 #   GO         goal-oriented indicator: ZZ error of the states × ZZ error of the measurement duals
+#   GO-res     goal-oriented indicator from residual estimates of states and duals
 #   σ-jump     conductivity jump indicator (what a reconstruction-driven refinement would do;
 #              blind to the electrodes)
 #   GO+σ-jump  sum of the normalised GO and σ-jump indicators
 #
-# Run: SCENARIO=aligned julia --project benchmark/adaptive_meshing.jl   (prints a table)
+# Run: SCENARIO=aligned STRATEGIES=uniform,GO-res julia --project benchmark/adaptive_meshing.jl
+#      (prints a table; STRATEGIES defaults to all)
 using ModularEIT, Ferrite, LinearAlgebra, Printf
 
 const L = 16
@@ -56,7 +59,7 @@ function solve_on(grid)
         I = trigonometric_patterns(fm, L ÷ 2)
         U, X = forward_neumann(fm, σ, I)
     end
-    return (; disc, fm, σ, U, X, n = fm.n, t)
+    return (; disc, fm, σ, I, U, X, n = fm.n, t)
 end
 
 relerr(U, Uref) = norm(U - Uref) / norm(Uref)
@@ -68,19 +71,24 @@ Uref = ref.U
 
 rows = Tuple{String, Int, Float64, Float64, Float64, Float64}[]
 
-for m in (16, 32, 64, 128, 256, 512)
+const STRATEGIES = split(get(ENV, "STRATEGIES", "uniform,ZZ,RES,GO,GO-res,σ-jump,GO+σ-jump"), ",")
+
+"uniform" in STRATEGIES && for m in (16, 32, 64, 128, 256, 512)
     r = solve_on(generate_grid(Quadrilateral, (m, m)))
     η = sqrt(sum(flux_recovery_indicator(r.disc, r.σ, r.X)))
     push!(rows, ("uniform", r.n, relerr(r.U, Uref), η, r.t, 0.0))
 end
 
 zz(r) = flux_recovery_indicator(r.disc, r.σ, r.X)
+res(r) = residual_indicator(r.disc, r.fm, r.σ, r.X, r.I)
 go(r) = goal_oriented_indicator(r.disc, r.fm, r.σ, r.X)
+gores(r) = goal_oriented_indicator(r.disc, r.fm, r.σ, r.X; estimator = :residual, currents = r.I)
 jump(r) = jump_indicator(r.disc, r.σ)
 normalised(η) = sum(η) > 0 ? η ./ sum(η) : η
 
-for (name, indicator) in (("ZZ", zz), ("GO", go), ("σ-jump", jump),
+for (name, indicator) in (("ZZ", zz), ("RES", res), ("GO", go), ("GO-res", gores), ("σ-jump", jump),
                           ("GO+σ-jump", r -> normalised(go(r)) .+ normalised(jump(r))))
+    name in STRATEGIES || continue
     am = AdaptiveMesh(generate_grid(Quadrilateral, (16, 16)); maxlevel = 6)
     for step in 1:60
         r = solve_on(current_grid(am))

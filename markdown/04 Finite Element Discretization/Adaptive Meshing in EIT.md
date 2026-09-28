@@ -16,7 +16,7 @@ The discretisation error of the predicted voltages is a *model error*. If it is 
 
 One mesh has to serve all current patterns, so the indicators of all patterns are summed. Suitable indicators:
 
-- the residual indicator of the parent article (flux jumps across facets);
+- the [[Residual Estimator for the Conductivity Equation|residual indicator]]: element residuals, current-density jumps across facets, and the boundary residuals of the electrode model;
 - the [[Zienkiewicz-Zhu Estimator]], which recovers a smooth current density and measures the distance to it;
 - [[Goal-Oriented Error Estimation]], which weights the residuals by adjoint fields of the measurements and targets exactly the voltage error.
 
@@ -33,6 +33,7 @@ A convergent adaptive algorithm for the regularised EIT problem refines with an 
 
 - **Gradients.** On a graded mesh the coefficient gradient $\partial J/\partial\sigma_a$ scales with the cell size, so steepest descent favours large cells. The $L^2$ gradient $M_\sigma^{-1}\partial J/\partial\sigma$ is mesh independent (see [[Conductivity Tensor]] and [[Gradient Representation and the Riesz Map]]).
 - **Transfer.** After refinement or coarsening, the current iterate is transferred by [[L2 Projection]]. For piecewise constants, children inherit the value of their parent, and a coarsened parent gets the mean of its children.
+- **The experiment must not change with the mesh.** Electrodes, current patterns and the grounding must be defined geometrically (for example electrode positions as length-weighted centroids, electrodes as boundary segments carried through refinement), not through node or facet counts, which change under boundary refinement. Otherwise every mesh simulates a slightly different measurement, and the discretisation error seems to stagnate.
 - **Discretisation-dependent functionals.** Regularisers must be evaluated with the mesh geometry (cell areas, facet lengths), not per coefficient, or their weight changes under refinement.
 
 ## Refining quadrilaterals and triangles

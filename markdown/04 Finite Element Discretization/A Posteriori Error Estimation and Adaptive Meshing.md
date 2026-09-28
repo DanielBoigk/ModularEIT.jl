@@ -17,7 +17,7 @@ $$
 \eta_K^2 = h_K^2\,\|\nabla\cdot(\sigma\nabla u_h)\|^2_{L^2(K)} + \sum_{F\subset\partial K} h_F\,\big\|[\![\sigma\partial_\nu u_h]\!]\big\|^2_{L^2(F)},
 $$
 
-where the second term contains the jumps of the normal flux across interior faces. On boundary faces the jump is replaced by $g - \sigma\partial_\nu u_h$. Then $\|u-u_h\|_{a}\lesssim\big(\sum_K\eta_K^2\big)^{1/2}$ (reliability), and $\eta_K$ also bounds the local error from below (efficiency).
+where the second term contains the jumps of the normal flux across interior faces. On boundary faces the jump is replaced by $g - \sigma\partial_\nu u_h$. Then $\|u-u_h\|_{a}\lesssim\big(\sum_K\eta_K^2\big)^{1/2}$ (reliability), and $\eta_K$ also bounds the local error from below (efficiency). The boundary residuals of the electrode models are listed in [[Residual Estimator for the Conductivity Equation]].
 
 **Adaptive loop.** SOLVE → ESTIMATE → MARK (for example [[Dörfler Marking]]: the smallest set of cells carrying a fixed fraction of the total error) → REFINE ($h$-refinement by splitting, with [[Hanging Nodes]] on quadrilaterals or [[Newest Vertex Bisection]] on triangles, or $p$-refinement by raising the polynomial degree). Recovery-based estimators such as the [[Zienkiewicz-Zhu Estimator]] are a cheap alternative to residual estimators.
 

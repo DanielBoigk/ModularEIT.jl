@@ -1,42 +1,55 @@
 # Adaptive meshing for EIT.
 #
-# Refinement: Ferrite's AMR (p4est-style forest of quadtrees/octrees) on quadrilateral and
-# hexahedral meshes, which fits the pixel/voxel meshes of image-based EIT. Refined meshes have
-# hanging nodes; FerriteDiscretization condenses them with conformity constraints, so forward
-# models, objectives and solvers work unchanged. Triangle/tetrahedron refinement (e.g. newest
-# vertex bisection) is not implemented yet: AdaptiveMesh warns and leaves such meshes unchanged.
+# Refinement:
+#   quadrilaterals/hexahedra  Ferrite's AMR (p4est-style forest of quadtrees/octrees), fits the
+#                             pixel/voxel meshes of image-based EIT. Refined meshes have hanging
+#                             nodes; FerriteDiscretization condenses them with conformity
+#                             constraints, so forward models, objectives and solvers work unchanged.
+#   linear triangles          newest vertex bisection (Bisection.jl): conforming, no hanging nodes.
+#   other cells (tetrahedra)  not implemented: AdaptiveMesh warns and leaves the mesh unchanged.
 #
 # Indicators:
+#   residual_indicator       forward accuracy in the energy norm: element residuals, jumps of
+#                            the current density across facets and boundary residuals of the
+#                            electrode model (ResidualEstimator.jl), summed over all patterns
 #   flux_recovery_indicator  forward accuracy in the energy norm: Zienkiewicz–Zhu estimator of
 #                            the current density σ∇u, summed over all current patterns
-#   goal_oriented_indicator  accuracy of the measured voltages: ZZ error of the states times ZZ
-#                            error of the measurement duals (the adjoint fields of the Jacobian)
+#   goal_oriented_indicator  accuracy of the measured voltages: error of the states times error
+#                            of the measurement duals (the adjoint fields of the Jacobian), both
+#                            by residual or by recovery estimates
 #   jump_indicator           reconstruction features: jumps of a piecewise constant σ
 # Marking: dorfler_marking. Transfer of σ between meshes: transfer_conductivity.
 
 """
-    AdaptiveMesh(grid; maxlevel = 10)
+    AdaptiveMesh(grid; maxlevel)
 
-Adaptively refinable mesh built from a quadrilateral or hexahedral `grid` (forest of
-quadtrees/octrees from Ferrite's AMR, at most `maxlevel` refinement levels). Use
-[`refine_mesh!`](@ref) / [`coarsen_mesh!`](@ref) and build a new
+Adaptively refinable mesh. Use [`refine_mesh!`](@ref) / [`coarsen_mesh!`](@ref) and build a new
 [`FerriteDiscretization`](@ref) on [`current_grid`](@ref) after each change.
 
-Other cell types (triangles, tetrahedra) are accepted with a warning and are never refined:
-refinement for them is not implemented yet.
+- Quadrilateral or hexahedral `grid`: forest of quadtrees/octrees from Ferrite's AMR, at most
+  `maxlevel` refinement levels (default 10; one level quarters a cell). Refined grids have
+  hanging nodes.
+- Linear triangle `grid`: newest vertex bisection, at most `maxlevel` bisections per cell
+  (default 20; two bisections quarter a cell). Refined grids are conforming; facet and cell
+  sets are carried over. Coarsening is not implemented.
+
+Other cell types (tetrahedra, quadratic cells) are accepted with a warning and never refined.
 """
 mutable struct AdaptiveMesh{F}
     forest::F
     grid::Ferrite.AbstractGrid
 end
 
-function AdaptiveMesh(grid::Ferrite.AbstractGrid; maxlevel::Integer = 10)
+function AdaptiveMesh(grid::Ferrite.AbstractGrid; maxlevel::Union{Nothing, Integer} = nothing)
     C = getcelltype(grid)
     if C <: Union{Quadrilateral, Hexahedron}
-        forest = Ferrite.AMR.ForestBWG(grid, maxlevel)
+        forest = Ferrite.AMR.ForestBWG(grid, something(maxlevel, 10))
         return AdaptiveMesh(forest, Ferrite.AMR.creategrid(forest))
+    elseif C === Triangle
+        mesh = BisectionMesh(grid, something(maxlevel, 20))
+        return AdaptiveMesh(mesh, _creategrid(mesh))
     end
-    @warn "Adaptive refinement is implemented for quadrilateral and hexahedral meshes (Ferrite's AMR); " *
+    @warn "Adaptive refinement is implemented for quadrilateral, hexahedral and linear triangle meshes; " *
           "refinement of $C meshes is not implemented yet, so this mesh will not be refined."
     return AdaptiveMesh(nothing, grid)
 end
@@ -61,9 +74,14 @@ between neighbouring cells. Cell numbers refer to `current_grid(am)`.
 function refine_mesh!(am::AdaptiveMesh, cells::AbstractVector{<:Integer})
     am.forest === nothing && (_warn_no_refinement(); return am)
     isempty(cells) && return am
-    Ferrite.AMR.refine!(am.forest, collect(cells))
-    Ferrite.AMR.balanceforest!(am.forest)
-    am.grid = Ferrite.AMR.creategrid(am.forest)
+    if am.forest isa BisectionMesh
+        _refine!(am.forest, cells)
+        am.grid = _creategrid(am.forest)
+    else
+        Ferrite.AMR.refine!(am.forest, collect(cells))
+        Ferrite.AMR.balanceforest!(am.forest)
+        am.grid = Ferrite.AMR.creategrid(am.forest)
+    end
     return am
 end
 refine_mesh!(am::AdaptiveMesh) = refine_mesh!(am, collect(1:getncells(am.grid)))
@@ -75,6 +93,7 @@ Refinement level of every cell of `current_grid(am)` (0 = cell of the initial gr
 """
 function cell_levels(am::AdaptiveMesh)
     am.forest === nothing && return zeros(Int, getncells(am.grid))
+    am.forest isa BisectionMesh && return copy(am.forest.levels)
     return [Int(leaf.l) for tree in am.forest.cells for leaf in tree.leaves]
 end
 
@@ -84,7 +103,8 @@ end
 Maximum refinement level; cells at this level are not refined further. Exclude them from
 marking (e.g. set their indicator to zero) so that the adaptive loop keeps making progress.
 """
-max_level(am::AdaptiveMesh) = am.forest === nothing ? 0 : Int(first(am.forest.cells).b)
+max_level(am::AdaptiveMesh) = am.forest === nothing ? 0 :
+                              am.forest isa BisectionMesh ? am.forest.maxlevel : Int(first(am.forest.cells).b)
 
 """
     coarsen_mesh!(am, cells)
@@ -93,6 +113,8 @@ Coarsen: every complete family of sibling cells among `cells` is merged into its
 """
 function coarsen_mesh!(am::AdaptiveMesh, cells::AbstractVector{<:Integer})
     am.forest === nothing && (_warn_no_refinement(); return am)
+    am.forest isa BisectionMesh &&
+        (@warn "Coarsening of bisection-refined triangle meshes is not implemented yet; the mesh is unchanged."; return am)
     isempty(cells) && return am
     Ferrite.AMR.coarsen!(am.forest, collect(cells))
     Ferrite.AMR.balanceforest!(am.forest)
@@ -169,33 +191,41 @@ function flux_recovery_indicator(disc::FerriteDiscretization, σ::AbstractVector
 end
 
 """
-    goal_oriented_indicator(disc, fm, σ, X; solver = DirectSolver(), normalize = false)
+    goal_oriented_indicator(disc, fm, σ, X; estimator = :recovery, currents = nothing,
+                            solver = DirectSolver(), normalize = false)
 
 Goal-oriented indicator for the measured voltages, one value per cell:
 
     η_K = η_K(u) η_K(z),   η_K(u)² = Σₛ ‖J*ₛ - σ∇uₛ‖²_K,   η_K(z)² = Σₘ ‖J*(zₘ) - σ∇zₘ‖²_K,
 
 where `zₘ` are the dual solutions of the measurements (`A zₘ = Qᵀ Π eₘ`, the adjoint fields of
-the Jacobian rows) and both factors are [`flux_recovery_indicator`](@ref)s. The voltage error is
+the Jacobian rows). Both factors are [`flux_recovery_indicator`](@ref)s (`estimator = :recovery`)
+or [`residual_indicator`](@ref)s (`estimator = :residual`, needs the injected `currents`). The voltage error is
 bounded by products of primal and dual errors, so cells are refined where errors are made *and*
 influence the measurements. `X` holds the current-driven states (`n × s`). `normalize` weighs
 every pattern and every measurement equally.
 
-This is a heuristic built from recovery estimators. In `benchmark/adaptive_meshing.jl` it
-improves the voltages of low-frequency patterns about 5× over uniform meshes of the same size,
-but under-resolves high-frequency patterns (also with `normalize = true`), so the total voltage
-error stagnates near 1e-2; a residual-based dual-weighted estimator is the next step.
+In `benchmark/adaptive_meshing.jl` the residual version is the cheapest effective choice
+(indicator cost about that of one forward solve with all patterns).
 """
 function goal_oriented_indicator(disc::FerriteDiscretization, fm::ForwardModel, σ::AbstractVector,
-                                 X::AbstractVecOrMat; solver::AbstractLinearSolver = DirectSolver(),
-                                 normalize::Bool = false)
+                                 X::AbstractVecOrMat; estimator::Symbol = :recovery, currents = nothing,
+                                 solver::AbstractLinearSolver = DirectSolver(), normalize::Bool = false)
+    estimator in (:recovery, :residual) || throw(ArgumentError("estimator must be :recovery or :residual"))
+    estimator === :residual && currents === nothing &&
+        throw(ArgumentError("estimator = :residual needs the injected currents"))
     system_matrix!(fm, σ)
     st = _init_neumann_solver(solver, fm)
     Πt = _remove_mean!(Matrix(1.0I, n_measure(fm), n_measure(fm)))
     Z = zeros(fm.n, n_measure(fm))
     _solve!(Z, st, fm.Q' * Πt)
-    ηu = flux_recovery_indicator(disc, σ, X; normalize)
-    ηz = flux_recovery_indicator(disc, σ, Z; normalize)
+    if estimator === :residual
+        ηu = residual_indicator(disc, fm, σ, X, currents; normalize)
+        ηz = _residual_indicator(disc, σ, _lift(disc, Z[1:ndofs_u(disc), :]), _dual_boundary(disc, fm, Z), normalize)
+    else
+        ηu = flux_recovery_indicator(disc, σ, X; normalize)
+        ηz = flux_recovery_indicator(disc, σ, Z; normalize)
+    end
     return sqrt.(ηu .* ηz)
 end
 

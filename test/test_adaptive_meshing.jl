@@ -10,14 +10,6 @@ using Test
 @testset "adaptive meshing" begin
     rng = MersenneTwister(21)
 
-    @testset "triangle meshes are not refined yet (warning)" begin
-        tri = generate_grid(Triangle, (3, 3))
-        am = @test_logs (:warn, r"quadrilateral") AdaptiveMesh(tri)
-        @test current_grid(am) === tri
-        @test_logs (:warn, r"not implemented") refine_mesh!(am, [1, 2])
-        @test getncells(current_grid(am)) == getncells(tri)
-    end
-
     am = AdaptiveMesh(generate_grid(Quadrilateral, (4, 4)); maxlevel = 6)
     @test getncells(current_grid(am)) == 16
     amu = AdaptiveMesh(generate_grid(Quadrilateral, (2, 2)); maxlevel = 6)
@@ -75,7 +67,7 @@ using Test
         _, X = forward_dirichlet(fm, ones(ndofs_σ(disc)), bx)
         @test X ≈ interpolate_function(disc, x -> x[1]; field = :u) atol = 1e-12
 
-        els = angular_electrodes(disc, 8; coverage = 0.5)
+        els = angular_electrodes(disc, 4; coverage = 0.5)     # coarse mesh: few, wide electrodes
         fm = ForwardModel(disc, CompleteElectrodeModel(els, 0.1))
         σtrue = 1 .+ rand(rng, ndofs_σ(disc))
         I = trigonometric_patterns(fm, 2)
@@ -117,7 +109,7 @@ using Test
         @test any(>(0), J)
         @test all(abs(cellmid[c][1]) < 0.3 for c in 1:getncells(grid) if J[c] > 0)
         # goal-oriented indicator (voltages of a gap model): nonnegative, zero for the exact solution
-        fmg = ForwardModel(disc, GapModel(angular_electrodes(disc, 8)))
+        fmg = ForwardModel(disc, GapModel(angular_electrodes(disc, 4)))
         _, Xg = forward_neumann(fmg, σjump, trigonometric_patterns(fmg, 2))
         ηg = goal_oriented_indicator(disc, fmg, σjump, Xg)
         @test length(ηg) == getncells(grid) && all(>=(0), ηg) && sum(ηg) > 0
@@ -126,6 +118,23 @@ using Test
         marked = dorfler_marking(ηj, θ)
         @test sum(ηj[marked]) >= θ * sum(ηj)
         @test sum(ηj[marked[1:end-1]]) < θ * sum(ηj)   # minimal
+    end
+
+    @testset "electrode positions and patterns do not depend on the mesh" begin
+        coarse = FerriteDiscretization(generate_grid(Quadrilateral, (16, 16)))
+        am4 = AdaptiveMesh(generate_grid(Quadrilateral, (16, 16)); maxlevel = 6)
+        refine_mesh!(am4, [2, 3, 6, 11, 40])                 # boundary cells, under electrodes
+        fine = FerriteDiscretization(current_grid(am4))
+        for d in (coarse, fine)
+            @test ModularEIT._centroid(d, d.boundary_facets) ≈ Vec(0.0, 0.0) atol = 1e-14
+        end
+        # the same physical electrodes (the four sides) on both meshes: same angles, same patterns
+        sides(d) = [collect(getfacetset(d.grid, n)) for n in ("right", "top", "left", "bottom")]
+        fmc = ForwardModel(coarse, CompleteElectrodeModel(sides(coarse), 0.1))
+        fmf = ForwardModel(fine, CompleteElectrodeModel(sides(fine), 0.1))
+        @test fmc.angles ≈ fmf.angles
+        @test fmc.angles ≈ [0, π / 2, π, -π / 2]
+        @test trigonometric_patterns(fmc, 1) ≈ trigonometric_patterns(fmf, 1)
     end
 
     @testset "conductivity transfer after refinement" begin
