@@ -6,16 +6,28 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Block Conjugate Gradient</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</guid>
+    <description><![CDATA[ The block conjugate gradient method (O’Leary 1980) solves A X = B for s right-hand sides simultaneously. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 09:39:11 GMT</pubDate>
+  </item><item>
+    <title>MINRES</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES</guid>
+    <description><![CDATA[ MINRES (Paige &amp; Saunders 1975) solves A\mathbf x = \mathbf b for a symmetric, possibly indefinite or singular, matrix. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 09:39:11 GMT</pubDate>
+  </item><item>
+    <title>Projected Cholesky Factorization</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</guid>
+    <description><![CDATA[ Direct solver for A\mathbf x = \mathbf b when A is symmetric positive semidefinite with a known null space V = \ker A of dimension k and positive definite on V^\perp. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 09:39:11 GMT</pubDate>
+  </item><item>
     <title>Neumann Problem</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</guid>
     <description><![CDATA[ In the Neumann problem the current density on the boundary is prescribed. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
-  </item><item>
-    <title>Block Conjugate Gradient</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</guid>
-    <description><![CDATA[ The block conjugate gradient method (O’Leary 1980) solves AX = B for s right-hand sides simultaneously. ]]></description>
     <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
   </item><item>
     <title>Block Krylov Methods</title>
@@ -36,12 +48,6 @@
     <description><![CDATA[ The discrete Neumann Problem L_\gamma\mathbf u = \mathbf g is singular: L_\gamma\mathbf 1 = 0. ]]></description>
     <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
   </item><item>
-    <title>Projected Cholesky Factorization</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</guid>
-    <description><![CDATA[ Direct solver for A\mathbf x = \mathbf b when A is symmetric positive semidefinite with a known null space V = \ker A of dimension k and positive definite on V^\perp. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 21:16:25 GMT</pubDate>
-  </item><item>
     <title>Projected Conjugate Gradient</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient</guid>
@@ -58,12 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Applications-of-EIT</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Applications-of-EIT</guid>
     <description><![CDATA[ Electrical Impedance Tomography is used wherever conductivity contrasts show up and a cheap, fast, non-invasive measurement matters more than fine spatial resolution. ]]></description>
-    <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
-  </item><item>
-    <title>Complete Electrode Model</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
-    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
     <pubDate>Sun, 27 Sep 2026 15:57:39 GMT</pubDate>
   </item>
     </channel>
