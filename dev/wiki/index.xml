@@ -10,13 +10,25 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</guid>
     <description><![CDATA[ A finite element solution u_h satisfies the discrete equations exactly. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
+    <pubDate>Mon, 28 Sep 2026 16:34:22 GMT</pubDate>
   </item><item>
     <title>Adaptive Meshing in EIT</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</guid>
     <description><![CDATA[ Adaptive mesh refinement repeats SOLVE → ESTIMATE → MARK → REFINE (see A Posteriori Error Estimation and Adaptive Meshing). ]]></description>
-    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
+    <pubDate>Mon, 28 Sep 2026 16:34:22 GMT</pubDate>
+  </item><item>
+    <title>Residual Estimator for the Conductivity Equation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation</guid>
+    <description><![CDATA[ The residual-based estimator of A Posteriori Error Estimation and Adaptive Meshing, written out for the discretised Conductivity Equation with the boundary conditions of the Electrode Models. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 16:34:22 GMT</pubDate>
+  </item><item>
+    <title>ModularEIT Wiki</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
+    <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. ]]></description>
+    <pubDate>Mon, 28 Sep 2026 16:34:22 GMT</pubDate>
   </item><item>
     <title>Dörfler Marking</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/D%C3%B6rfler-Marking</link>
@@ -48,22 +60,10 @@
     <description><![CDATA[ The Zienkiewicz–Zhu (ZZ) estimator compares the discrete gradient with a recovered, smoother gradient. ]]></description>
     <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
   </item><item>
-    <title>ModularEIT Wiki</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
-    <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
-  </item><item>
     <title>Complete Electrode Model</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
     <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
-    <pubDate>Mon, 28 Sep 2026 14:43:44 GMT</pubDate>
-  </item><item>
-    <title>Electrode Models</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</guid>
-    <description><![CDATA[ The mathematical boundary conditions have to model how current actually enters the body through L metal electrodes e_1,\dots,e_L\subset\partial\Omega. ]]></description>
     <pubDate>Mon, 28 Sep 2026 14:43:44 GMT</pubDate>
   </item>
     </channel>

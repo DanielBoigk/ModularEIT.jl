@@ -132,10 +132,10 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</loc>
-    <lastmod>2026-09-28T15:35:47.000Z</lastmod>
+    <lastmod>2026-09-28T16:34:22.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</loc>
-    <lastmod>2026-09-28T15:35:47.000Z</lastmod>
+    <lastmod>2026-09-28T16:34:22.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
@@ -217,6 +217,9 @@
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient</loc>
     <lastmod>2026-09-27T21:16:25.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation</loc>
+    <lastmod>2026-09-28T16:34:22.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Stiffness-Matrix</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
@@ -441,5 +444,5 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</loc>
-    <lastmod>2026-09-28T15:35:47.000Z</lastmod>
+    <lastmod>2026-09-28T16:34:22.000Z</lastmod>
   </url></urlset>
