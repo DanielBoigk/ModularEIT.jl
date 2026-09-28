@@ -24,7 +24,7 @@ then scatter into the global sparse matrix (see [[Numerical Quadrature and Assem
 - Symmetric positive semidefinite with kernel = constants, like the [[Stiffness Matrix]].
 - Spectrally equivalent to $K$: $\gamma_{\min}K\le L_\gamma\le\gamma_{\max}K$.
 - **Linear in $\gamma$**: $L_\gamma = \sum_k\gamma_k L^{(k)}$ for a basis expansion $\gamma = \sum_k\gamma_k\psi_k$. The solution $\mathbf u = L_\gamma^{-1}\mathbf g$ is nonlinear in $\gamma$ nonetheless (see [[Forward Map]]).
-- Its sparsity pattern does not depend on $\gamma$, so the symbolic structure and the preconditioner setup can be reused across iterations.
+- Its sparsity pattern does not depend on $\gamma$, so the symbolic structure and the preconditioner setup can be reused across iterations. Together with linearity this makes reassembly a single sparse matrix-vector product (see [[Conductivity Tensor]]).
 
 Every reconstruction iteration reassembles $L_\sigma$ for the current guess $\sigma$ and then solves the state and adjoint systems with it (see [[Adjoint State Method]]).
 

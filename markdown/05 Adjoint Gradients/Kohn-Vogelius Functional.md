@@ -32,6 +32,15 @@ $$
 
 One iteration costs two forward solves (one Dirichlet, one Neumann) and **no adjoint solve**. At the true conductivity, the misfit corresponds to a data fit in the natural energy ($H^{1/2}$-type) norm rather than in $L^2(\partial\Omega)$.
 
+**Discrete version.** With the current-driven state $\mathbf x_N$ ($A\mathbf x_N = P I$) and the voltage-driven state $\mathbf x_D$ (measured voltages prescribed, see [[Discrete Electrode Models]]),
+
+$$
+J_{\mathrm{KV}} = \tfrac12\sum_s(\mathbf x_{N,s}-\mathbf x_{D,s})^\top A(\sigma)\,(\mathbf x_{N,s}-\mathbf x_{D,s}),\qquad
+\frac{\partial J_{\mathrm{KV}}}{\partial\sigma_a} = \tfrac12\sum_s\Big(\mathbf x_{D,s}^\top\frac{\partial A}{\partial\sigma_a}\mathbf x_{D,s} - \mathbf x_{N,s}^\top\frac{\partial A}{\partial\sigma_a}\mathbf x_{N,s}\Big),
+$$
+
+two contractions with the [[Conductivity Tensor]]. The cross term $\mathbf x_N^\top A\,\mathbf x_D = (P I)^\top\mathbf x_D$ depends only on the data if the voltage-driven problem prescribes the measured voltages exactly where the current enters. This holds for the continuum model, point electrodes and the [[Complete Electrode Model]] with voltages on all electrodes, and then $J_{\mathrm{KV}}$ vanishes at the true conductivity. For the [[Gap Model]], the voltage-driven counterpart is the [[Shunt Model]], a different model, so $J_{\mathrm{KV}}>0$ even for exact data.
+
 **Relaxation and regularisation.** Minimising sequences of the unregularised functional can oscillate finer and finer. Kohn and Vogelius studied its relaxation (homogenisation), which leads to anisotropic, non-unique limits (see [[Anisotropic Conductivities]]). In practice the unrelaxed functional is used with bounds $\sigma_{\min}\le\sigma\le\sigma_{\max}$ and an explicit regulariser. Kohn and McKenney reported that early termination has a desirable smoothing effect.
 
 ## References

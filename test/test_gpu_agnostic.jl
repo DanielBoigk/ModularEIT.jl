@@ -7,6 +7,7 @@ using SparseArrays
 using Random
 using Test
 using JLArrays
+import Ferrite
 
 include("helpers.jl")
 
@@ -68,5 +69,23 @@ JLArrays.allowscalar(false)
         @test X isa JLArray
         @test stats.converged
         @test norm(Array(X) - Xref) / norm(Xref) < 1e-7
+    end
+
+    @testset "conductivity tensor: assembly and gradient contraction on the device" begin
+        grid = Ferrite.generate_grid(Ferrite.Triangle, (6, 6))
+        disc = FerriteDiscretization(grid; ip_σ = Ferrite.Lagrange{Ferrite.RefTriangle, 1}())
+        ct = ConductivityTensor(disc)
+        ctd = ConductivityTensor(disc; to_device)
+        @test ctd.T isa DeviceSparseMatrixCSR
+        rng = MersenneTwister(4)
+        σ = 1 .+ rand(rng, ndofs_σ(disc))
+        nz = weighted_stiffness_values!(zeros(nnz(ct.pattern)), ct, σ)
+        nzd = weighted_stiffness_values!(JLArray(zeros(nnz(ct.pattern))), ctd, JLArray(σ))
+        @test nzd isa JLArray
+        @test Array(nzd) ≈ nz
+        Λ, U = randn(rng, ndofs_u(disc), 3), randn(rng, ndofs_u(disc), 3)
+        g = tensor_gradient!(zeros(ndofs_σ(disc)), ct, Λ, U; α = -1)
+        gd = tensor_gradient!(JLArray(zeros(ndofs_σ(disc))), ctd, JLArray(Λ), JLArray(U); α = -1)
+        @test Array(gd) ≈ g
     end
 end

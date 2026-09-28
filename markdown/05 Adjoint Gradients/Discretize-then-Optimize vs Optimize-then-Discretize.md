@@ -20,6 +20,8 @@ $$
 - solvers are stopped early (inexact states and adjoints);
 - the misfit is measured in a norm other than the one used for discretisation.
 
+Both gradients come from the same assembled quantity. The DTO gradient is the dual vector $\big(-\int\psi_a\nabla u_h\cdot\nabla\lambda_h\big)_a$, and the $L^2$-projected OTD gradient is $M_\sigma^{-1}$ times it (see [[Conductivity Tensor]]).
+
 DTO gradients make line searches and quasi-Newton methods behave consistently, because they are exact derivatives of the function being minimised. OTD gradients are mesh-independent approximations of the true gradient (see [[Gradient Representation and the Riesz Map]]).
 
 ## References

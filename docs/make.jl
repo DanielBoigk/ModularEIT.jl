@@ -12,10 +12,9 @@ makedocs(
         "Home" => "index.md",
         "Getting Started" => "getting_started.md",
         "API Reference" => [
-            "Meshes & Electrodes" => "api/geometry.md",
-            "Forward Problem" => "api/forward.md",
-            "Regularization" => "api/regularization.md",
-            "Reconstruction" => "api/reconstruction.md",
+            "Discretization" => "api/discretization.md",
+            "Electrode Models & Forward Problem" => "api/forward.md",
+            "Objectives" => "api/objectives.md",
             "Linear Solvers" => "api/linear_solvers.md",
         ],
     ],

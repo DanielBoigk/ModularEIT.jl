@@ -9,6 +9,17 @@ Projected block conjugate gradient method for the singular (pure Neumann) EIT sy
 at once. The theory is in the wiki articles *Projected Conjugate Gradient*,
 *Block Conjugate Gradient* and *Grounding of the Potential*.
 
+The objectives and forward solves take a solver *choice*, instantiated for the current system
+matrix and refactorised / re-preconditioned when the conductivity changes:
+
+```@docs
+AbstractLinearSolver
+DirectSolver
+BlockCGSolver
+```
+
+## Projected block CG
+
 ```@docs
 pbcg
 pbcg!

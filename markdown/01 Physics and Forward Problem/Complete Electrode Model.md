@@ -35,7 +35,9 @@ $$
 B\big((u,U),(v,V)\big) = \int_\Omega\gamma\nabla u\cdot\nabla v\,\mathrm dx + \sum_{\ell=1}^L\frac1{z_\ell}\int_{e_\ell}(u-U_\ell)(v-V_\ell)\,\mathrm ds = \sum_\ell I_\ell V_\ell .
 $$
 
-The resulting *electrode NtD matrix* $I\mapsto U$ is symmetric positive definite on $\{\sum I_\ell=0\}$. It is the finite-dimensional analogue of the [[Neumann-to-Dirichlet Map]]. As electrodes become small and numerous, the CEM approaches the continuum model.
+The resulting *electrode NtD matrix* $I\mapsto U$ is symmetric positive definite on $\{\sum I_\ell=0\}$. It is the finite-dimensional analogue of the [[Neumann-to-Dirichlet Map]]. As electrodes become small and numerous, the CEM approaches the continuum model. As $z_\ell\to 0$ it becomes the [[Shunt Model]]; for large $z_\ell$ the current density under the electrode becomes uniform, as in the [[Gap Model]].
+
+Integrating the second condition over $e_\ell$ gives $U_\ell = |e_\ell|^{-1}\int_{e_\ell}u\,\mathrm ds + z_\ell I_\ell/|e_\ell|$: the voltage of a current-carrying electrode includes the contact voltage drop (see [[Measurement Protocols]]). The finite element system is derived in [[Discrete Electrode Models]].
 
 ## References
 

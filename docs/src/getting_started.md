@@ -1,40 +1,54 @@
 # Getting Started
 
-This page walks through a complete (mock) reconstruction.
+A forward simulation and the two objectives on a small quadrilateral mesh (the kind of mesh a
+pixel image gives).
 
-## Build a mesh and place electrodes
+## Discretization and electrodes
 
 ```@example tour
-using ModularEIT
+using ModularEIT, Ferrite
 
-mesh = circle_mesh(32)
-electrodes = ring_electrodes(mesh, 8)
-(nnodes(mesh), nelements(mesh), length(electrodes))
+grid = generate_grid(Quadrilateral, (24, 24))          # [-1, 1]², Q1 potential, Q0 conductivity
+disc = FerriteDiscretization(grid)
+electrodes = angular_electrodes(disc, 16; coverage = 0.5)
+fm = ForwardModel(disc, CompleteElectrodeModel(electrodes, 0.05))
+(ndofs_u(disc), ndofs_σ(disc), n_inject(fm), n_measure(fm))
 ```
 
-## Simulate measurements
+## Simulate data
 
-Inject current between two adjacent electrodes and solve the forward problem for
-a homogeneous conductivity ``\sigma \equiv 2``:
+A conductive inclusion, trigonometric current patterns, measured electrode voltages:
 
 ```@example tour
-problem = ForwardProblem(mesh, electrodes)
-I = [1.0, -1.0, 0, 0, 0, 0, 0, 0]
-U = solve_forward(problem, fill(2.0, nelements(mesh)), I)
+σ_true = interpolate_function(disc, x -> hypot(x[1] - 0.3, x[2]) < 0.35 ? 3.0 : 1.0)
+currents = trigonometric_patterns(fm, 4)                # 8 patterns
+voltages, _ = forward_neumann(fm, σ_true, currents)
+size(voltages)
 ```
 
-## Reconstruct
+## Objectives and gradients
 
-Start from ``\sigma \equiv 1`` and minimize the Tikhonov-regularized data misfit:
+Least squares through the adjoint state method, with the L² gradient (Riesz map with the
+σ mass matrix):
 
 ```@example tour
-result = reconstruct(problem, U, I, Tikhonov(1e-3); σ_init=ones(nelements(mesh)))
-result.residuals[end]
+σ0 = ones(ndofs_σ(disc))
+obj = AdjointStateObjective(fm, currents, voltages; gradient = L2Gradient(FEMatrices(disc)))
+g = zeros(ndofs_σ(disc))
+J = value_and_gradient!(g, obj, σ0)
+(J, objective_value(obj, σ_true))
 ```
 
-Swap the regularizer to use total variation instead:
+The Kohn–Vogelius functional needs no adjoint solve:
 
 ```@example tour
-result_tv = reconstruct(problem, U, I, TotalVariation(1e-3); σ_init=ones(nelements(mesh)))
-result_tv.residuals[end]
+kv = KohnVogeliusObjective(fm, currents, voltages)
+(value_and_gradient!(g, kv, σ0), objective_value(kv, σ_true))
+```
+
+Swap the linear solver without changing anything else:
+
+```@example tour
+obj_cg = AdjointStateObjective(fm, currents, voltages; solver = BlockCGSolver(; preconditioner = :amg))
+objective_value(obj_cg, σ0) ≈ objective_value(obj, σ0)
 ```
