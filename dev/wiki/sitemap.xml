@@ -149,6 +149,9 @@
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Boundary-Mass-and-Stiffness-Matrices</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Coarsening-of-Bisection-Meshes</loc>
+    <lastmod>2026-09-28T22:03:27.000Z</lastmod>
+  </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conductivity-Tensor</loc>
     <lastmod>2026-09-28T14:43:44.000Z</lastmod>
   </url><url>
@@ -204,13 +207,16 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection</loc>
-    <lastmod>2026-09-28T15:35:47.000Z</lastmod>
+    <lastmod>2026-09-28T22:03:27.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem</loc>
     <lastmod>2026-09-27T21:16:25.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Quadrature-and-Assembly</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Pixel-Images-and-Finite-Element-Functions</loc>
+    <lastmod>2026-09-28T22:03:27.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</loc>
     <lastmod>2026-09-28T09:39:11.000Z</lastmod>
@@ -444,5 +450,5 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</loc>
-    <lastmod>2026-09-28T16:34:22.000Z</lastmod>
+    <lastmod>2026-09-28T22:03:27.000Z</lastmod>
   </url></urlset>
