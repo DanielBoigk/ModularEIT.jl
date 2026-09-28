@@ -9,7 +9,7 @@ aliases: [NVB, Bisection refinement]
 
 **Shape regularity.** All triangles produced from an initial triangle fall into finitely many similarity classes (at most four for NVB). The minimum angle stays bounded away from zero, however often the mesh is refined. This makes NVB the standard refinement for the convergence and optimality theory of adaptive finite element methods (see [[Dörfler Marking]]).
 
-**Relatives.** Longest-edge bisection (Rivara) always bisects the longest edge. Red-green refinement splits marked triangles into four congruent children (red) and closes the mesh with temporary bisections (green). Coarsening reverses bisections of sibling pairs.
+**Relatives.** Longest-edge bisection (Rivara) always bisects the longest edge. Red-green refinement splits marked triangles into four congruent children (red) and closes the mesh with temporary bisections (green). Coarsening reverses bisections of sibling pairs (see [[Coarsening of Bisection Meshes]]).
 
 **Comparison with quadtrees.** Quadtree refinement of quadrilaterals keeps a Cartesian structure, well suited to pixel images. It needs hanging-node constraints and a 2:1 balance. Bisection of triangles gives conforming meshes and follows curved boundaries and electrodes better (see [[Adaptive Meshing in EIT]]).
 
