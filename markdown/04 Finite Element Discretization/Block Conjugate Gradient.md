@@ -3,7 +3,7 @@ tags: [numerics, linear-algebra, performance]
 aliases: [Block CG, BCG, Projected block CG]
 ---
 
-The **block conjugate gradient** method (O'Leary 1980) solves $AX = B$ for $s$ right-hand sides simultaneously. It minimises the $A$-norm error of every column over the *joint* block Krylov space
+The **block conjugate gradient** method (O'Leary 1980) solves $A X = B$ for $s$ right-hand sides simultaneously. It minimises the $A$-norm error of every column over the *joint* block Krylov space
 
 $$
 \mathcal K_k(A,R_0) = \operatorname{span}\{R_0, AR_0,\dots,A^{k-1}R_0\}\qquad(\text{dimension up to } ks).

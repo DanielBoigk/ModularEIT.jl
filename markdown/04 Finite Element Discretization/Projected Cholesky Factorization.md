@@ -23,6 +23,8 @@ The vector from step 2 solves $A\mathbf x = \hat{\mathbf b}$. Take any solution 
 
 **Block right-hand sides.** Triangular solves with $L$ and $L^\top$ handle $s$ right-hand sides at once (BLAS-3 in supernodal codes). In EIT, all state *and* adjoint solves of one reconstruction iteration share one factorisation: $2N$ solves per factorisation.
 
+**LDLᵀ instead of Cholesky.** Because $A_{JJ}$ is SPD, a sparse $LDL^\top$ factorisation without pivoting is equally stable. It avoids square roots and works in any floating-point type. LDLFactorizations.jl is a pure-Julia implementation that reads only the upper triangle, supports symbolic/numeric separation for refactorisation, and handles Float32 on the CPU, which CHOLMOD does not. A bordered system $\begin{pmatrix}A & \mathbf w\\ \mathbf w^\top & 0\end{pmatrix}$, which would impose the grounding directly, is indefinite. An $LDL^\top$ with a static elimination order meets a zero pivot when the singular $A$ block is eliminated first, so pinning plus a posteriori grounding is the robust route.
+
 **Changing conductivity.** A new $\sigma$ changes the values of $L_\sigma$ but not its sparsity pattern. The symbolic analysis (ordering, elimination tree, supernode structure) is reused and only the numeric factorisation is repeated. Keeping a map from the entries of $A$ to those of $A_{JJ}$ makes this update a simple gather.
 
 **Cost.** For 2D finite element meshes with $n$ unknowns, nested dissection gives $\mathcal O(n\log n)$ fill and $\mathcal O(n^{3/2})$ factorisation work. Each solve costs $\mathcal O(n\log n)$ per right-hand side. Compared with [[Block Conjugate Gradient|(block) CG]] with [[Algebraic Multigrid|AMG]], this pays off when many right-hand sides share one matrix, when high accuracy is needed, or for moderate $n$. For very large 3D problems the fill-in makes iterative solvers preferable.
@@ -39,4 +41,5 @@ is nonsingular but indefinite, so it needs an $LDL^\top$ factorisation. The shif
 2. Y. Chen, T. A. Davis, W. W. Hager, S. Rajamanickam (2008). *Algorithm 887: CHOLMOD, Supernodal Sparse Cholesky Factorization and Update/Downdate*. ACM Trans. Math. Softw. 35(3), 22. [doi:10.1145/1391989.1391995](https://doi.org/10.1145/1391989.1391995)
 3. A. George (1973). *Nested Dissection of a Regular Finite Element Mesh*. SIAM J. Numer. Anal. 10(2), 345–363. [doi:10.1137/0710032](https://doi.org/10.1137/0710032)
 4. P. R. Amestoy, T. A. Davis, I. S. Duff (1996). *An Approximate Minimum Degree Ordering Algorithm*. SIAM J. Matrix Anal. Appl. 17(4), 886–905. [doi:10.1137/S0895479894278952](https://doi.org/10.1137/S0895479894278952)
-5. NVIDIA. *cuDSS: CUDA Direct Sparse Solver* (documentation). [docs.nvidia.com/cuda/cudss](https://docs.nvidia.com/cuda/cudss/)
+5. D. Orban and contributors. *LDLFactorizations.jl* (software). [github.com/JuliaSmoothOptimizers/LDLFactorizations.jl](https://github.com/JuliaSmoothOptimizers/LDLFactorizations.jl)
+6. NVIDIA. *cuDSS: CUDA Direct Sparse Solver* (documentation). [docs.nvidia.com/cuda/cudss](https://docs.nvidia.com/cuda/cudss/)

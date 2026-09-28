@@ -20,7 +20,12 @@ It uses the same short Lanczos recurrence as CG, so its cost per iteration is si
 
 For pure-Neumann EIT forward and adjoint problems with mean-zero projection, MINRES with an [[Algebraic Multigrid]] preconditioner is a robust default.
 
+**Block MINRES and symmetric scaling.** Krylov.jl provides block MINRES for $s$ right-hand sides. A MINRES preconditioner must be symmetric positive definite and is applied symmetrically. A diagonal (Jacobi) preconditioner can therefore be realised exactly by solving the scaled system
+$$ \big(D^{-1/2}AD^{-1/2}\big)\,\mathbf y = D^{-1/2}\mathbf b,\qquad \mathbf x = D^{-1/2}\mathbf y,\qquad D = \operatorname{diag}(A). $$
+Scaling preserves consistency for the singular Neumann matrix. The scaled null space is $D^{1/2}V$, and $D^{-1/2}\Pi\mathbf b$ is orthogonal to it, because $(D^{-1/2}\Pi\mathbf b)^\top D^{1/2}V = \mathbf b^\top\Pi V = 0$. The result is then [[Grounding of the Potential|grounded]] as for the other projected solvers (see [[Projected Conjugate Gradient]]). Blocks of linearly dependent right-hand sides are handled by solving for an orthonormal basis of their span and recombining.
+
 ## References
 
 1. C. C. Paige, M. A. Saunders (1975). *Solution of Sparse Indefinite Systems of Linear Equations*. SIAM J. Numer. Anal. 12(4), 617–629. [doi:10.1137/0712047](https://doi.org/10.1137/0712047)
 2. S.-C. T. Choi, C. C. Paige, M. A. Saunders (2011). *MINRES-QLP: A Krylov Subspace Method for Indefinite or Singular Symmetric Systems*. SIAM J. Sci. Comput. 33(4), 1810–1836. [doi:10.1137/100787921](https://doi.org/10.1137/100787921)
+3. A. Montoison, D. Orban (2023). *Krylov.jl: A Julia basket of hand-picked Krylov methods*. J. Open Source Softw. 8(89), 5187. [doi:10.21105/joss.05187](https://doi.org/10.21105/joss.05187)

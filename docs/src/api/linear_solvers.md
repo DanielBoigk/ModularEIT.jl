@@ -26,9 +26,23 @@ analysis when only the conductivity changes.
 
 ```@docs
 projected_cholesky
+projected_ldl
 ProjectedCholesky
 refactor!
 LinearAlgebra.ldiv!(::AbstractVecOrMat, ::ProjectedCholesky, ::AbstractVecOrMat)
+```
+
+## Projected block MINRES (Krylov.jl)
+
+Block MINRES from Krylov.jl on the projected system, with optional symmetric Jacobi scaling
+(Krylov.jl's block MINRES does not take a preconditioner yet). `columnwise = true` uses the
+single-vector MINRES per right-hand side, which also works on the GPU.
+
+```@docs
+pbminres
+pbminres!
+ProjectedMinresWorkspace
+BlockMinresStats
 ```
 
 ## Preconditioners

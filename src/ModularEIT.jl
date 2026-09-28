@@ -20,7 +20,8 @@ export Regularizer, Tikhonov, TotalVariation, penalty, gradient
 export ReconstructionResult, reconstruct
 export BlockCGWorkspace, BlockCGStats, pbcg, pbcg!, boundary_grounding
 export JacobiPreconditioner, AMGPreconditioner
-export ProjectedCholesky, projected_cholesky, refactor!
+export ProjectedCholesky, projected_cholesky, projected_ldl, refactor!
+export ProjectedMinresWorkspace, BlockMinresStats, pbminres, pbminres!
 
 include("mesh.jl")
 include("electrodes.jl")
@@ -29,5 +30,6 @@ include("regularization.jl")
 include("reconstruction.jl")
 include("LinearSolvers/ProjectedBlockCG.jl")
 include("LinearSolvers/ProjectedCholesky.jl")
+include("LinearSolvers/ProjectedBlockMinres.jl")
 
 end # module ModularEIT

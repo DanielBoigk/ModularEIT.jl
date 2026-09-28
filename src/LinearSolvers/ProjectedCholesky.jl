@@ -17,6 +17,7 @@
 
 using LinearAlgebra
 using SparseArrays
+import LDLFactorizations
 
 # ---------------------------------------------------------------------------------------
 # Backend interface (CPU: CHOLMOD). Device backends add methods for their matrix types.
@@ -35,6 +36,17 @@ _chol_refactor!(F::SparseArrays.CHOLMOD.Factor, A::SparseMatrixCSC) = (cholesky!
 
 # X ← A⁻¹ B for the reduced system (X, B are nJ × s)
 _chol_solve!(X, F::SparseArrays.CHOLMOD.Factor, B) = ldiv!(X, F, B)
+
+# LDLᵀ backend (LDLFactorizations.jl, pure Julia, any floating-point type). It reads the upper
+# triangle only, so the reduced matrix is stored as triu(A[J, J]) and marked with this wrapper.
+struct _UpperTriangle{M}
+    A::M
+end
+_chol_factorize(U::_UpperTriangle) = LDLFactorizations.ldl(Symmetric(U.A, :U))
+_set_values!(U::_UpperTriangle, nzval::Vector) = (copyto!(U.A.nzval, nzval); U)
+_chol_refactor!(F::LDLFactorizations.LDLFactorization, U::_UpperTriangle) =
+    (LDLFactorizations.ldl_factorize!(Symmetric(U.A, :U), F); F)
+_chol_solve!(X, F::LDLFactorizations.LDLFactorization, B) = ldiv!(X, F, B)
 
 # ---------------------------------------------------------------------------------------
 # Solver object
@@ -56,14 +68,25 @@ a block of right-hand sides.
 - `to_device`: converts matrices/vectors to a device. With CUDA.jl and CUDSS.jl loaded,
   `to_device = x -> x isa SparseMatrixCSC ? CuSparseMatrixCSR(x) : CuArray(x)` factorises and
   solves on the GPU with cuDSS.
+- `backend`: `:cholmod` (CPU, Float64, supernodal), `:ldl` (CPU, LDLFactorizations.jl, any
+  floating-point type) or `:auto` (default: CHOLMOD for Float64 on the CPU, LDLᵀ for other types,
+  the device backend when `to_device` is given). See also [`projected_ldl`](@ref).
 
 Right-hand sides are projected onto `range(A) = V⊥` first, so inconsistent data are solved in the
 least-squares sense. Use [`refactor!`](@ref) after the matrix values change (same pattern).
 """
 function projected_cholesky(A::SparseMatrixCSC; nullspace = nothing, grounding = nothing,
-                            nrhs::Integer = 1, to_device = identity)
-    return ProjectedCholesky(A; nullspace, grounding, nrhs, to_device)
+                            nrhs::Integer = 1, to_device = identity, backend::Symbol = :auto)
+    return ProjectedCholesky(A; nullspace, grounding, nrhs, to_device, backend)
 end
+
+"""
+    projected_ldl(A; kwargs...)
+
+[`projected_cholesky`](@ref) with the LDLᵀ backend of LDLFactorizations.jl (`backend = :ldl`):
+pure Julia, works for `Float32`, `Float64` and other floating-point types, CPU only.
+"""
+projected_ldl(A::SparseMatrixCSC; kwargs...) = projected_cholesky(A; kwargs..., backend = :ldl)
 
 """
     ProjectedCholesky
@@ -93,7 +116,7 @@ end
 _pinned_dofs(V::Matrix) = sort(qr(copy(V'), ColumnNorm()).p[1:size(V, 2)])
 
 function ProjectedCholesky(A::SparseMatrixCSC{T}; nullspace = nothing, grounding = nothing,
-                           nrhs::Integer = 1, to_device = identity) where {T}
+                           nrhs::Integer = 1, to_device = identity, backend::Symbol = :auto) where {T}
     n = size(A, 1)
     size(A, 2) == n || throw(DimensionMismatch("A must be square"))
     Vh = nullspace === nothing ? ones(T, n, 1) : T.(Array(_as_matrix(nullspace)))
@@ -108,12 +131,18 @@ function ProjectedCholesky(A::SparseMatrixCSC{T}; nullspace = nothing, grounding
     pinned = _pinned_dofs(Vh)
     J = setdiff(1:n, pinned)
     # value map A.nzval → A[J, J].nzval, so refactorisation needs no sparse indexing
+    if backend == :auto
+        backend = to_device !== identity ? :device : T == Float64 ? :cholmod : :ldl
+    end
+    backend in (:cholmod, :ldl, :device) || throw(ArgumentError("unknown backend $backend"))
+    backend == :ldl && to_device !== identity &&
+        throw(ArgumentError("the LDLᵀ backend runs on the CPU only"))
     Aidx = SparseMatrixCSC(n, n, A.colptr, A.rowval, collect(1.0:length(A.nzval)))
-    nzmap = round.(Int, Aidx[J, J].nzval)
-    Ared = SparseMatrixCSC{T, Int}(A[J, J])
-    Ared.nzval == A.nzval[nzmap] || error("inconsistent value map")
+    AidxJJ = backend == :ldl ? triu(Aidx[J, J]) : Aidx[J, J]
+    nzmap = round.(Int, AidxJJ.nzval)
+    Ared = SparseMatrixCSC{T, Int}(AidxJJ.m, AidxJJ.n, AidxJJ.colptr, AidxJJ.rowval, A.nzval[nzmap])
 
-    Adev = to_device(Ared)
+    Adev = backend == :ldl ? _UpperTriangle(Ared) : to_device(Ared)
     fact = _chol_factorize(Adev)
     nJ = length(J)
     dev(M) = to_device(M)

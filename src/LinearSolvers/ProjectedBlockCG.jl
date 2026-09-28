@@ -118,7 +118,7 @@ function boundary_grounding(n::Integer, dofs; weights = nothing, T = Float64)
 end
 
 # X ← (I - V Vᵀ) X : orthogonal projection onto V⊥ (V orthonormal)
-function _project!(X, ws::BlockCGWorkspace)
+function _project!(X, ws)  # ws: any object with fields V, Ks
     r = size(X, 2)
     K = _cols(ws.Ks, r)
     _gram!(K, ws.V, X)
@@ -127,7 +127,7 @@ function _project!(X, ws::BlockCGWorkspace)
 end
 
 # X ← X - V (WᵀV)⁻¹ Wᵀ X : oblique projection onto {Wᵀx = 0} along V
-function _ground!(X, ws::BlockCGWorkspace)
+function _ground!(X, ws)   # ws: any object with fields W, F, Ks
     K = _cols(ws.Ks, size(X, 2))
     _gram!(K, ws.W, X)
     mul!(X, ws.F, K, -1, 1)
@@ -135,7 +135,7 @@ function _ground!(X, ws::BlockCGWorkspace)
 end
 
 # Euclidean column norms of X: one O(n s) reduction on the device, s values to the host.
-function _colnorms!(out::Vector, X, ws::BlockCGWorkspace)
+function _colnorms!(out::Vector, X, ws)  # ws: fields nrm, nrmh
     s = size(X, 2)
     buf = _block(ws.nrm, 1, s)
     sum!(abs2, buf, X)
