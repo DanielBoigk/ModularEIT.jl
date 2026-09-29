@@ -6,16 +6,28 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Discrete Cosine Transform</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</guid>
-    <description><![CDATA[ On a uniform grid, the finite element matrices of Neumann problems are diagonalised by discrete cosine transforms (DCT). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 13:47:49 GMT</pubDate>
+    <title>Fast Solvers on Disk Domains</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</guid>
+    <description><![CDATA[ On a disk, the constant-coefficient Neumann problem separates in polar coordinates: Fourier modes in the angle, and one ordinary differential equation along the radius per mode. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 14:17:18 GMT</pubDate>
   </item><item>
     <title>Fast Solvers on Rectangular Domains</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</guid>
     <description><![CDATA[ On a rectangle discretised by a uniform grid (for example the pixel-aligned bilinear meshes of Pixel Images and Finite Element Functions), the Discrete Cosine Transform inverts the constant-coefficient Neumann operator in O(n\log n) operations. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 14:17:18 GMT</pubDate>
+  </item><item>
+    <title>ModularEIT Wiki</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
+    <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 14:17:18 GMT</pubDate>
+  </item><item>
+    <title>Discrete Cosine Transform</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</guid>
+    <description><![CDATA[ On a uniform grid, the finite element matrices of Neumann problems are diagonalised by discrete cosine transforms (DCT). ]]></description>
     <pubDate>Tue, 29 Sep 2026 13:47:49 GMT</pubDate>
   </item><item>
     <title>Choosing the Regularization Parameter</title>
@@ -53,18 +65,6 @@
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption</guid>
     <description><![CDATA[ To train a denoiser or deblurrer that should later clean EIT reconstructions, one needs pairs (clean, degraded). ]]></description>
     <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
-  </item><item>
-    <title>Synthetic Conductivity Data</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Synthetic-Conductivity-Data</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Synthetic-Conductivity-Data</guid>
-    <description><![CDATA[ Learned priors (see Learned Regularization) need samples from a distribution of plausible conductivities. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
-  </item><item>
-    <title>Complete Electrode Model</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
-    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item>
     </channel>
   </rss>
