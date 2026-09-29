@@ -46,8 +46,56 @@ using Test
         errs = [maximum(dist(ConformalMap(oct; modes = N)(cis(t))) for t in θ) for N in (128, 1024)]
         @test errs[1] < 1e-2
         @test errs[2] < 0.4 * errs[1]
-        # not star-shaped / too eccentric for Theodorsen's method
-        @test_throws ArgumentError ConformalMap(t -> (3cos(t), 0.5sin(t)))
+        # too eccentric for Theodorsen's method; :auto falls back to Wegmann's method and raises the
+        # resolution until the boundary is matched (crowding at the tips)
+        @test_throws ArgumentError ConformalMap(t -> (2.5cos(t), sin(t)); method = :theodorsen, modes = 256)
+        E = ConformalMap(t -> (2.5cos(t), sin(t)))
+        @test E.method === :wegmann
+        @test E.boundary_error < 1e-8
+        zE = [E(cis(t)) for t in θ]
+        @test maximum(abs.(real.(zE) .^ 2 ./ 6.25 .+ imag.(zE) .^ 2 .- 1)) < 1e-7
+    end
+
+    # exact Riemann maps normalised at an interior point: Φ(w) = f((w + w₀)/(1 + w₀ w)) for the
+    # univalent f(w) = w + εw² and real w₀ (Φ(0) = f(w₀), Φ'(0) = f'(w₀)(1 - w₀²) > 0)
+    @testset "Wegmann's method reproduces exact maps where Theodorsen fails: w₀ = $w0" for w0 in (-0.6, 0.5)
+        ε = 0.45
+        f(w) = w + ε * w^2
+        Φex(w) = f((w + w0) / (1 + w0 * w))
+        dΦex(w) = (1 + 2ε * (w + w0) / (1 + w0 * w)) * (1 - w0^2) / (1 + w0 * w)^2
+        curve = t -> reim(f(cis(t)))
+        center = reim(complex(f(w0)))
+        @test_throws ArgumentError ConformalMap(curve; center, method = :theodorsen)
+        Φ = ConformalMap(curve; center, method = :wegmann, modes = 512)
+        @test Φ.method === :wegmann
+        for w in (0.0 + 0im, 0.5cis(0.3), 0.9cis(2.0), 0.99cis(-1.2), cis(0.7))
+            @test Φ(w) ≈ Φex(w) atol = 1e-7
+            @test map_derivative(Φ, w) ≈ dΦex(w) atol = 1e-5
+        end
+        @test Φ.boundary_error < 1e-8
+        @test ConformalMap(curve; center, modes = 512).method === :wegmann     # :auto falls back
+    end
+
+    # f(w) = w + 0.3w³ (four lobes with dents) is not star-shaped with respect to f(0.6)
+    @testset "non-star-shaped domain: exact map" begin
+        f(w) = w + 0.3w^3
+        w0 = 0.6
+        Φex(w) = f((w + w0) / (1 + w0 * w))
+        curve = t -> reim(f(cis(t)))
+        center = reim(complex(f(w0)))
+        @test_throws ArgumentError ModularEIT._PolarCurve(t -> f(cis(t)), complex(f(w0)))
+        Φ = ConformalMap(curve; center)
+        @test Φ.method === :wegmann
+        @test Φ.boundary_error < 1e-8
+        @test maximum(abs(Φ(r * cis(t)) - Φex(r * cis(t))) for r in (0.0, 0.5, 0.9, 1.0), t in range(0, 2π; length = 200)) < 1e-7
+        d0 = map_derivative(Φ, 0.0 + 0im)
+        @test abs(imag(d0)) < 1e-10 && real(d0) > 0
+        # the mapped mesh is valid (univalent map) and covers the domain
+        cg = conformal_grid(Φ, 12, 128; boundary_spacing = 1 / 24)
+        g = cg.grid
+        area(c) = (x = getcoordinates(g, c); ((x[2] - x[1])[1] * (x[3] - x[1])[2] - (x[2] - x[1])[2] * (x[3] - x[1])[1]) / 2)
+        @test minimum(area, 1:getncells(g)) > 0
+        @test sum(area, 1:getncells(g)) ≈ π * (1 + 3 * 0.3^2) rtol = 1e-2         # area = π Σ k |aₖ|² (inscribed polygon)
     end
 
     @testset "conformally mapped polar mesh" begin

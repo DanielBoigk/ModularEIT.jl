@@ -162,10 +162,12 @@ fast_neumann_solve
 
 ## Conformally mapped domains
 
-Simply connected domains that are star-shaped and not too far from a disk (thorax or head
-cross-sections, ellipses up to aspect ratio ≈ 2.4) are meshed by mapping a polar mesh with a
-conformal map. The mesh keeps its shape quality and boundary grading; the disk solver
-preconditions the mapped problem with mesh-independent iteration counts.
+Simply connected domains with smooth boundaries are meshed by mapping a polar mesh with a
+conformal map: Theodorsen's method for nearly circular star-shaped domains (thorax or head
+cross-sections), Wegmann's method (started from Symm's integral equation) for all others,
+including non-star-shaped ones. The resolution is raised until the boundary is matched; strongly
+elongated domains are expensive (crowding). The mesh keeps its shape quality and boundary
+grading; the disk solver preconditions the mapped problem with mesh-independent iteration counts.
 
 ```julia
 Φ = ConformalMap(t -> (1.3cos(t) + 0.1cos(2t), sin(t) + 0.1sin(3t)))    # or polygon vertices
