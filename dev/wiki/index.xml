@@ -6,6 +6,12 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>ModularEIT Wiki</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
+    <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): imaging the electrical conductivity inside a body from currents and voltages measured at its surface. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 19:24:33 GMT</pubDate>
+  </item><item>
     <title>Anatomy of an EIT Reconstruction</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Anatomy-of-an-EIT-Reconstruction</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Anatomy-of-an-EIT-Reconstruction</guid>
@@ -58,12 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complex-Conductivity</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complex-Conductivity</guid>
     <description><![CDATA[ Biological tissue both conducts and stores charge: cell membranes act as capacitors. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
-  </item><item>
-    <title>Conductivity Equation</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Conductivity-Equation</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Conductivity-Equation</guid>
-    <description><![CDATA[ Combining the steady-state Continuity Equation \nabla\cdot\mathbf J = 0 with Ohm’s law \mathbf J = -\gamma\nabla u gives the conductivity equation \nabla\cdot(\gamma\nabla u) = 0 \qquad \text{in } \Omega , for the electric potential u:\Omega\to\mathbb R in a bounded Lipschitz domain \Omega\subset\ma... ]]></description>
     <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item>
     </channel>
