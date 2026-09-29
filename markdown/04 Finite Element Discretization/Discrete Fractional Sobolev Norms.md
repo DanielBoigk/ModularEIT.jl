@@ -32,6 +32,8 @@ So the $H^{-1/2}$ matrix is the $L^2$-dual of the $H^{1/2}$ matrix, as in the co
 
 **Uses in EIT.** Weighting the voltage misfit in $H^{1/2}$ or the current misfit in $H^{-1/2}$ matches the mapping properties of the [[Neumann-to-Dirichlet Map]] and changes how high-frequency boundary data are weighted relative to low-frequency data (see [[Data Fidelity Terms]]).
 
+On uniform rectangle grids the eigenvectors are cosine modes, and the same construction works for σ in the interior at $O(n\log n)$ cost; see [[Spectral Sobolev Norms on Rectangles]].
+
 ## References
 
 1. M. Arioli, D. Loghin (2009). *Discrete Interpolation Norms with Applications*. SIAM J. Numer. Anal. 47(4), 2924–2951. [doi:10.1137/080729360](https://doi.org/10.1137/080729360)

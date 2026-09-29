@@ -14,6 +14,8 @@ aliases: [AMG]
 - The setup (building the hierarchy) is the expensive part. In a reconstruction loop the hierarchy for a previous $\sigma$ can be reused as long as $\sigma$ changes little, since $L_\sigma$ is spectrally equivalent to $K$.
 - For singular Neumann matrices, the coarsest-level solve must handle the constant null space (pseudo-inverse or projection).
 
+On uniform rectangle grids, a transform-based preconditioner without σ-dependent setup is an alternative; see [[Fast Solvers on Rectangular Domains]].
+
 ## References
 
 1. J. W. Ruge, K. Stüben (1987). *Algebraic Multigrid*. In: Multigrid Methods, SIAM Frontiers in Applied Mathematics, 73–130. [doi:10.1137/1.9781611971057.ch4](https://doi.org/10.1137/1.9781611971057.ch4)

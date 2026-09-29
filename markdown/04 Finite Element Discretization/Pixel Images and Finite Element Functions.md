@@ -22,6 +22,8 @@ $S$ is sparse, with at most as many nonzeros per row as basis functions per cell
 
 **Orientation.** Images are usually stored row by row from the *top*, while coordinates grow upwards. The pixel in row $i$ and column $j$ of an $n\times m$ image of the box $[x_0,x_1]\times[y_0,y_1]$ has the centre $\big(x_0+(j-\tfrac12)\Delta x,\ y_1-(i-\tfrac12)\Delta y\big)$.
 
+On pixel-aligned rectangle meshes the finite element matrices are diagonalised by the [[Discrete Cosine Transform]], which gives fast solvers and preconditioners ([[Fast Solvers on Rectangular Domains]]) and spectral norms ([[Spectral Sobolev Norms on Rectangles]]).
+
 ## References
 
 1. S. C. Brenner, L. R. Scott (2008). *The Mathematical Theory of Finite Element Methods*, 3rd ed. Springer. [doi:10.1007/978-0-387-75934-0](https://doi.org/10.1007/978-0-387-75934-0)
