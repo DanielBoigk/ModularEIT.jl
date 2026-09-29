@@ -25,7 +25,8 @@
 Singular value decomposition `J = U S Vᵀ W` of the Jacobian of the least-squares objective `obj`
 at `θ` (thin: `min(m, n)` singular values, in decreasing order). The columns of `V` are the
 parameter modes, orthonormal in the metric `W = Diagonal(weights)` (Euclidean by default), ordered
-by how well the data determine them. Returns a named tuple `(U, s, V, r)` with the residual `r`.
+by how well the data determine them. Returns a named tuple `(U, s, V, r, w)` with the residual
+`r` and the metric weights `w` (ones by default).
 
 For a [`ParametrizedObjective`](@ref) over pixels, `V[:, 1:k]` is the data-optimal subspace of
 dimension `k` (see [`jacobian_basis`](@ref)).
@@ -36,7 +37,8 @@ function jacobian_svd(obj::AbstractObjective, θ::AbstractVector; weights = noth
     J = zeros(length(r), length(θ))
     residual_and_jacobian!(r, J, obj, Vector{Float64}(θ))
     U, s, V = _weighted_svd(J, weights)
-    return (; U, s, V, r)
+    w = weights === nothing ? ones(length(θ)) : Vector{Float64}(weights)
+    return (; U, s, V, r, w)
 end
 
 """

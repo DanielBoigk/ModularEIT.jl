@@ -17,7 +17,7 @@ $$
 
 **Connection to regularisation.** The *maximum a posteriori* (MAP) estimate minimises exactly a [[Variational Regularization|variational objective]]: the data misfit plus $\mathcal R(\sigma) = -\log\pi(\sigma)$. For example, a Gaussian smoothness prior gives [[Tikhonov Regularization]], and a Laplace-type prior on gradients gives [[Total Variation]].
 
-**Beyond the MAP.** Markov chain Monte Carlo (MCMC) sampling of the posterior gives the conditional mean, credible intervals and uncertainty quantification. Kaipio et al. (2000) did this for EIT. It is expensive because every sample needs a forward solve. Generative priors such as [[Diffusion Models]] are the learned counterpart of $\pi(\sigma)$ (see [[Diffusion Posterior Sampling]]).
+**Beyond the MAP.** Markov chain Monte Carlo (MCMC) sampling of the posterior gives the conditional mean, credible intervals and uncertainty quantification. Kaipio et al. (2000) did this for EIT. It is expensive because every sample needs a forward solve. Generative priors such as [[Diffusion Models]] are the learned counterpart of $\pi(\sigma)$ (see [[Diffusion Posterior Sampling]]). Linearizing at the MAP estimate gives a Gaussian approximation of the posterior, with the pointwise variance available cheaply from the Jacobian's SVD (see [[Resolution and Confidence Maps]]).
 
 ## References
 

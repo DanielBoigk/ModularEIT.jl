@@ -49,7 +49,7 @@ $$
 
 Iterated until the misfit reaches the noise level (the discrepancy principle, see [[Choosing the Regularization Parameter]]), this is regularisation by projection with no penalty term. Too small a $K$ stalls above the noise level. Too large a $K$ fits the noise after a few iterations (semi-convergence). [[Levenberg-Marquardt Method|Levenberg–Marquardt]] with identity damping uses the same SVD but filters it smoothly, with factors $s_i^2/(s_i^2+\lambda)$ in place of the cut-off. Both respect the depth ordering. Smoothness and [[Total Variation]] penalties impose a different ordering, which the data do not see.
 
-**Data-optimal subspace.** Computed once at a reference conductivity, the leading modes $V_K$ form a basis for a subspace parametrisation (see [[Parametrizations of the Conductivity]]). It is the data-adapted counterpart of low-frequency cosine modes.
+**Data-optimal subspace.** Computed once at a reference conductivity, the leading modes $V_K$ form a basis for a subspace parametrisation (see [[Parametrizations of the Conductivity]]). It is the data-adapted counterpart of low-frequency cosine modes. The same SVD gives the pixel-wise confidence of a reconstruction (see [[Resolution and Confidence Maps]]).
 
 **In ModularEIT.jl:** [`jacobian_svd`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.jacobian_svd), [`jacobian_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.jacobian_basis), [`TruncatedGaussNewton`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.TruncatedGaussNewton).
 

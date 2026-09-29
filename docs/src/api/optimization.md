@@ -75,12 +75,20 @@ js  = jacobian_svd(obj, θ₀)                       # (U, s, V, r), J = U S V�
 res = minimize(obj, θ₀, TruncatedGaussNewton(; rtol = 1e-2); lower = 0.05,
                ftarget = discrepancy_target(obj.obj, noise))
 sp  = SubspaceParametrization(pixels, jacobian_basis(obj, θ₀, 40))   # data-optimal subspace
+
+# confidence maps at the reconstruction (plot with pixel_image(pixels, map))
+js  = jacobian_svd(obj, res.σ)
+R   = resolution_map(js; rtol = 1e-2)             # ∈ [0, 1]: 1 = determined by the data
+sd  = posterior_std(obj, res.σ; noise, prior_std = 0.5)
 ```
 
 ```@docs
 jacobian_svd
 jacobian_basis
 TruncatedGaussNewton
+sensitivity_map
+resolution_map
+posterior_std
 ```
 
 ## Wiki articles
@@ -91,6 +99,9 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Tikhonov Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Tikhonov-Regularization)
 - [Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Total-Variation)
 - [Smoothed Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Smoothed-Total-Variation)
+- [Parametrizations of the Conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity)
+- [Truncated SVD Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization)
+- [Resolution and Confidence Maps](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Resolution-and-Confidence-Maps)
 - [Iterative Reconstruction Loop](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Iterative-Reconstruction-Loop)
 - [Gauss-Newton Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method)
 - [Levenberg-Marquardt Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method)

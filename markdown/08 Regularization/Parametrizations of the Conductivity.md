@@ -37,7 +37,7 @@ Restricting the pixels to a subspace, $\theta_{\text{pixels}} = B\,c$, is itself
 
 Subspace coefficients cannot be bounded like pixels, since a combination of modes can become negative. Trial conductivities have to be checked for positivity instead.
 
-**In ModularEIT.jl:** [`PixelParametrization`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.PixelParametrization), [`SubspaceParametrization`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.SubspaceParametrization), [`ParametrizedObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.ParametrizedObjective), [`dct_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.dct_basis), [`boundary_band_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.boundary_band_basis).
+**In ModularEIT.jl:** [`PixelParametrization`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.PixelParametrization), [`SubspaceParametrization`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.SubspaceParametrization), [`ParametrizedObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.ParametrizedObjective), [`dct_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.dct_basis), [`boundary_band_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/parametrization/#ModularEIT.boundary_band_basis), [`jacobian_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.jacobian_basis).
 
 ## References
 

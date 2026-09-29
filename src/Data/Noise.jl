@@ -157,3 +157,7 @@ function electrode_angles(L::Integer; offset::Real = 0.0, jitter::Real = 0.0, rn
     θ = offset .+ 2π .* (0:(L - 1)) ./ L
     return jitter == 0 ? collect(θ) : θ .+ jitter .* randn(rng, L)
 end
+
+# mean standard deviation of the whitened residual (for posterior_std)
+_residual_noise_std(obj::AdjointStateObjective, noise::AbstractNoiseModel) =
+    sqrt(2 * discrepancy_target(obj, noise; τ = 1) / n_residual(obj))

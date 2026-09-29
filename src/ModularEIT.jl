@@ -45,6 +45,7 @@ export residual!, residual_and_jacobian!, n_residual, boundary_error, pattern_va
 export TikhonovRegularizer, TotalVariationRegularizer, RegularizedObjective, gauss_newton_hessian
 export minimize, OptimizationState, GradientDescent, LBFGS, GaussNewton
 export jacobian_svd, jacobian_basis, TruncatedGaussNewton
+export sensitivity_map, resolution_map, posterior_std
 export prox, prox!, ProximalMap, lumped_mass, ProximalGradient, ADMM
 export AbstractNoiseModel, GaussianNoise, RelativeGaussianNoise, SourceMeterNoise, add_noise, add_noise!
 export expected_squared_error, discrepancy_target, perturb_boundary_operator, perturb_contact_impedance, electrode_angles
@@ -79,6 +80,7 @@ include("Optimization/Optimizers.jl")
 include("Optimization/FirstOrder.jl")
 include("Optimization/GaussNewton.jl")
 include("Optimization/TruncatedSVD.jl")
+include("Optimization/Confidence.jl")
 include("Optimization/Proximal.jl")
 
 include("Data/Noise.jl")
