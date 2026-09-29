@@ -8,9 +8,9 @@ An electrode model says how current enters and where voltage is measured. A
 [`ForwardModel`](@ref) turns it into an injection matrix ``P``, a measurement matrix ``Q`` and
 (for the complete electrode model) extra unknowns for the electrode voltages. Every model has a
 current-driven (Neumann) and a voltage-driven (Dirichlet) forward problem. Injection and
-measurement sites may differ. Theory: wiki articles [Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models), [Point Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Point-Electrode-Model),
-[Gap Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Gap-Model), [Shunt Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Shunt-Model), [Complete Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model), [Discrete Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Electrode-Models) and
-[Measurement Protocols](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Measurement-Protocols).
+measurement sites may differ. Theory: wiki articles [Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Electrode-Models), [Point Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Point-Electrode-Model),
+[Gap Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Gap-Model), [Shunt Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Shunt-Model), [Complete Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complete-Electrode-Model), [Discrete Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Discrete-Electrode-Models) and
+[Measurement Protocols](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Measurement-Protocols).
 
 ```@docs
 AbstractElectrodeModel
@@ -50,17 +50,17 @@ pattern_svd
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
 
-- [Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models)
-- [Complete Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model)
-- [Gap Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Gap-Model)
-- [Shunt Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Shunt-Model)
-- [Point Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Point-Electrode-Model)
-- [Current Patterns](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns)
-- [Neumann Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem)
-- [Dirichlet Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem)
-- [Forward Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Forward-Map)
-- [Neumann-to-Dirichlet Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-to-Dirichlet-Map)
-- [Dirichlet-to-Neumann Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map)
-- [Discrete Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Electrode-Models)
-- [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential)
-- [State Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/State-Equation)
+- [Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Electrode-Models)
+- [Complete Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complete-Electrode-Model)
+- [Gap Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Gap-Model)
+- [Shunt Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Shunt-Model)
+- [Point Electrode Model](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Point-Electrode-Model)
+- [Current Patterns](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Current-Patterns)
+- [Neumann Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Neumann-Problem)
+- [Dirichlet Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Dirichlet-Problem)
+- [Forward Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Forward-Map)
+- [Neumann-to-Dirichlet Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Neumann-to-Dirichlet-Map)
+- [Dirichlet-to-Neumann Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Dirichlet-to-Neumann-Map)
+- [Discrete Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Discrete-Electrode-Models)
+- [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Grounding-of-the-Potential)
+- [State Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/State-Equation)

@@ -87,13 +87,13 @@ corrupt_image
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
 
-- [Choosing the Regularization Parameter](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter)
-- [Spectral Sobolev Norms on Rectangles](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Spectral-Sobolev-Norms-on-Rectangles)
-- [Stopping Criteria](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria)
-- [Noise Models for EIT Data](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Noise-Models-for-EIT-Data)
-- [Synthetic Conductivity Data](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Synthetic-Conductivity-Data)
-- [Inverse Crime](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime)
-- [Spectral Image Corruption](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption)
+- [Choosing the Regularization Parameter](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Choosing-the-Regularization-Parameter)
+- [Spectral Sobolev Norms on Rectangles](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Spectral-Sobolev-Norms-on-Rectangles)
+- [Stopping Criteria](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria)
+- [Noise Models for EIT Data](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Noise-Models-for-EIT-Data)
+- [Synthetic Conductivity Data](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Synthetic-Conductivity-Data)
+- [Inverse Crime](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Inverse-Crime)
+- [Spectral Image Corruption](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Spectral-Image-Corruption)
 
 ## Index
 

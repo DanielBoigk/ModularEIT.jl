@@ -35,7 +35,7 @@ conductivity derivative ``\partial_{\sigma_a}(\lambda^\top L(\sigma)\,u) = (T^\t
 ``w_k = \lambda_{\mathrm{row}_k} u_{\mathrm{col}_k}``, i.e. the discrete adjoint-state gradient
 ``\int \psi_a \nabla u\cdot\nabla\lambda``. Assembly and gradients are sparse matrix-vector
 products and one parallel gather, so they run on the CPU and on every GPU backend
-(`to_device = device_converter(ArrayType)`). Theory: wiki article [Conductivity Tensor](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conductivity-Tensor).
+(`to_device = device_converter(ArrayType)`). Theory: wiki article [Conductivity Tensor](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Conductivity-Tensor).
 
 ```@docs
 ConductivityTensor
@@ -68,16 +68,16 @@ total_variation
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
 
-- [Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Total-Variation)
-- [Smoothed Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Smoothed-Total-Variation)
-- [Galerkin Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Galerkin-Method)
-- [Lagrange Finite Elements](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Lagrange-Finite-Elements)
-- [Mass Matrix](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Mass-Matrix)
-- [Stiffness Matrix](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Stiffness-Matrix)
-- [Weighted Stiffness Matrix](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Weighted-Stiffness-Matrix)
-- [Conductivity Tensor](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conductivity-Tensor)
-- [Boundary Mass and Stiffness Matrices](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Boundary-Mass-and-Stiffness-Matrices)
-- [L2 Projection](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/L2-Projection)
-- [Functional Derivative of the Data Misfit](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Functional-Derivative-of-the-Data-Misfit)
-- [Gradient Representation and the Riesz Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Gradient-Representation-and-the-Riesz-Map)
-- [Discretize-then-Optimize vs Optimize-then-Discretize](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Discretize-then-Optimize-vs-Optimize-then-Discretize)
+- [Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Total-Variation)
+- [Smoothed Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Smoothed-Total-Variation)
+- [Galerkin Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Galerkin-Method)
+- [Lagrange Finite Elements](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Lagrange-Finite-Elements)
+- [Mass Matrix](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Mass-Matrix)
+- [Stiffness Matrix](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Stiffness-Matrix)
+- [Weighted Stiffness Matrix](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Weighted-Stiffness-Matrix)
+- [Conductivity Tensor](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Conductivity-Tensor)
+- [Boundary Mass and Stiffness Matrices](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Boundary-Mass-and-Stiffness-Matrices)
+- [L2 Projection](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/L2-Projection)
+- [Functional Derivative of the Data Misfit](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Functional-Derivative-of-the-Data-Misfit)
+- [Gradient Representation and the Riesz Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Gradient-Representation-and-the-Riesz-Map)
+- [Discretize-then-Optimize vs Optimize-then-Discretize](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Discretize-then-Optimize-vs-Optimize-then-Discretize)

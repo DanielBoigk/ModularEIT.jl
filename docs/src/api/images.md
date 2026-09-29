@@ -8,7 +8,7 @@ Conversion between finite element functions on 2D meshes and `n × m` pixel imag
 image-based priors, learned regularisers or plotting. `img[i, j]` is the pixel in row `i` from
 the top and column `j` from the left of the bounding box. On quadrilateral meshes whose cells are
 the pixels (`generate_grid(Quadrilateral, (m, n))` with piecewise constant σ), both directions
-are exact inverses. Theory: wiki article [Pixel Images and Finite Element Functions](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Pixel-Images-and-Finite-Element-Functions).
+are exact inverses. Theory: wiki article [Pixel Images and Finite Element Functions](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions).
 
 ```julia
 disc = FerriteDiscretization(grid)
@@ -30,4 +30,4 @@ from_image
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
 
-- [Pixel Images and Finite Element Functions](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Pixel-Images-and-Finite-Element-Functions)
+- [Pixel Images and Finite Element Functions](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions)

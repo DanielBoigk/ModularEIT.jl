@@ -6,8 +6,8 @@ CurrentModule = ModularEIT
 
 Projected block conjugate gradient method for the singular (pure Neumann) EIT systems
 ``L_\sigma X = B``. It works on the CPU and the GPU and supports several right-hand sides
-at once. The theory is in the wiki articles [Projected Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient),
-[Block Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient) and [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential).
+at once. The theory is in the wiki articles [Projected Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Projected-Conjugate-Gradient),
+[Block Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient) and [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Grounding-of-the-Potential).
 
 The objectives and forward solves take a solver *choice*, instantiated for the current system
 matrix and refactorised / re-preconditioned when the conductivity changes:
@@ -125,7 +125,7 @@ solver = BlockCGSolver(preconditioner = DCTPreconditioner(disc))
 obj = AdjointStateObjective(fm, currents, voltages; solver)
 ```
 
-Theory: wiki articles [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform) and [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains).
+Theory: wiki articles [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Discrete-Cosine-Transform) and [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Rectangular-Domains).
 
 ```@docs
 DCTPreconditioner
@@ -148,7 +148,7 @@ disc = FerriteDiscretization(polar_grid(32, 256; boundary_spacing = 1 / 64))
 solver = BlockCGSolver(preconditioner = PolarPreconditioner(disc))
 ```
 
-Theory: wiki article [Fast Solvers on Disk Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains).
+Theory: wiki article [Fast Solvers on Disk Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains).
 
 ```@docs
 AbstractFastPreconditioner
@@ -176,8 +176,8 @@ disc = FerriteDiscretization(cg.grid)
 solver = BlockCGSolver(preconditioner = PolarPreconditioner(disc; reference = cg.reference))
 ```
 
-Theory: wiki articles [Conformal Invariance of the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation) and
-[Numerical Conformal Mapping](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping).
+Theory: wiki articles [Conformal Invariance of the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation) and
+[Numerical Conformal Mapping](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Numerical-Conformal-Mapping).
 
 ```@docs
 ConformalMap
@@ -190,17 +190,17 @@ conformal_grid
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
 
-- [Conformal Invariance of the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation)
-- [Null Space of the Neumann Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem)
-- [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential)
-- [Conjugate Gradient Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conjugate-Gradient-Method)
-- [Projected Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient)
-- [Block Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient)
-- [Block Krylov Methods](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Krylov-Methods)
-- [Projected Cholesky Factorization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization)
-- [MINRES](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES)
-- [Numerical Conformal Mapping](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping)
-- [Algebraic Multigrid](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid)
-- [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform)
-- [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains)
-- [Fast Solvers on Disk Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains)
+- [Conformal Invariance of the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation)
+- [Null Space of the Neumann Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Null-Space-of-the-Neumann-Problem)
+- [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Grounding-of-the-Potential)
+- [Conjugate Gradient Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Conjugate-Gradient-Method)
+- [Projected Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Projected-Conjugate-Gradient)
+- [Block Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient)
+- [Block Krylov Methods](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Krylov-Methods)
+- [Projected Cholesky Factorization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Projected-Cholesky-Factorization)
+- [MINRES](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/MINRES)
+- [Numerical Conformal Mapping](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Numerical-Conformal-Mapping)
+- [Algebraic Multigrid](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Algebraic-Multigrid)
+- [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Discrete-Cosine-Transform)
+- [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Rectangular-Domains)
+- [Fast Solvers on Disk Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains)

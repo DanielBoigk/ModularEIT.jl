@@ -28,9 +28,9 @@ Objectives deliver coefficient gradients (dual vectors). The gradient representa
 map, e.g. the L² gradient ``M_\sigma^{-1} \nabla J``) is an option of the first-order methods,
 so data term and regularizers are always added in the same representation.
 
-Theory: wiki articles [Tikhonov Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Tikhonov-Regularization), [Smoothed Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Smoothed-Total-Variation), [Gauss-Newton
-Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Gauss-Newton-Method), [Levenberg-Marquardt Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Levenberg-Marquardt-Method), [L-BFGS](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/L-BFGS), [L-BFGS-B](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/L-BFGS-B), [Line Search](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Line-Search), [Proximal Operator](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Proximal-Operator), [ADMM](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/ADMM), [Nested ADMM Reconstruction](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Nested-ADMM-Reconstruction),
-[Chambolle-Pock Algorithm](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Chambolle-Pock-Algorithm), [Box Constraints on Conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Box-Constraints-on-Conductivity), [Stopping Criteria](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria), [Gradient Representation and the Riesz Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Gradient-Representation-and-the-Riesz-Map).
+Theory: wiki articles [Tikhonov Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Tikhonov-Regularization), [Smoothed Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Smoothed-Total-Variation), [Gauss-Newton
+Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method), [Levenberg-Marquardt Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method), [L-BFGS](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/L-BFGS), [L-BFGS-B](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/L-BFGS-B), [Line Search](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Line-Search), [Proximal Operator](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Proximal-Operator), [ADMM](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/ADMM), [Nested ADMM Reconstruction](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Nested-ADMM-Reconstruction),
+[Chambolle-Pock Algorithm](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Chambolle-Pock-Algorithm), [Box Constraints on Conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Box-Constraints-on-Conductivity), [Stopping Criteria](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria), [Gradient Representation and the Riesz Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Gradient-Representation-and-the-Riesz-Map).
 
 ## Regularizers
 
@@ -67,23 +67,23 @@ ADMM
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
 
-- [Variational Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Variational-Regularization)
-- [Tikhonov Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Tikhonov-Regularization)
-- [Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Total-Variation)
-- [Smoothed Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Smoothed-Total-Variation)
-- [Iterative Reconstruction Loop](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Iterative-Reconstruction-Loop)
-- [Gauss-Newton Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Gauss-Newton-Method)
-- [Levenberg-Marquardt Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Levenberg-Marquardt-Method)
-- [Line Search](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Line-Search)
-- [L-BFGS](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/L-BFGS)
-- [L-BFGS-B](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/L-BFGS-B)
-- [Proximal Operator](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Proximal-Operator)
-- [ADMM](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/ADMM)
-- [Chambolle-Pock Algorithm](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Chambolle-Pock-Algorithm)
-- [Nested ADMM Reconstruction](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Nested-ADMM-Reconstruction)
-- [Box Constraints on Conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Box-Constraints-on-Conductivity)
-- [Stopping Criteria](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria)
-- [Plug-and-Play Priors](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Plug-and-Play-Priors)
+- [Variational Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Variational-Regularization)
+- [Tikhonov Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Tikhonov-Regularization)
+- [Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Total-Variation)
+- [Smoothed Total Variation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Smoothed-Total-Variation)
+- [Iterative Reconstruction Loop](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Iterative-Reconstruction-Loop)
+- [Gauss-Newton Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method)
+- [Levenberg-Marquardt Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method)
+- [Line Search](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Line-Search)
+- [L-BFGS](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/L-BFGS)
+- [L-BFGS-B](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/L-BFGS-B)
+- [Proximal Operator](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Proximal-Operator)
+- [ADMM](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/ADMM)
+- [Chambolle-Pock Algorithm](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Chambolle-Pock-Algorithm)
+- [Nested ADMM Reconstruction](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Nested-ADMM-Reconstruction)
+- [Box Constraints on Conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Box-Constraints-on-Conductivity)
+- [Stopping Criteria](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria)
+- [Plug-and-Play Priors](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Plug-and-Play-Priors)
 
 ## Index
 

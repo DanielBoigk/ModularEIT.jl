@@ -2,39 +2,37 @@
 title: ModularEIT Wiki
 ---
 
-A wiki on the theory of **Electrical Impedance Tomography (EIT)**: the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. It accompanies the Julia library [ModularEIT.jl](https://github.com/DanielBoigk/ModularEIT.jl), whose API is documented in the [Documenter docs](https://danielboigk.github.io/ModularEIT.jl/dev/).
+A wiki on the theory of **Electrical Impedance Tomography (EIT)**: imaging the electrical conductivity inside a body from currents and voltages measured at its surface. It covers the physics and mathematics of the forward and inverse problem, their discretisation and numerical solution, and classical and learned regularisation. It accompanies the Julia library [ModularEIT.jl](https://github.com/DanielBoigk/ModularEIT.jl), whose API is documented in the [API docs](https://danielboigk.github.io/ModularEIT.jl/dev/). Articles on implemented topics link to the corresponding functions.
 
 Every article ends with its references, including DOI or arXiv links. Symbols are listed in [[Notation]].
 
-## 1. Physics and forward problem
-[[Electrical Impedance Tomography]] · [[Tomographic Imaging Modalities]] · [[Applications of EIT]] · [[Ohm's Law in Continuum Form]] · [[Continuity Equation]] · [[Quasi-Static Approximation]] · [[Complex Conductivity]] · [[Conductivity Equation]] · [[Sobolev and Trace Spaces]] · [[Dirichlet Problem]] · [[Neumann Problem]] · [[Dirichlet-to-Neumann Map]] · [[Neumann-to-Dirichlet Map]] · [[Properties of the Boundary Operators]] · [[Forward Map]] · [[Dirichlet and Thomson Principles]] · [[Electrode Models]] · [[Point Electrode Model]] · [[Gap Model]] · [[Shunt Model]] · [[Complete Electrode Model]] · [[Measurement Protocols]] · [[Current Patterns]] · [[Conformal Invariance of the Conductivity Equation]]
+## Where to start
 
-## 2. Inverse problem
-[[Calderón Problem]] · [[Well-Posedness]] · [[Uniqueness in the Calderón Problem]] · [[Boundary Determination]] · [[Complex Geometrical Optics Solutions]] · [[Anisotropic Conductivities]] · [[Stability of the Calderón Problem]] · [[Linearized EIT and the Sensitivity Kernel]] · [[Reconstruction Algorithms with Guarantees]] · [[D-bar Method]] · [[Bayesian Inversion]] · [[EIT Software and Solvers]] · [[Deep Learning for EIT]]
+- **New to EIT.** [[Electrical Impedance Tomography]] → [[Conductivity Equation]] → [[Electrode Models]] → [[Forward Map]] → [[Calderón Problem]] → [[Anatomy of an EIT Reconstruction]].
+- **From the model to a simulation.** [[From Physics to Linear Algebra]] → [[Weak Formulation of the Conductivity Equation]] → [[Galerkin Method]] → [[Discrete Electrode Models]] → [[Choosing a Linear Solver]].
+- **Reconstructing a conductivity.** [[Anatomy of an EIT Reconstruction]] → [[Variational Regularization]] → [[Adjoint State Method]] → [[Choosing an Optimizer]] → [[Noise Models for EIT Data]] → [[Inverse Crime]].
+- **Priors learned from data.** [[Classical and Learned Priors]] → [[Learned Regularization]] → [[Plug-and-Play Priors]] → [[Diffusion Models]] → [[Diffusion Models for EIT]].
+- **Fast and adaptive computation.** [[Choosing a Linear Solver]] → [[Fast Solvers on Disk Domains]] → [[Numerical Conformal Mapping]] → [[Adaptive Meshing in EIT]].
+- **The mathematics of uniqueness and stability.** [[Calderón Problem]] → [[Uniqueness in the Calderón Problem]] → [[Stability of the Calderón Problem]] → [[D-bar Method]].
 
-## 3. Regularisation
-[[Variational Regularization]] · [[Data Fidelity Terms]] · [[Choosing the Regularization Parameter]] · [[Tikhonov Regularization]] · [[Total Variation]] · [[Smoothed Total Variation]] · [[Truncated SVD Regularization]] · [[Implicit Regularization]]
+## Topics
 
-## 4. Finite element discretisation
-[[Galerkin Method]] · [[Weak Formulation of the Conductivity Equation]] · [[Lax-Milgram Theorem]] · [[Green's Identities]] · [[Lagrange Finite Elements]] · [[Mass Matrix]] · [[Stiffness Matrix]] · [[Weighted Stiffness Matrix]] · [[Conductivity Tensor]] · [[Numerical Quadrature and Assembly]] · [[Enforcing Dirichlet Conditions]] · [[Discrete Electrode Models]] · [[Null Space of the Neumann Problem]] · [[Boundary Mass and Stiffness Matrices]] · [[Discrete Fractional Sobolev Norms]] · [[L2 Projection]] · [[Pixel Images and Finite Element Functions]] · [[Discrete Boundary Operator]] · [[Conjugate Gradient Method]] · [[Projected Conjugate Gradient]] · [[Block Conjugate Gradient]] · [[Projected Cholesky Factorization]] · [[Grounding of the Potential]] · [[MINRES]] · [[LSQR]] · [[Algebraic Multigrid]] · [[Block Krylov Methods]] · [[A Posteriori Error Estimation and Adaptive Meshing]] · [[Adaptive Meshing in EIT]] · [[Residual Estimator for the Conductivity Equation]] · [[Zienkiewicz-Zhu Estimator]] · [[Goal-Oriented Error Estimation]] · [[Dörfler Marking]] · [[Hanging Nodes]] · [[Newest Vertex Bisection]] · [[Coarsening of Bisection Meshes]] · [[Discrete Cosine Transform]] · [[Fast Solvers on Rectangular Domains]] · [[Fast Solvers on Disk Domains]] · [[Numerical Conformal Mapping]] · [[Spectral Sobolev Norms on Rectangles]]
+| | Topic | Contents |
+|:--|:--|:--|
+| 0 | [[00 Overviews/index\|Overviews]] | Short articles that connect the topics |
+| 1 | [[01 Foundations of EIT/index\|Foundations of EIT]] | Physics, the conductivity equation, electrode models, measurement protocols |
+| 2 | [[02 The Forward Problem/index\|The Forward Problem]] | Function spaces, well-posedness, boundary operators, conformal invariance |
+| 3 | [[03 The Inverse Problem/index\|The Inverse Problem]] | Calderón problem, uniqueness, stability, D-bar, Bayesian view |
+| 4 | [[04 Finite Elements/index\|Finite Elements]] | Galerkin discretisation, matrices, discrete electrode models, grounding |
+| 5 | [[05 Linear Solvers/index\|Linear Solvers]] | Krylov methods, factorisations, multigrid, fast transform solvers |
+| 6 | [[06 Meshes and Geometry/index\|Meshes and Geometry]] | Error estimation, adaptive refinement, conformal maps |
+| 7 | [[07 Adjoint Gradients/index\|Adjoint Gradients]] | PDE-constrained optimisation, adjoint method, gradient representation |
+| 8 | [[08 Regularization/index\|Regularization]] | Tikhonov, total variation, parameter choice |
+| 9 | [[09 Optimization/index\|Optimization]] | Gauss–Newton, L-BFGS, proximal and splitting methods, stopping |
+| 10 | [[10 Data and Noise/index\|Data and Noise]] | Synthetic data, noise models, inverse crime |
+| 11 | [[11 Learned Priors/index\|Learned Priors]] | Plug-and-play, learned energies, implicit networks |
+| 12 | [[12 Diffusion Models/index\|Diffusion Models]] | Score-based generative models and posterior sampling |
+| 13 | [[13 Geometric Learning/index\|Geometric Learning]] | Symmetries and equivariant networks |
+| 14 | [[14 Outlook/index\|Outlook]] | Software, design principles, open questions |
 
-## 5. Adjoint gradients
-[[Iterative Reconstruction Loop]] · [[PDE-Constrained Optimization]] · [[Lagrangian Formulation]] · [[KKT Conditions]] · [[Adjoint State Method]] · [[State Equation]] · [[Adjoint Equation]] · [[Adjoint Method for the Dirichlet Problem]] · [[Functional Derivative of the Data Misfit]] · [[Kohn-Vogelius Functional]] · [[Gradient Representation and the Riesz Map]] · [[Automatic Differentiation vs Adjoint Methods]] · [[Discretize-then-Optimize vs Optimize-then-Discretize]] · [[Rules of the Calculus of Variations]] · [[Gradient Testing]]
-
-## 6. Optimisation
-[[Gauss-Newton Method]] · [[Levenberg-Marquardt Method]] · [[Line Search]] · [[L-BFGS]] · [[L-BFGS-B]] · [[Proximal Operator]] · [[ADMM]] · [[Chambolle-Pock Algorithm]] · [[Nested ADMM Reconstruction]] · [[Box Constraints on Conductivity]] · [[Stopping Criteria]] · [[Stochastic and Adaptive Gradient Methods]]
-
-## 7. Data and noise
-[[Synthetic Conductivity Data]] · [[Decay of Boundary Measurements]] · [[Noise Models for EIT Data]] · [[Inverse Crime]] · [[Spectral Image Corruption]]
-
-## 8. Learned priors
-[[Learned Regularization]] · [[Plug-and-Play Priors]] · [[Regularization by Denoising]] · [[Manifold Hypothesis]] · [[Neural ODEs]] · [[Deep Equilibrium Models]] · [[Energy-Based Models]] · [[Langevin Dynamics]] · [[Input Convex Neural Networks]] · [[U-Net]] · [[Hallucinations and Uncertainty]]
-
-## 9. Diffusion models
-[[Diffusion Models]] · [[DDPM Forward Process]] · [[Noise Schedule]] · [[Variance-Preserving SDE]] · [[Continuous Limit of the DDPM Chain]] · [[Score Function]] · [[Denoising Score Matching]] · [[Reverse-Time SDE]] · [[Probability Flow ODE]] · [[Euler-Maruyama Method]] · [[DDPM Ancestral Sampling]] · [[Tweedie's Formula]] · [[Sinusoidal Time Embedding]] · [[Diffusion Posterior Sampling]] · [[DiffPIR]] · [[RED-Diff]] · [[Diffusion Proximal Operator]] · [[Diffusion Models for EIT]]
-
-## 10. Geometric learning
-[[Symmetries of the EIT Problem]] · [[Invariant and Equivariant Functions]] · [[Dihedral Group D4]] · [[Reynolds Operator]] · [[Invariant Filter Banks]] · [[Equivariant Convolutions]]
-
-## 11. Outlook
-[[Design Principles for EIT Solvers]] · [[Open Questions]]
+Every topic page gives a reading order through its articles and lists them all. The explorer on the left and the search find any article directly.
