@@ -73,15 +73,20 @@ inverted with an FFT in the angle and one tridiagonal solve per angular mode alo
 (`O(n log n)`), for every electrode model and for current- and voltage-driven problems. The
 radial spacing is arbitrary (e.g. graded towards the boundary). Variants and costs as for
 [`DCTPreconditioner`](@ref).
+
+On a conformally mapped mesh ([`conformal_grid`](@ref)) pass the disk mesh as `reference`: the
+stiffness matrix of the disk then preconditions the one of the mapped domain; since the map is
+conformal, both are spectrally equivalent with constants close to 1.
 """
 struct PolarPreconditioner{D} <: AbstractFastPreconditioner
     disc::D
     grid::PolarStructure
     variant::Symbol
 end
-function PolarPreconditioner(disc::AbstractDiscretization; variant::Symbol = :constant)
+function PolarPreconditioner(disc::AbstractDiscretization; variant::Symbol = :constant, reference = nothing)
     _check_variant(variant)
-    return PolarPreconditioner(disc, polar_structure(disc), variant)
+    ps = reference === nothing ? polar_structure(disc) : _reference_structure(disc, reference)
+    return PolarPreconditioner(disc, ps, variant)
 end
 
 _check_variant(v) = v in (:constant, :scaled) || throw(ArgumentError("variant must be :constant or :scaled, got :$v"))
@@ -105,8 +110,8 @@ the voltage-driven block `fm.A_ff` of a forward model on a disk mesh, for [`pbcg
 [`update_preconditioner!`](@ref) after every change of the matrix values.
 """
 polar_preconditioner(disc::AbstractDiscretization, fm::ForwardModel; system::Symbol = :neumann,
-                     variant::Symbol = :constant) =
-    _FastSystem(PolarPreconditioner(disc; variant), fm, system)
+                     variant::Symbol = :constant, reference = nothing) =
+    _FastSystem(PolarPreconditioner(disc; variant, reference), fm, system)
 
 mutable struct _FastSystem{S}
     grid::S                    # StructuredGrid or PolarStructure

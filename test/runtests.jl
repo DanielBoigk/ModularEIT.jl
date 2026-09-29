@@ -15,7 +15,7 @@ end
     end
     @testset "Galerkin layer" begin
         runfolder("Galerkin", ["test_fem_assembly.jl", "test_electrode_models.jl",
-                               "test_objectives.jl", "test_pattern_svd.jl"])
+                               "test_objectives.jl", "test_pattern_svd.jl", "test_conformal.jl"])
     end
     @testset "adaptivity" begin
         runfolder("Adaptivity", ["test_adaptive_meshing.jl", "test_bisection.jl",

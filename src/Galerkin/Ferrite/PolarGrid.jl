@@ -99,3 +99,41 @@ function polar_structure(d::FerriteDiscretization; rtol::Real = 1e-8)
     K = assemble_stiffness(d.dh_u, d.cv_u)
     return PolarStructure(nr, nθ, true, perm, K[perm, perm])
 end
+
+"""
+    ConformalGrid
+
+A mesh `grid` of a domain Ω obtained by mapping the polar mesh `reference` of the unit disk with
+the conformal map `map` (same connectivity and numbering). See [`conformal_grid`](@ref).
+"""
+struct ConformalGrid{G, R}
+    grid::G
+    reference::R
+    map::ConformalMap
+end
+
+"""
+    conformal_grid(Φ::ConformalMap, nr, nθ; boundary_spacing = nothing, offset = 0)
+
+Mesh of the domain `Φ(𝔻)`: the [`polar_grid`](@ref) of the unit disk with the nodes mapped by
+`Φ`. Since `Φ` is conformal, the triangles keep their shapes up to `O(h)` and the ring grading
+carries over to the boundary of Ω (scaled by `|Φ'|`). All computations (electrode models,
+phantoms, objectives) use the mapped mesh; the disk mesh `reference` provides the fast
+preconditioner, `PolarPreconditioner(disc; reference = cg.reference)`.
+"""
+function conformal_grid(Φ::ConformalMap, nr::Integer, nθ::Integer; boundary_spacing = nothing, offset::Real = 0.0)
+    ref = polar_grid(nr, nθ; boundary_spacing, offset)
+    nodes = [Node(Vec(reim(Φ(complex(n.x[1], n.x[2])))...)) for n in ref.nodes]
+    return ConformalGrid(Grid(copy(ref.cells), nodes), ref, Φ)
+end
+
+# polar structure of a reference disk mesh with the connectivity (and dof numbering) of `disc`
+function _reference_structure(d::FerriteDiscretization, reference::Ferrite.AbstractGrid)
+    fail(msg) = throw(ArgumentError("the reference mesh does not match the discretization: $msg"))
+    getncells(reference) == getncells(d.grid) || fail("different numbers of cells")
+    all(getcells(reference, c).nodes == getcells(d.grid, c).nodes for c in 1:getncells(d.grid)) ||
+        fail("different connectivity")
+    rd = FerriteDiscretization(reference; ip_u = d.ip_u)
+    all(celldofs(rd.dh_u, c) == celldofs(d.dh_u, c) for c in 1:getncells(d.grid)) || fail("different dof numbering")
+    return polar_structure(rd)
+end

@@ -160,10 +160,35 @@ polar_structure
 fast_neumann_solve
 ```
 
+## Conformally mapped domains
+
+Simply connected domains that are star-shaped and not too far from a disk (thorax or head
+cross-sections, ellipses up to aspect ratio ≈ 2.4) are meshed by mapping a polar mesh with a
+conformal map. The mesh keeps its shape quality and boundary grading; the disk solver
+preconditions the mapped problem with mesh-independent iteration counts.
+
+```julia
+Φ = ConformalMap(t -> (1.3cos(t) + 0.1cos(2t), sin(t) + 0.1sin(3t)))    # or polygon vertices
+cg = conformal_grid(Φ, 32, 256; boundary_spacing = 1 / 64)
+disc = FerriteDiscretization(cg.grid)
+solver = BlockCGSolver(preconditioner = PolarPreconditioner(disc; reference = cg.reference))
+```
+
+Theory: wiki articles [Conformal Invariance of the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation) and
+[Numerical Conformal Mapping](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping).
+
+```@docs
+ConformalMap
+map_derivative
+ConformalGrid
+conformal_grid
+```
+
 ## Wiki articles
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
 
+- [Conformal Invariance of the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation)
 - [Null Space of the Neumann Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem)
 - [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential)
 - [Conjugate Gradient Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conjugate-Gradient-Method)
@@ -172,6 +197,7 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Block Krylov Methods](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Krylov-Methods)
 - [Projected Cholesky Factorization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization)
 - [MINRES](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES)
+- [Numerical Conformal Mapping](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping)
 - [Algebraic Multigrid](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid)
 - [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform)
 - [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains)

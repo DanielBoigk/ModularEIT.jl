@@ -18,6 +18,7 @@ export DeviceSparseMatrixCSR, device_converter
 export AbstractLinearSolver, DirectSolver, BlockCGSolver
 export StructuredGrid, DCTPreconditioner, dct_preconditioner
 export AbstractFastPreconditioner, PolarStructure, PolarPreconditioner, polar_preconditioner, polar_grid
+export ConformalMap, map_derivative, ConformalGrid, conformal_grid
 
 export AbstractDiscretization, AbstractElectrodeModel, AbstractForwardModel, AbstractObjective
 export AbstractMisfit, AbstractRieszMap, AbstractEITProblem, AbstractSolutionState
@@ -52,6 +53,7 @@ export gaussian_random_field, corrupt_image, conductivity, simulate_data
 
 
 include("AbstractTypes.jl")
+include("Geometry/ConformalMap.jl")
 
 include("LinearSolvers/ProjectedBlockCG.jl")
 include("LinearSolvers/ProjectedCholesky.jl")
