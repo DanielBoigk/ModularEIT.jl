@@ -108,7 +108,7 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Data-Fidelity-Terms</loc>
     <lastmod>2026-09-29T10:38:33.000Z</lastmod>
@@ -234,7 +234,7 @@
     <lastmod>2026-09-29T10:38:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Spectral-Sobolev-Norms-on-Rectangles</loc>
-    <lastmod>2026-09-29T09:44:53.000Z</lastmod>
+    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Stiffness-Matrix</loc>
     <lastmod>2026-09-29T10:38:33.000Z</lastmod>
@@ -327,22 +327,22 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Decay-of-Boundary-Measurements</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Noise-Models-for-EIT-Data</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Synthetic-Conductivity-Data</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Deep-Equilibrium-Models</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>

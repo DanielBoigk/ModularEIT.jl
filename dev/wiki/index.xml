@@ -6,6 +6,48 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Choosing the Regularization Parameter</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</guid>
+    <description><![CDATA[ The parameter \beta in a variational objective balances data fit against prior. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+  </item><item>
+    <title>Spectral Sobolev Norms on Rectangles</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Spectral-Sobolev-Norms-on-Rectangles</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Spectral-Sobolev-Norms-on-Rectangles</guid>
+    <description><![CDATA[ The spectral construction of Discrete Fractional Sobolev Norms needs the eigenvectors of a pair of matrices (K, M). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+  </item><item>
+    <title>Stopping Criteria</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria</guid>
+    <description><![CDATA[ Common rules for terminating a reconstruction: Discrepancy principle: stop when \|\mathcal F(\sigma_k)-y^\delta\|\le\tau\delta (\tau\gtrsim1, \delta the noise level). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+  </item><item>
+    <title>Inverse Crime</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</guid>
+    <description><![CDATA[ An inverse crime is committed when synthetic data are generated with the same numerical model that is later used for the reconstruction: same mesh, same element type, same discretisation of \sigma, no noise. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+  </item><item>
+    <title>Noise Models for EIT Data</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Noise-Models-for-EIT-Data</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Noise-Models-for-EIT-Data</guid>
+    <description><![CDATA[ Simulated EIT data must be corrupted with noise to mimic real measurements and to avoid overly optimistic results (see also Inverse Crime). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+  </item><item>
+    <title>Spectral Image Corruption</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption</guid>
+    <description><![CDATA[ To train a denoiser or deblurrer that should later clean EIT reconstructions, one needs pairs (clean, degraded). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+  </item><item>
+    <title>Synthetic Conductivity Data</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Synthetic-Conductivity-Data</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Synthetic-Conductivity-Data</guid>
+    <description><![CDATA[ Learned priors (see Learned Regularization) need samples from a distribution of plausible conductivities. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+  </item><item>
     <title>Complete Electrode Model</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
@@ -22,48 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</guid>
     <description><![CDATA[ In the Dirichlet problem the voltage on the boundary is prescribed. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Dirichlet-to-Neumann Map</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map</guid>
-    <description><![CDATA[ For a conductivity \gamma, the Dirichlet-to-Neumann (DtN) map sends a boundary voltage to the boundary current it produces: \Lambda_\gamma : H^{1/2}(\partial\Omega)\to H^{-1/2}(\partial\Omega), \qquad f \mapsto \gamma\,\partial_\nu u_f\big|_{\partial\Omega}, where u_f solves the Dirichlet Problem wi... ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Electrode Models</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</guid>
-    <description><![CDATA[ The mathematical boundary conditions have to model how current actually enters the body through L metal electrodes e_1,\dots,e_L\subset\partial\Omega. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Forward Map</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Forward-Map</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Forward-Map</guid>
-    <description><![CDATA[ The forward map of EIT takes a conductivity to the boundary operator it generates: \mathcal F:\ \gamma \mapsto \Lambda_\gamma \quad(\text{or } \gamma\mapsto\mathcal R_\gamma = \Lambda_\gamma^{-1}). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Gap Model</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Gap-Model</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Gap-Model</guid>
-    <description><![CDATA[ The gap model spreads the current of each electrode e_\ell\subset\partial\Omega uniformly over the electrode and assumes no current in the gaps between electrodes (see Electrode Models): \nabla\cdot(\sigma\nabla u) = 0\ \text{ in }\Omega,\qquad \sigma\,\partial_\nu u = \begin{cases} I_\ell/|e_\ell| ... ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Neumann Problem</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</guid>
-    <description><![CDATA[ In the Neumann problem the current density on the boundary is prescribed. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Neumann-to-Dirichlet Map</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-to-Dirichlet-Map</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-to-Dirichlet-Map</guid>
-    <description><![CDATA[ Real EIT devices inject currents and measure voltages. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Point Electrode Model</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Point-Electrode-Model</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Point-Electrode-Model</guid>
-    <description><![CDATA[ The point electrode model idealises every electrode as a single boundary point x_\ell\in\partial\Omega (see Electrode Models). ]]></description>
     <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item>
     </channel>
