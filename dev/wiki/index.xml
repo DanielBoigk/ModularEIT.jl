@@ -6,6 +6,12 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Truncated SVD Regularization</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</guid>
+    <description><![CDATA[ Truncated SVD (linear problems). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 23:08:20 GMT</pubDate>
+  </item><item>
     <title>Bayesian Inversion</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Bayesian-Inversion</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Bayesian-Inversion</guid>
@@ -22,12 +28,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Resolution-and-Confidence-Maps</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Resolution-and-Confidence-Maps</guid>
     <description><![CDATA[ A reconstruction does not determine every part of the conductivity equally well. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 22:45:58 GMT</pubDate>
-  </item><item>
-    <title>Truncated SVD Regularization</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</guid>
-    <description><![CDATA[ Truncated SVD (linear problems). ]]></description>
     <pubDate>Tue, 29 Sep 2026 22:45:58 GMT</pubDate>
   </item><item>
     <title>Regularization</title>
