@@ -25,6 +25,8 @@ where $u_i(\sigma)$ solves the [[Neumann Problem]]. This is the most common choi
 
 Any differentiable $d$ fits the [[Adjoint State Method]]. Only the right-hand side of the adjoint equation, $\partial_u d$, changes.
 
+**In ModularEIT.jl:** [`SquaredEuclidean`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.SquaredEuclidean), [`WeightedSquaredEuclidean`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.WeightedSquaredEuclidean).
+
 ## References
 
 1. L. Borcea (2002). *Electrical impedance tomography*. Inverse Problems 18(6), R99–R136. [doi:10.1088/0266-5611/18/6/201](https://doi.org/10.1088/0266-5611/18/6/201)

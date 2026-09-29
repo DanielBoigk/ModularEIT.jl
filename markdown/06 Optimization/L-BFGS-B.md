@@ -12,6 +12,8 @@ The compact limited-memory representation keeps the cost per iteration at $\math
 
 **Why it matters in EIT.** Bounds keep the conductivity physical and the forward problem coercive. Simply clipping after an unconstrained step breaks the quasi-Newton curvature information. L-BFGS-B handles the bounds consistently.
 
+**In ModularEIT.jl:** [`LBFGS`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.LBFGS), [`minimize`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.minimize).
+
 ## References
 
 1. R. H. Byrd, P. Lu, J. Nocedal, C. Zhu (1995). *A Limited Memory Algorithm for Bound Constrained Optimization*. SIAM J. Sci. Comput. 16(5), 1190–1208. [doi:10.1137/0916069](https://doi.org/10.1137/0916069)

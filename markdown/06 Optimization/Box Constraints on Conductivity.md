@@ -22,6 +22,8 @@ $$
 - As the regulariser $\iota_\Sigma$ in [[ADMM]], whose prox is clipping.
 - Reparametrisation: $\sigma = \sigma_{\min}+e^{s}$, or a sigmoid, turns the problem into an unconstrained one. This changes the geometry of the problem and the gradient ($\partial\sigma/\partial s$ chain factor).
 
+**In ModularEIT.jl:** [`minimize`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.minimize).
+
 ## References
 
 1. L. Borcea (2002). *Electrical impedance tomography*. Inverse Problems 18(6), R99–R136. [doi:10.1088/0266-5611/18/6/201](https://doi.org/10.1088/0266-5611/18/6/201)

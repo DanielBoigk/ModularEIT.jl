@@ -36,6 +36,8 @@ $$
 
 For many right-hand sides at once see [[Block Conjugate Gradient]].
 
+**In ModularEIT.jl:** [`pbcg`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbcg), [`pbcg!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbcg!).
+
 ## References
 
 1. E. F. Kaasschieter (1988). *Preconditioned conjugate gradients for solving singular systems*. J. Comput. Appl. Math. 24(1–2), 265–275. [doi:10.1016/0377-0427(88)90358-5](https://doi.org/10.1016/0377-0427(88)90358-5)

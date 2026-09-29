@@ -22,6 +22,8 @@ By the [[Dirichlet and Thomson Principles|Dirichlet principle]], $u$ minimises t
 
 In a finite element code, the boundary condition is imposed on the matrix as described in [[Enforcing Dirichlet Conditions]].
 
+**In ModularEIT.jl:** [`forward_dirichlet`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_dirichlet).
+
 ## References
 
 1. L. C. Evans (2010). *Partial Differential Equations*, 2nd ed. AMS GSM 19. [doi:10.1090/gsm/019](https://doi.org/10.1090/gsm/019)

@@ -24,6 +24,8 @@ $S$ is sparse, with at most as many nonzeros per row as basis functions per cell
 
 On pixel-aligned rectangle meshes the finite element matrices are diagonalised by the [[Discrete Cosine Transform]], which gives fast solvers and preconditioners ([[Fast Solvers on Rectangular Domains]]) and spectral norms ([[Spectral Sobolev Norms on Rectangles]]).
 
+**In ModularEIT.jl:** [`ImageMap`](https://danielboigk.github.io/ModularEIT.jl/dev/api/images/#ModularEIT.ImageMap), [`to_image`](https://danielboigk.github.io/ModularEIT.jl/dev/api/images/#ModularEIT.to_image), [`from_image`](https://danielboigk.github.io/ModularEIT.jl/dev/api/images/#ModularEIT.from_image).
+
 ## References
 
 1. S. C. Brenner, L. R. Scott (2008). *The Mathematical Theory of Finite Element Methods*, 3rd ed. Springer. [doi:10.1007/978-0-387-75934-0](https://doi.org/10.1007/978-0-387-75934-0)

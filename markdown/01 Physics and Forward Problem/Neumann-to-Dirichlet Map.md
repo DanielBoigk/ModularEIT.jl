@@ -24,6 +24,8 @@ Properties (see [[Properties of the Boundary Operators]]):
 
 With finitely many current patterns $G = [g_1,\dots,g_N]$ and measured voltages $F=[f_1,\dots,f_N]$, a discrete NtD matrix is estimated as in [[Discrete Boundary Operator]].
 
+**In ModularEIT.jl:** [`forward_neumann`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_neumann).
+
 ## References
 
 1. J. L. Mueller, S. Siltanen (2012). *Linear and Nonlinear Inverse Problems with Practical Applications*. SIAM. [doi:10.1137/1.9781611972344](https://doi.org/10.1137/1.9781611972344)

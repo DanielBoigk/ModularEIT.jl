@@ -23,6 +23,8 @@ The right-hand side needs point values of $v$, which $H^1(\Omega)$ functions do 
 
 **Discretisation.** The load vector of electrode $\ell$ is the unit vector of the node closest to $x_\ell$, and measuring picks nodal values (see [[Discrete Electrode Models]]). The voltage-driven counterpart prescribes $u(x_\ell) = U_\ell$ at the electrode nodes and no current elsewhere. For consistent data it is the exact inverse of the current-driven problem.
 
+**In ModularEIT.jl:** [`PointElectrodeModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.PointElectrodeModel).
+
 ## References
 
 1. M. Hanke, B. Harrach, N. Hyvönen (2011). *Justification of point electrode models in electrical impedance tomography*. Math. Models Methods Appl. Sci. 21(6), 1395–1413. [doi:10.1142/S0218202511005362](https://doi.org/10.1142/S0218202511005362)

@@ -9,9 +9,9 @@ triangle meshes with newest vertex bisection. Refined quadrilateral meshes have 
 [`FerriteDiscretization`](@ref) condenses the conformity constraints, so forward models,
 objectives and solvers work unchanged. Bisection keeps triangle meshes conforming (also
 continuous σ spaces work) and carries facet and cell sets over. Theory: wiki articles
-*Adaptive Meshing in EIT*, *Hanging Nodes*, *Newest Vertex Bisection*, *Residual Estimator for
-the Conductivity Equation*, *Zienkiewicz-Zhu Estimator*, *Goal-Oriented Error Estimation* and
-*Dörfler Marking*.
+[Adaptive Meshing in EIT](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT), [Hanging Nodes](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Hanging-Nodes), [Newest Vertex Bisection](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection), [Residual Estimator for
+the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation), [Zienkiewicz-Zhu Estimator](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Zienkiewicz-Zhu-Estimator), [Goal-Oriented Error Estimation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Goal-Oriented-Error-Estimation) and
+[Dörfler Marking](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Dörfler-Marking).
 
 ```julia
 am = AdaptiveMesh(generate_grid(Quadrilateral, (16, 16)); maxlevel = 6)
@@ -42,3 +42,17 @@ jump_indicator
 dorfler_marking
 transfer_conductivity
 ```
+
+## Wiki articles
+
+Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
+
+- [L2 Projection](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/L2-Projection)
+- [A Posteriori Error Estimation and Adaptive Meshing](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing)
+- [Adaptive Meshing in EIT](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT)
+- [Residual Estimator for the Conductivity Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation)
+- [Zienkiewicz-Zhu Estimator](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Zienkiewicz-Zhu-Estimator)
+- [Goal-Oriented Error Estimation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Goal-Oriented-Error-Estimation)
+- [Dörfler Marking](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Dörfler-Marking)
+- [Hanging Nodes](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Hanging-Nodes)
+- [Newest Vertex Bisection](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection)

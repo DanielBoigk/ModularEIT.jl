@@ -29,6 +29,8 @@ initialised for example with $z^0 = x^0$ and $u^0 = 0$ (see [[Proximal Operator]
 
 **In EIT.** $F$ is the data misfit, whose prox is computed iteratively, and $G = \beta\mathcal R$ is a regulariser with a cheap prox ([[Total Variation]], [[Tikhonov Regularization]], box constraints) or a learned denoiser ([[Plug-and-Play Priors]], [[Diffusion Proximal Operator]]). See [[Nested ADMM Reconstruction]].
 
+**In ModularEIT.jl:** [`ADMM`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.ADMM).
+
 ## References
 
 1. S. Boyd, N. Parikh, E. Chu, B. Peleato, J. Eckstein (2011). *Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers*. Found. Trends Mach. Learn. 3(1), 1–122. [doi:10.1561/2200000016](https://doi.org/10.1561/2200000016)

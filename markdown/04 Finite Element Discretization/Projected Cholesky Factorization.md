@@ -35,6 +35,8 @@ The vector from step 2 solves $A\mathbf x = \hat{\mathbf b}$. Take any solution 
 $\begin{pmatrix}A & V\\ V^\top & 0\end{pmatrix}$
 is nonsingular but indefinite, so it needs an $LDL^\top$ factorisation. The shift $A+\varepsilon I$ changes the solution (see [[Null Space of the Neumann Problem]]). Pinning keeps the SPD structure and gives the exact solution.
 
+**In ModularEIT.jl:** [`projected_cholesky`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.projected_cholesky), [`projected_ldl`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.projected_ldl), [`DirectSolver`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.DirectSolver).
+
 ## References
 
 1. P. Bochev, R. B. Lehoucq (2005). *On the Finite Element Solution of the Pure Neumann Problem*. SIAM Review 47(1), 50–66. [doi:10.1137/S0036144503426074](https://doi.org/10.1137/S0036144503426074)

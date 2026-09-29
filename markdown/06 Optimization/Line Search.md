@@ -20,6 +20,8 @@ with $0<c_1<c_2<1$ (typically $c_1 = 10^{-4}$, $c_2 = 0.9$). Backtracking ($\tau
 
 **Projected search.** With bounds $\sigma_{\min}\le\sigma\le\sigma_{\max}$, evaluate $\Phi(P(\sigma+\tau p))$ with the projection $P$ onto the box (see [[Box Constraints on Conductivity]]).
 
+**In ModularEIT.jl:** [`GradientDescent`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.GradientDescent), [`LBFGS`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.LBFGS), [`GaussNewton`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.GaussNewton).
+
 ## References
 
 1. J. Nocedal, S. J. Wright (2006). *Numerical Optimization*, 2nd ed., Ch. 3. Springer. [doi:10.1007/978-0-387-40065-5](https://doi.org/10.1007/978-0-387-40065-5)

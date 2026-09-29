@@ -46,6 +46,8 @@ with the mass matrix $M_\sigma$ of the $\sigma$ space. This is the Riesz represe
 
 Assembly ($T\sigma$), gradient ($T^\top\mathbf w$) and the gather $\mathbf w$ are sparse matrix-vector products and one independent product per stored entry. They parallelise over threads and GPU cores without atomic operations or colouring. The memory cost is $\mathrm{nnz}(T)\approx n_{\mathrm{cells}}\,n_u^2\,n_\psi$ for $n_u$ potential and $n_\psi$ conductivity basis functions per cell. That is small in 2D, and needs checking in 3D with high-order conductivity spaces.
 
+**In ModularEIT.jl:** [`ConductivityTensor`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.ConductivityTensor), [`pair_products!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.pair_products!), [`tensor_gradient!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.tensor_gradient!).
+
 ## References
 
 1. S. C. Brenner, L. R. Scott (2008). *The Mathematical Theory of Finite Element Methods*, 3rd ed. Springer. [doi:10.1007/978-0-387-75934-0](https://doi.org/10.1007/978-0-387-75934-0)

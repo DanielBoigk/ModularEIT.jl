@@ -40,6 +40,8 @@ A convergent adaptive algorithm for the regularised EIT problem refines with an 
 
 Quadtree refinement of quadrilaterals (octrees in 3D) splits a cell into four children and creates [[Hanging Nodes]]. It fits pixel meshes well and keeps the cells shape regular. Triangles can be refined conformingly by [[Newest Vertex Bisection]] or red-green refinement, without hanging nodes. Marking is usually done by [[Dörfler Marking]].
 
+**In ModularEIT.jl:** [`AdaptiveMesh`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.AdaptiveMesh), [`refine_mesh!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.refine_mesh!), [`goal_oriented_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.goal_oriented_indicator).
+
 ## References
 
 1. M. Molinari, B. H. Blott, S. J. Cox, G. J. Daniell (2002). *Optimal imaging with adaptive mesh refinement in electrical impedance tomography*. Physiol. Meas. 23(1), 121–128. [doi:10.1088/0967-3334/23/1/311](https://doi.org/10.1088/0967-3334/23/1/311)

@@ -19,6 +19,8 @@ For a finite set of current patterns $g_1,\dots,g_N$ it becomes the finite-dimen
 
 Inverting $\mathcal F$ is the [[Calderón Problem]].
 
+**In ModularEIT.jl:** [`ForwardModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.ForwardModel), [`forward_neumann`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_neumann), [`forward_dirichlet`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_dirichlet).
+
 ## References
 
 1. L. Borcea (2002). *Electrical impedance tomography*. Inverse Problems 18(6), R99–R136. [doi:10.1088/0266-5611/18/6/201](https://doi.org/10.1088/0266-5611/18/6/201)

@@ -13,6 +13,8 @@ The discrete [[Neumann Problem]] $L_\gamma\mathbf u = \mathbf g$ is singular: $L
 
 After solving, **ground** the solution, for example by subtracting its boundary mean or making its boundary nodal values sum to zero, so voltages are comparable to measurements that are themselves mean-free (see [[Grounding of the Potential]]).
 
+**In ModularEIT.jl:** [`projected_cholesky`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.projected_cholesky), [`pbcg`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbcg).
+
 ## References
 
 1. P. Bochev, R. B. Lehoucq (2005). *On the Finite Element Solution of the Pure Neumann Problem*. SIAM Review 47(1), 50–66. [doi:10.1137/S0036144503426074](https://doi.org/10.1137/S0036144503426074)

@@ -36,6 +36,8 @@ Components and where they are described:
 
 The per-pattern solves are independent, so the method parallelises naturally over patterns.
 
+**In ModularEIT.jl:** [`minimize`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.minimize).
+
 ## References
 
 1. M. Hinze, R. Pinnau, M. Ulbrich, S. Ulbrich (2009). *Optimization with PDE Constraints*. Springer. [doi:10.1007/978-1-4020-8839-1](https://doi.org/10.1007/978-1-4020-8839-1)

@@ -24,6 +24,8 @@ $$
 
 **Discretisation.** With the finite element basis $\varphi_i$, the load vector of electrode $\ell$ is $\int_{e_\ell}\varphi_i\,\mathrm ds/|e_\ell|$, and the measurement matrix is its transpose (see [[Discrete Electrode Models]]).
 
+**In ModularEIT.jl:** [`GapModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.GapModel).
+
 ## References
 
 1. K.-S. Cheng, D. Isaacson, J. C. Newell, D. G. Gisser (1989). *Electrode models for electric current computed tomography*. IEEE Trans. Biomed. Eng. 36(9), 918–924. [doi:10.1109/10.35300](https://doi.org/10.1109/10.35300)

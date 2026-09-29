@@ -36,6 +36,8 @@ This is a rectangular, non-symmetric system. It is best solved by [[LSQR]]. The 
 
 **Trust-region view.** Adapting $\lambda$ from the ratio of actual to predicted reduction makes LM a trust-region method: increase $\lambda$ after a poor step and decrease it after a good one.
 
+**In ModularEIT.jl:** [`GaussNewton`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.GaussNewton).
+
 ## References
 
 1. K. Levenberg (1944). *A method for the solution of certain non-linear problems in least squares*. Quart. Appl. Math. 2(2), 164–168. [doi:10.1090/qam/10666](https://doi.org/10.1090/qam/10666)

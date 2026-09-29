@@ -26,6 +26,8 @@ The product $\nabla u_g\cdot\nabla u_k$ is the **sensitivity kernel**. It tells 
 - The same product $\nabla u\cdot\nabla\lambda$ appears as the gradient in the [[Adjoint State Method]]. There $\lambda$ plays the role of the second field, driven by the data residual.
 - Stacking the kernels for all pattern pairs gives the Jacobian used in the [[Gauss-Newton Method]].
 
+**In ModularEIT.jl:** [`residual_and_jacobian!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.residual_and_jacobian!).
+
 ## References
 
 1. A. P. Calderón (1980/2006). *On an inverse boundary value problem*. Comput. Appl. Math. 25(2–3), 133–138. [doi:10.1590/S0101-82052006000200002](https://doi.org/10.1590/S0101-82052006000200002)

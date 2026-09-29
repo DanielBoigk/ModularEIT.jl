@@ -30,6 +30,8 @@ Coercivity on $H^1(\Omega)/\mathbb R$ follows from the Poincaré–Wirtinger ine
 
 The map $g\mapsto u|_{\partial\Omega}$ is the [[Neumann-to-Dirichlet Map]].
 
+**In ModularEIT.jl:** [`forward_neumann`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_neumann).
+
 ## References
 
 1. L. C. Evans (2010). *Partial Differential Equations*, 2nd ed. AMS GSM 19. [doi:10.1090/gsm/019](https://doi.org/10.1090/gsm/019)

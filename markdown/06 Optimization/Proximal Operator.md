@@ -31,6 +31,8 @@ It moves $v$ towards smaller values of $R$ while staying close to $v$.
 
 **Denoisers as proximal operators.** A denoiser $D$ maps a noisy image to a clean one, just as a prox maps $v$ to a nearby point with small $R$. Replacing $\operatorname{prox}_R$ by a learned denoiser is the idea behind [[Plug-and-Play Priors]].
 
+**In ModularEIT.jl:** [`prox!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.prox!), [`ProximalMap`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.ProximalMap).
+
 ## References
 
 1. N. Parikh, S. Boyd (2014). *Proximal Algorithms*. Found. Trends Optim. 1(3), 127–239. [doi:10.1561/2400000003](https://doi.org/10.1561/2400000003)

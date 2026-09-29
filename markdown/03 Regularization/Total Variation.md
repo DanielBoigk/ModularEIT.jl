@@ -29,6 +29,8 @@ This is TV denoising itself. It is used as the regulariser step in [[ADMM]].
 
 In EIT, TV regularisation gives sharper inclusions than [[Tikhonov Regularization]] and is robust in clinical data (Borsic et al. 2010).
 
+**In ModularEIT.jl:** [`TotalVariationRegularizer`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.TotalVariationRegularizer), [`total_variation`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.total_variation).
+
 ## References
 
 1. L. I. Rudin, S. Osher, E. Fatemi (1992). *Nonlinear total variation based noise removal algorithms*. Physica D 60(1–4), 259–268. [doi:10.1016/0167-2789(92)90242-F](https://doi.org/10.1016/0167-2789(92)90242-F)

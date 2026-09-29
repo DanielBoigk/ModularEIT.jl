@@ -22,6 +22,8 @@ The electrode voltages $U_\ell$ are unknowns, as in the [[Complete Electrode Mod
 
 **The gap and shunt models are different models.** The voltage-driven shunt problem is *not* the inverse of the current-driven gap model: the gap model has a uniform current density with a non-constant potential on the electrode, the shunt model the reverse. Functionals that compare a current-driven and a voltage-driven solution of the same data, such as the [[Kohn-Vogelius Functional]], therefore do not vanish at the true conductivity if these two models are paired.
 
+**In ModularEIT.jl:** [`GapModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.GapModel), [`forward_dirichlet`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_dirichlet).
+
 ## References
 
 1. K.-S. Cheng, D. Isaacson, J. C. Newell, D. G. Gisser (1989). *Electrode models for electric current computed tomography*. IEEE Trans. Biomed. Eng. 36(9), 918–924. [doi:10.1109/10.35300](https://doi.org/10.1109/10.35300)

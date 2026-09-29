@@ -40,6 +40,8 @@ The adjoint is itself an EIT forward problem, driven by the voltage residual as 
 
 **Dirichlet case.** $V_0 = H^1_0$, so $\lambda = 0$ on $\partial\Omega$. The measured quantity is the current, and the misfit enters through the flux instead.
 
+**In ModularEIT.jl:** [`AdjointStateObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.AdjointStateObjective).
+
 ## References
 
 1. M. Hinze, R. Pinnau, M. Ulbrich, S. Ulbrich (2009). *Optimization with PDE Constraints*. Springer. [doi:10.1007/978-1-4020-8839-1](https://doi.org/10.1007/978-1-4020-8839-1)

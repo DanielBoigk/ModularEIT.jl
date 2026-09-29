@@ -24,6 +24,8 @@ For pure-Neumann EIT forward and adjoint problems with mean-zero projection, MIN
 $$ \big(D^{-1/2}AD^{-1/2}\big)\,\mathbf y = D^{-1/2}\mathbf b,\qquad \mathbf x = D^{-1/2}\mathbf y,\qquad D = \operatorname{diag}(A). $$
 Scaling preserves consistency for the singular Neumann matrix. The scaled null space is $D^{1/2}V$, and $D^{-1/2}\Pi\mathbf b$ is orthogonal to it, because $(D^{-1/2}\Pi\mathbf b)^\top D^{1/2}V = \mathbf b^\top\Pi V = 0$. The result is then [[Grounding of the Potential|grounded]] as for the other projected solvers (see [[Projected Conjugate Gradient]]). Blocks of linearly dependent right-hand sides are handled by solving for an orthonormal basis of their span and recombining.
 
+**In ModularEIT.jl:** [`pbminres`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbminres).
+
 ## References
 
 1. C. C. Paige, M. A. Saunders (1975). *Solution of Sparse Indefinite Systems of Linear Equations*. SIAM J. Numer. Anal. 12(4), 617–629. [doi:10.1137/0712047](https://doi.org/10.1137/0712047)

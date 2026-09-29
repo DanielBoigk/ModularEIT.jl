@@ -18,6 +18,8 @@ $$
 
 Since state and adjoint solves use the same matrix and preconditioner, both can be batched together once the residuals are known. Stacking the patterns also reduces the per-pattern overhead of assembling the gradient $-\nabla u_i\cdot\nabla\lambda_i$ (see [[Functional Derivative of the Data Misfit]]).
 
+**In ModularEIT.jl:** [`pbcg`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbcg), [`pbminres`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbminres).
+
 ## References
 
 1. D. P. O'Leary (1980). *The block conjugate gradient algorithm and related methods*. Linear Algebra Appl. 29, 293–322. [doi:10.1016/0024-3795(80)90247-5](https://doi.org/10.1016/0024-3795(80)90247-5)

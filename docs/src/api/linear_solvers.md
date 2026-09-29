@@ -6,8 +6,8 @@ CurrentModule = ModularEIT
 
 Projected block conjugate gradient method for the singular (pure Neumann) EIT systems
 ``L_\sigma X = B``. It works on the CPU and the GPU and supports several right-hand sides
-at once. The theory is in the wiki articles *Projected Conjugate Gradient*,
-*Block Conjugate Gradient* and *Grounding of the Potential*.
+at once. The theory is in the wiki articles [Projected Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient),
+[Block Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient) and [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential).
 
 The objectives and forward solves take a solver *choice*, instantiated for the current system
 matrix and refactorised / re-preconditioned when the conductivity changes:
@@ -113,3 +113,17 @@ used for the tall-skinny Gram products `XᵀY` by one GEMV per column for Float6
 2–8 columns. For those shapes cuBLAS picks a kernel that is 10–30× slower. Note that consumer
 GPUs run Float64 at 1/64 of the Float32 rate, so Float32 is usually the better choice there
 (see `benchmark/`).
+
+## Wiki articles
+
+Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
+
+- [Null Space of the Neumann Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem)
+- [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential)
+- [Conjugate Gradient Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conjugate-Gradient-Method)
+- [Projected Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient)
+- [Block Conjugate Gradient](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient)
+- [Block Krylov Methods](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Krylov-Methods)
+- [Projected Cholesky Factorization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization)
+- [MINRES](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES)
+- [Algebraic Multigrid](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid)

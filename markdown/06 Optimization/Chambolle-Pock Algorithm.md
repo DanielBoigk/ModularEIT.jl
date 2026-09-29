@@ -31,6 +31,8 @@ For the standard forward-difference gradient on a unit grid, $\|\nabla\|^2\le8$ 
 
 This computes the [[Total Variation]] prox exactly, without smoothing. It can be used as the regulariser step in [[ADMM]].
 
+**In ModularEIT.jl:** [`prox!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.prox!), [`TotalVariationRegularizer`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.TotalVariationRegularizer).
+
 ## References
 
 1. A. Chambolle, T. Pock (2011). *A First-Order Primal-Dual Algorithm for Convex Problems with Applications to Imaging*. J. Math. Imaging Vis. 40, 120–145. [doi:10.1007/s10851-010-0251-1](https://doi.org/10.1007/s10851-010-0251-1)

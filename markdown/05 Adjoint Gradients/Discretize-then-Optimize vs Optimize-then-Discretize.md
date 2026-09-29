@@ -24,6 +24,8 @@ Both gradients come from the same assembled quantity. The DTO gradient is the du
 
 DTO gradients make line searches and quasi-Newton methods behave consistently, because they are exact derivatives of the function being minimised. OTD gradients are mesh-independent approximations of the true gradient (see [[Gradient Representation and the Riesz Map]]).
 
+**In ModularEIT.jl:** [`CoefficientGradient`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.CoefficientGradient), [`L2Gradient`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.L2Gradient).
+
 ## References
 
 1. M. D. Gunzburger (2002). *Perspectives in Flow Control and Optimization*. SIAM. [doi:10.1137/1.9780898718720](https://doi.org/10.1137/1.9780898718720)

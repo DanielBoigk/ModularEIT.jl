@@ -23,6 +23,8 @@ Regularisation can also be **implicit**: early stopping of iterative methods, re
 
 The objective is minimised with gradient-based methods. Gradients come from the [[Adjoint State Method]], and minimisation uses [[Gauss-Newton Method|Gauss–Newton]], [[L-BFGS-B]] or splitting schemes such as [[ADMM]].
 
+**In ModularEIT.jl:** [`RegularizedObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.RegularizedObjective), [`minimize`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.minimize).
+
 ## References
 
 1. H. W. Engl, M. Hanke, A. Neubauer (1996). *Regularization of Inverse Problems*. Kluwer. [doi:10.1007/978-94-009-1740-8](https://doi.org/10.1007/978-94-009-1740-8)

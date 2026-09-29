@@ -42,6 +42,8 @@ Two solves per pattern give the full gradient. With a regulariser, add $\beta\na
 
 This is the continuous analogue of reverse-mode automatic differentiation (see [[Automatic Differentiation vs Adjoint Methods]]).
 
+**In ModularEIT.jl:** [`AdjointStateObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.AdjointStateObjective), [`value_and_gradient!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.value_and_gradient!).
+
 ## References
 
 1. R.-E. Plessix (2006). *A review of the adjoint-state method for computing the gradient of a functional with geophysical applications*. Geophys. J. Int. 167(2), 495–503. [doi:10.1111/j.1365-246X.2006.02978.x](https://doi.org/10.1111/j.1365-246X.2006.02978.x)

@@ -15,6 +15,8 @@ and choose $\mathcal M$ as small as possible: sort the cells by decreasing $\eta
 
 **Choice of $\theta$.** A small $\theta$ (0.2–0.5) refines few cells per step. The meshes are nearly optimal, but many solve–estimate cycles are needed. A large $\theta$ approaches uniform refinement. With several goals, for example forward accuracy and conductivity features in EIT (see [[Adaptive Meshing in EIT]]), the indicators can be combined before marking, or marked separately and the marked sets merged.
 
+**In ModularEIT.jl:** [`dorfler_marking`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.dorfler_marking).
+
 ## References
 
 1. W. Dörfler (1996). *A Convergent Adaptive Algorithm for Poisson's Equation*. SIAM J. Numer. Anal. 33(3), 1106–1124. [doi:10.1137/0733054](https://doi.org/10.1137/0733054)

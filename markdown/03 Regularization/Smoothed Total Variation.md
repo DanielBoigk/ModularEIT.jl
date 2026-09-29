@@ -32,6 +32,8 @@ In a finite element space this is assembled as the vector $\big(\int_\Omega \fra
 
 **Choosing $\varepsilon$.** If $\varepsilon$ is too large, the result looks like $H^1$-[[Tikhonov Regularization]] and edges blur. If it is too small, the problem becomes stiff and optimisers slow down. Continuation, decreasing $\varepsilon$ during the iterations, is common.
 
+**In ModularEIT.jl:** [`TotalVariationRegularizer`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.TotalVariationRegularizer), [`total_variation`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.total_variation).
+
 ## References
 
 1. P. Charbonnier, L. Blanc-Féraud, G. Aubert, M. Barlaud (1997). *Deterministic edge-preserving regularization in computed imaging*. IEEE Trans. Image Process. 6(2), 298–311. [doi:10.1109/83.551699](https://doi.org/10.1109/83.551699)

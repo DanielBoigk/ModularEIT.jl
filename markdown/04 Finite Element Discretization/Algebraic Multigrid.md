@@ -16,6 +16,8 @@ aliases: [AMG]
 
 On uniform rectangle grids, a transform-based preconditioner without σ-dependent setup is an alternative; see [[Fast Solvers on Rectangular Domains]].
 
+**In ModularEIT.jl:** [`AMGPreconditioner`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.AMGPreconditioner).
+
 ## References
 
 1. J. W. Ruge, K. Stüben (1987). *Algebraic Multigrid*. In: Multigrid Methods, SIAM Frontiers in Applied Mathematics, 73–130. [doi:10.1137/1.9781611971057.ch4](https://doi.org/10.1137/1.9781611971057.ch4)

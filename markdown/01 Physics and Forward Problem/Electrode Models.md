@@ -14,6 +14,8 @@ Cheng et al. (1989) showed experimentally that only the CEM matches measured dat
 
 **Injection versus measurement.** Current-carrying electrodes and voltage-measuring electrodes need not coincide. On an electrode that carries current, the measured voltage contains the contact voltage drop $z_\ell I_\ell/|e_\ell|$, which only the CEM describes. On electrodes without current, all models agree closely. Which model is adequate therefore depends on the [[Measurement Protocols|measurement protocol]]. The finite element versions of all models are collected in [[Discrete Electrode Models]].
 
+**In ModularEIT.jl:** [`ContinuumModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.ContinuumModel), [`PointElectrodeModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.PointElectrodeModel), [`GapModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.GapModel), [`CompleteElectrodeModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.CompleteElectrodeModel).
+
 ## References
 
 1. K.-S. Cheng, D. Isaacson, J. C. Newell, D. G. Gisser (1989). *Electrode models for electric current computed tomography*. IEEE Trans. Biomed. Eng. 36(9), 918–924. [doi:10.1109/10.35300](https://doi.org/10.1109/10.35300)

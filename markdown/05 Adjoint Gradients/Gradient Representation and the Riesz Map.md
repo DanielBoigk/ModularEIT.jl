@@ -25,6 +25,8 @@ The Euclidean gradient depends on the mesh: small cells get small entries. The $
 
 **Sobolev gradients.** The $H^1$ representative is a smoothed $L^2$ gradient: it solves $(I-\alpha\Delta)\nabla_{H^1}\hat J = \nabla_{L^2}\hat J$. It acts as a preconditioner and an [[Implicit Regularization|implicit regulariser]], suppressing high-frequency updates. Quasi-Newton methods such as [[L-BFGS]] should be initialised with the metric in which the problem is posed, for example $H_0 = M^{-1}$.
 
+**In ModularEIT.jl:** [`CoefficientGradient`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.CoefficientGradient), [`L2Gradient`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.L2Gradient), [`riesz_map!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.riesz_map!).
+
 ## References
 
 1. J. W. Neuberger (2010). *Sobolev Gradients and Differential Equations*, 2nd ed. Springer LNM 1670. [doi:10.1007/978-3-642-04041-2](https://doi.org/10.1007/978-3-642-04041-2)

@@ -43,6 +43,8 @@ two contractions with the [[Conductivity Tensor]]. The cross term $\mathbf x_N^\
 
 **Relaxation and regularisation.** Minimising sequences of the unregularised functional can oscillate finer and finer. Kohn and Vogelius studied its relaxation (homogenisation), which leads to anisotropic, non-unique limits (see [[Anisotropic Conductivities]]). In practice the unrelaxed functional is used with bounds $\sigma_{\min}\le\sigma\le\sigma_{\max}$ and an explicit regulariser. Kohn and McKenney reported that early termination has a desirable smoothing effect.
 
+**In ModularEIT.jl:** [`KohnVogeliusObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.KohnVogeliusObjective).
+
 ## References
 
 1. R. V. Kohn, M. Vogelius (1987). *Relaxation of a variational method for impedance computed tomography*. Comm. Pure Appl. Math. 40(6), 745–777. [doi:10.1002/cpa.3160400605](https://doi.org/10.1002/cpa.3160400605)

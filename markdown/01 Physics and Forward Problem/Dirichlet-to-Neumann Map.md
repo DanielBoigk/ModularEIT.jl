@@ -31,6 +31,8 @@ Key facts, proved in [[Properties of the Boundary Operators]]:
 
 Recovering $\gamma$ from $\Lambda_\gamma$ is the [[Calderón Problem]].
 
+**In ModularEIT.jl:** [`forward_dirichlet`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_dirichlet).
+
 ## References
 
 1. A. P. Calderón (1980/2006). *On an inverse boundary value problem*. Reprinted in Comput. Appl. Math. 25(2–3), 133–138. [doi:10.1590/S0101-82052006000200002](https://doi.org/10.1590/S0101-82052006000200002)

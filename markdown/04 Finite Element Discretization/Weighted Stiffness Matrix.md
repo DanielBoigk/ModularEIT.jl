@@ -28,6 +28,8 @@ then scatter into the global sparse matrix (see [[Numerical Quadrature and Assem
 
 Every reconstruction iteration reassembles $L_\sigma$ for the current guess $\sigma$ and then solves the state and adjoint systems with it (see [[Adjoint State Method]]).
 
+**In ModularEIT.jl:** [`assemble_weighted_stiffness!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.assemble_weighted_stiffness!), [`ConductivityTensor`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.ConductivityTensor).
+
 ## References
 
 1. S. C. Brenner, L. R. Scott (2008). *The Mathematical Theory of Finite Element Methods*, 3rd ed. Springer. [doi:10.1007/978-0-387-75934-0](https://doi.org/10.1007/978-0-387-75934-0)

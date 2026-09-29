@@ -15,6 +15,8 @@ The update keeps $H$ positive definite as long as $y_k^\top s_k>0$, which a Wolf
 
 **For EIT.** It needs only objective values and gradients, one state and one adjoint solve per pattern and evaluation (see [[Adjoint State Method]]). Curvature is learned along the way. It usually converges much faster than steepest descent, with superlinear local convergence. For bound constraints use [[L-BFGS-B]].
 
+**In ModularEIT.jl:** [`LBFGS`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.LBFGS).
+
 ## References
 
 1. D. C. Liu, J. Nocedal (1989). *On the limited memory BFGS method for large scale optimization*. Math. Program. 45, 503–528. [doi:10.1007/BF01589116](https://doi.org/10.1007/BF01589116)

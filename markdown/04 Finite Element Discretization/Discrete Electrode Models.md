@@ -48,6 +48,8 @@ $$
 
 $(A\,\mathbf x)_B$ is the residual of the discrete equation on the Dirichlet nodes, the variationally consistent discrete normal current. The matrix $I\mapsto U$ inverts $U\mapsto I$ whenever both problems describe the same physics (continuum, point, CEM). The map $U\mapsto I$ is the Schur complement $A_{BB}-A_{BF}A_{FF}^{-1}A_{FB}$, a discrete [[Dirichlet-to-Neumann Map]] (see [[Discrete Boundary Operator]]).
 
+**In ModularEIT.jl:** [`ForwardModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.ForwardModel), [`ContinuumModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.ContinuumModel), [`PointElectrodeModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.PointElectrodeModel), [`GapModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.GapModel), [`CompleteElectrodeModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.CompleteElectrodeModel).
+
 ## References
 
 1. E. Somersalo, M. Cheney, D. Isaacson (1992). *Existence and Uniqueness for Electrode Models for Electric Current Computed Tomography*. SIAM J. Appl. Math. 52(4), 1023–1040. [doi:10.1137/0152060](https://doi.org/10.1137/0152060)

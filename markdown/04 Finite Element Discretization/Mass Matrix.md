@@ -23,6 +23,8 @@ For $u_h = \sum u_i\varphi_i$ and $v_h = \sum v_i\varphi_i$: $(u_h,v_h)_{L^2} = 
 
 Since $M$ is fixed for a given mesh, a sparse Cholesky factorisation is computed once and reused.
 
+**In ModularEIT.jl:** [`assemble_mass!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.assemble_mass!), [`FEMatrices`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.FEMatrices).
+
 ## References
 
 1. S. C. Brenner, L. R. Scott (2008). *The Mathematical Theory of Finite Element Methods*, 3rd ed. Springer. [doi:10.1007/978-0-387-75934-0](https://doi.org/10.1007/978-0-387-75934-0)

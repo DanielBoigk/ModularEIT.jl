@@ -17,7 +17,7 @@ value_and_gradient!
 
 ## Adjoint-state least squares
 
-Theory: wiki articles *Adjoint State Method* and *Adjoint Method for the Dirichlet Problem*.
+Theory: wiki articles [Adjoint State Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-State-Method) and [Adjoint Method for the Dirichlet Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-Method-for-the-Dirichlet-Problem).
 
 ```@docs
 AdjointStateObjective
@@ -28,7 +28,7 @@ n_residual
 
 ## Kohn–Vogelius
 
-Theory: wiki article *Kohn-Vogelius Functional*.
+Theory: wiki article [Kohn-Vogelius Functional](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Kohn-Vogelius-Functional).
 
 ```@docs
 KohnVogeliusObjective
@@ -50,6 +50,20 @@ WeightedSquaredEuclidean
 AbstractEITProblem
 AbstractSolutionState
 ```
+
+## Wiki articles
+
+Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
+
+- [Linearized EIT and the Sensitivity Kernel](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Linearized-EIT-and-the-Sensitivity-Kernel)
+- [Data Fidelity Terms](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Data-Fidelity-Terms)
+- [Adjoint State Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-State-Method)
+- [State Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/State-Equation)
+- [Adjoint Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-Equation)
+- [Adjoint Method for the Dirichlet Problem](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-Method-for-the-Dirichlet-Problem)
+- [Functional Derivative of the Data Misfit](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Functional-Derivative-of-the-Data-Misfit)
+- [Kohn-Vogelius Functional](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Kohn-Vogelius-Functional)
+- [Gauss-Newton Method](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Gauss-Newton-Method)
 
 ## Index
 

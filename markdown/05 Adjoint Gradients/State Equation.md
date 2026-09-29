@@ -25,6 +25,8 @@ Testing with $\delta\lambda\equiv1$ gives the compatibility condition $\int_\Ome
 
 Solving the state equations for all [[Current Patterns]] already gives the objective value $J(u(\sigma))$. The gradient additionally needs the [[Adjoint Equation]].
 
+**In ModularEIT.jl:** [`forward_neumann`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.forward_neumann), [`AdjointStateObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.AdjointStateObjective).
+
 ## References
 
 1. M. Hinze, R. Pinnau, M. Ulbrich, S. Ulbrich (2009). *Optimization with PDE Constraints*. Springer. [doi:10.1007/978-1-4020-8839-1](https://doi.org/10.1007/978-1-4020-8839-1)

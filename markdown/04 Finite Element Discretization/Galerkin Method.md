@@ -33,6 +33,8 @@ The approximation error of the space therefore controls the discretisation error
 
 In an EIT reconstruction the Galerkin solve is the inner step of each iteration (see [[Iterative Reconstruction Loop]]).
 
+**In ModularEIT.jl:** [`FerriteDiscretization`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.FerriteDiscretization).
+
 ## References
 
 1. S. C. Brenner, L. R. Scott (2008). *The Mathematical Theory of Finite Element Methods*, 3rd ed. Springer. [doi:10.1007/978-0-387-75934-0](https://doi.org/10.1007/978-0-387-75934-0)

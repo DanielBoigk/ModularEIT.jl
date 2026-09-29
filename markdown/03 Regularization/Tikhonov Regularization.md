@@ -34,6 +34,8 @@ If the proximity term is measured in the $L^2(\Omega)$ norm $\|z-y\|_M^2$, the s
 
 In the linearised setting, the Tikhonov solution of $J\delta = r$ is $\delta = (J^\top J + \beta L^\top L)^{-1}J^\top r$. This is the same system that appears in the [[Levenberg-Marquardt Method]].
 
+**In ModularEIT.jl:** [`TikhonovRegularizer`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.TikhonovRegularizer).
+
 ## References
 
 1. A. N. Tikhonov (1963). *On the solution of ill-posed problems and the method of regularization*. Dokl. Akad. Nauk SSSR 151(3), 501–504 (English transl.: Soviet Math. Dokl. 4, 1035–1038). [mathnet.ru/eng/dan28329](https://www.mathnet.ru/eng/dan28329)

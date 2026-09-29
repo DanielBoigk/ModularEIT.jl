@@ -39,6 +39,8 @@ The resulting *electrode NtD matrix* $I\mapsto U$ is symmetric positive definite
 
 Integrating the second condition over $e_\ell$ gives $U_\ell = |e_\ell|^{-1}\int_{e_\ell}u\,\mathrm ds + z_\ell I_\ell/|e_\ell|$: the voltage of a current-carrying electrode includes the contact voltage drop (see [[Measurement Protocols]]). The finite element system is derived in [[Discrete Electrode Models]].
 
+**In ModularEIT.jl:** [`CompleteElectrodeModel`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.CompleteElectrodeModel).
+
 ## References
 
 1. E. Somersalo, M. Cheney, D. Isaacson (1992). *Existence and Uniqueness for Electrode Models for Electric Current Computed Tomography*. SIAM J. Appl. Math. 52(4), 1023–1040. [doi:10.1137/0152060](https://doi.org/10.1137/0152060)

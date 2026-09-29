@@ -33,6 +33,8 @@ return z
 
 **Why split?** The expensive, nonconvex physics and the cheap or non-smooth prior are handled by the tools best suited to each. The regulariser can be swapped, for example for [[Plug-and-Play Priors|a learned denoiser]], without touching the PDE code. The inner proximal problem only needs to be solved approximately; inexact ADMM tolerates this as long as the errors are summable.
 
+**In ModularEIT.jl:** [`ADMM`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.ADMM).
+
 ## References
 
 1. S. Boyd, N. Parikh, E. Chu, B. Peleato, J. Eckstein (2011). *Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers*. Found. Trends Mach. Learn. 3(1), 1–122. [doi:10.1561/2200000016](https://doi.org/10.1561/2200000016)

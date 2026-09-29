@@ -26,11 +26,19 @@ makedocs(
 # The theory wiki (Obsidian vault in `markdown/`) is rendered with Quartz from `site/`
 # into `build/wiki/`, so it is deployed together with the API docs.
 # Set BUILD_WIKI=false to skip this step (e.g. when Node.js is not installed).
-if get(ENV, "BUILD_WIKI", "true") != "false"
+build_wiki = get(ENV, "BUILD_WIKI", "true") != "false"
+if build_wiki
     site = joinpath(@__DIR__, "..", "site")
     isdir(joinpath(site, "node_modules")) || run(Cmd(`npm ci`; dir=site))
     run(Cmd(`npx quartz build -d ../markdown -o $(joinpath(@__DIR__, "build", "wiki"))`; dir=site))
 end
+
+# The API pages link to wiki articles and the wiki articles to docstrings; fail before deploying
+# if any target is missing.
+include("crosslinks.jl")
+check_crosslinks(docs_src = joinpath(@__DIR__, "src"), docs_build = joinpath(@__DIR__, "build"),
+                 vault = joinpath(@__DIR__, "..", "markdown"),
+                 wiki_build = build_wiki ? joinpath(@__DIR__, "build", "wiki") : nothing)
 
 deploydocs(
     repo="github.com/DanielBoigk/ModularEIT.jl.git",

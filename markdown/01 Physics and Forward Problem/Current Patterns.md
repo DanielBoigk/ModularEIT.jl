@@ -17,6 +17,8 @@ A **current pattern** is a boundary current $g$ with $\int_{\partial\Omega} g\,\
 
 **Optimal patterns.** Isaacson (1986) showed that the patterns that best *distinguish* two conductivities $\gamma_1,\gamma_2$ are the eigenfunctions of $\mathcal R_{\gamma_1}-\mathcal R_{\gamma_2}$ with the largest eigenvalues. For rotationally symmetric perturbations of a disc, these are exactly the trigonometric patterns. In practice one can compute them from data through the SVD of an estimated boundary operator (see [[Truncated SVD Regularization]]).
 
+**In ModularEIT.jl:** [`trigonometric_patterns`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.trigonometric_patterns), [`pattern_svd`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.pattern_svd).
+
 ## References
 
 1. D. Isaacson (1986). *Distinguishability of Conductivities by Electric Current Computed Tomography*. IEEE Trans. Med. Imaging 5(2), 91–95. [doi:10.1109/TMI.1986.4307752](https://doi.org/10.1109/TMI.1986.4307752)

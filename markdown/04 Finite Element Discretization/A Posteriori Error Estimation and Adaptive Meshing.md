@@ -23,6 +23,8 @@ where the second term contains the jumps of the normal flux across interior face
 
 **In EIT.** Errors concentrate near electrodes, where currents are singular at the electrode edges, and at conductivity jumps. [[Goal-Oriented Error Estimation|Goal-oriented (dual-weighted residual) estimators]], which weight residuals with the adjoint solution, target exactly the error in the measured boundary voltages. See [[Adaptive Meshing in EIT]].
 
+**In ModularEIT.jl:** [`AdaptiveMesh`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.AdaptiveMesh), [`residual_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.residual_indicator).
+
 ## References
 
 1. M. Ainsworth, J. T. Oden (2000). *A Posteriori Error Estimation in Finite Element Analysis*. Wiley. [doi:10.1002/9781118032824](https://doi.org/10.1002/9781118032824)

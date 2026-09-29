@@ -25,6 +25,8 @@ The prior is never written down; it is defined implicitly by the denoiser.
 
 The diffusion-model analogue is [[DiffPIR]]. A related explicit construction is [[Regularization by Denoising]].
 
+**In ModularEIT.jl:** [`ProximalMap`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.ProximalMap), [`ADMM`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.ADMM).
+
 ## References
 
 1. S. V. Venkatakrishnan, C. A. Bouman, B. Wohlberg (2013). *Plug-and-Play priors for model based reconstruction*. IEEE GlobalSIP 2013, 945–948. [doi:10.1109/GlobalSIP.2013.6737048](https://doi.org/10.1109/GlobalSIP.2013.6737048)

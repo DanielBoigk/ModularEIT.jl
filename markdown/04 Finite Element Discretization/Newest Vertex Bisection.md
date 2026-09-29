@@ -13,6 +13,8 @@ aliases: [NVB, Bisection refinement]
 
 **Comparison with quadtrees.** Quadtree refinement of quadrilaterals keeps a Cartesian structure, well suited to pixel images. It needs hanging-node constraints and a 2:1 balance. Bisection of triangles gives conforming meshes and follows curved boundaries and electrodes better (see [[Adaptive Meshing in EIT]]).
 
+**In ModularEIT.jl:** [`AdaptiveMesh`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.AdaptiveMesh), [`refine_mesh!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.refine_mesh!).
+
 ## References
 
 1. W. F. Mitchell (1991). *Adaptive refinement for arbitrary finite-element spaces with hierarchical bases*. J. Comput. Appl. Math. 36(1), 65–78. [doi:10.1016/0377-0427(91)90226-A](https://doi.org/10.1016/0377-0427(91)90226-A)

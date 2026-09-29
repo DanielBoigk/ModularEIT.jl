@@ -29,6 +29,8 @@ assembled cell by cell with quadrature (see [[Numerical Quadrature and Assembly]
 
 **Adding a regulariser.** If the objective contains $\beta\mathcal R(\sigma)$, the gradient becomes $\beta\nabla\mathcal R(\sigma) - \sum_i\nabla u_i\cdot\nabla\lambda_i$. The state and adjoint equations do not change.
 
+**In ModularEIT.jl:** [`value_and_gradient!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.value_and_gradient!), [`tensor_gradient!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.tensor_gradient!).
+
 ## References
 
 1. M. Hinze, R. Pinnau, M. Ulbrich, S. Ulbrich (2009). *Optimization with PDE Constraints*. Springer. [doi:10.1007/978-1-4020-8839-1](https://doi.org/10.1007/978-1-4020-8839-1)

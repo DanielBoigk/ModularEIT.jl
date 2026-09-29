@@ -23,6 +23,8 @@ For FEM stiffness matrices $\kappa = \mathcal O(h^{-2})$, so a preconditioner is
 
 For symmetric indefinite or singular systems use [[MINRES]]. For least-squares problems with rectangular matrices use [[LSQR]].
 
+**In ModularEIT.jl:** [`pbcg`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbcg).
+
 ## References
 
 1. M. R. Hestenes, E. Stiefel (1952). *Methods of conjugate gradients for solving linear systems*. J. Res. Natl. Bur. Stand. 49(6), 409–436. [doi:10.6028/jres.049.044](https://doi.org/10.6028/jres.049.044)

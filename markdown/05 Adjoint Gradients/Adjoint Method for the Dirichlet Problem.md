@@ -35,6 +35,8 @@ a contraction with the [[Conductivity Tensor]]. If the currents are compared in 
 
 **Jacobian.** Replacing $\mathbf r$ by the unit vectors of the measurements gives one Dirichlet solve per measurement. These are independent of the pattern $s$, so a single block solve gives the Jacobian for all patterns.
 
+**In ModularEIT.jl:** [`AdjointStateObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.AdjointStateObjective).
+
 ## References
 
 1. L. Borcea (2002). *Electrical impedance tomography*. Inverse Problems 18(6), R99–R136. [doi:10.1088/0266-5611/18/6/201](https://doi.org/10.1088/0266-5611/18/6/201)

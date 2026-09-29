@@ -22,6 +22,8 @@ If only per-pattern gradients $\nabla J_i$ are available (one adjoint solve per 
 
 **Properties.** Locally quadratic convergence for zero-residual problems and linear convergence for small residuals. The matrix $J^\top J$ is extremely ill-conditioned in EIT, so the step must be damped, which gives the [[Levenberg-Marquardt Method]]. With a regulariser $\beta\mathcal R$ one solves $(J^\top J+\beta\nabla^2\mathcal R)\delta = -(J^\top r+\beta\nabla\mathcal R)$.
 
+**In ModularEIT.jl:** [`GaussNewton`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.GaussNewton), [`residual_and_jacobian!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/objectives/#ModularEIT.residual_and_jacobian!).
+
 ## References
 
 1. J. Nocedal, S. J. Wright (2006). *Numerical Optimization*, 2nd ed., Ch. 10. Springer. [doi:10.1007/978-0-387-40065-5](https://doi.org/10.1007/978-0-387-40065-5)

@@ -38,6 +38,8 @@ For a general null space with basis $V$ and $k$ grounding functionals $W$ this b
 - The boundary misfit $\|u|_{\partial\Omega}-f\|^2$ is *not* invariant under $u\mapsto u+c$. Minimising it over the constant gives $\int_{\partial\Omega}(u+c-f) = 0$. If the measured voltages $f$ have zero boundary mean, grounding $u$ with zero boundary mean automatically picks the best-fitting constant, so the misfit only measures the physically meaningful voltage differences. Discretely, the constant that is removed from the voltage error should be taken with the same weights as the grounding: the $w$-weighted mean $\mathbf e - \mathbf 1\,w^\top\mathbf e/w^\top\mathbf 1$. With unit weights this reduces to the zero *sum* of boundary nodal values and the plain mean.
 - Grounding with the interior mean, or with the full nodal sum, adds a constant offset that depends on the conductivity in the interior. That spurious offset then appears in the data misfit.
 
+**In ModularEIT.jl:** [`boundary_grounding`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.boundary_grounding), [`reground`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.reground).
+
 ## References
 
 1. P. Bochev, R. B. Lehoucq (2005). *On the Finite Element Solution of the Pure Neumann Problem*. SIAM Review 47(1), 50–66. [doi:10.1137/S0036144503426074](https://doi.org/10.1137/S0036144503426074)
