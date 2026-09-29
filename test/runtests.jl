@@ -1,33 +1,35 @@
-# Test suite, grouped by component. Every file can also be run on its own, e.g.
-#     julia --project -e 'using Test; include("test/Galerkin/test_objectives.jl")'
+# Test suite, grouped by component (folders of test/). Run everything, or only some folders:
+#     julia --project -e 'using Pkg; Pkg.test()'
+#     julia --project -e 'using Pkg; Pkg.test(test_args = ["Images", "Data"])'
+# Pkg.test provides the test-only dependencies (FerriteGmsh, Statistics, JLArrays), which a
+# plain `include` of a test file in the package environment does not see.
 using Test
 
 const TESTDIR = @__DIR__
-runfolder(folder, files) = for f in files
-    include(joinpath(TESTDIR, folder, f))
-end
+const SELECTED = isempty(ARGS) ? nothing : Set(ARGS)
+
+const SUITES = [
+    ("linear solvers", "LinearSolvers", ["test_projected_block_cg.jl", "test_projected_cholesky.jl",
+                                         "test_krylov_ldl.jl", "test_gpu_agnostic.jl",
+                                         "test_dct_preconditioner.jl", "test_polar_preconditioner.jl"]),
+    ("Galerkin layer", "Galerkin", ["test_fem_assembly.jl", "test_electrode_models.jl",
+                                    "test_objectives.jl", "test_pattern_svd.jl", "test_conformal.jl"]),
+    ("adaptivity", "Adaptivity", ["test_adaptive_meshing.jl", "test_bisection.jl", "test_residual_estimator.jl"]),
+    ("optimization", "Optimization", ["test_regularizers.jl", "test_optimizers.jl", "test_proximal.jl"]),
+    ("data", "Data", ["test_noise.jl", "test_synthetic.jl"]),
+    ("images", "Images", ["test_images.jl"]),
+]
+
+SELECTED === nothing || issubset(SELECTED, [folder for (_, folder, _) in SUITES]) ||
+    error("unknown test folders $(setdiff(SELECTED, [folder for (_, folder, _) in SUITES]))")
 
 @testset "ModularEIT" begin
-    @testset "linear solvers" begin
-        runfolder("LinearSolvers", ["test_projected_block_cg.jl", "test_projected_cholesky.jl",
-                                    "test_krylov_ldl.jl", "test_gpu_agnostic.jl",
-                                    "test_dct_preconditioner.jl", "test_polar_preconditioner.jl"])
-    end
-    @testset "Galerkin layer" begin
-        runfolder("Galerkin", ["test_fem_assembly.jl", "test_electrode_models.jl",
-                               "test_objectives.jl", "test_pattern_svd.jl", "test_conformal.jl"])
-    end
-    @testset "adaptivity" begin
-        runfolder("Adaptivity", ["test_adaptive_meshing.jl", "test_bisection.jl",
-                                 "test_residual_estimator.jl"])
-    end
-    @testset "optimization" begin
-        runfolder("Optimization", ["test_regularizers.jl", "test_optimizers.jl", "test_proximal.jl"])
-    end
-    @testset "data" begin
-        runfolder("Data", ["test_noise.jl", "test_synthetic.jl"])
-    end
-    @testset "images" begin
-        runfolder("Images", ["test_images.jl"])
+    for (name, folder, files) in SUITES
+        (SELECTED === nothing || folder in SELECTED) || continue
+        @testset "$name" begin
+            for f in files
+                include(joinpath(TESTDIR, folder, f))
+            end
+        end
     end
 end

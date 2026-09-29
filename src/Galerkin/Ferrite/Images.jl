@@ -179,3 +179,88 @@ function _fill_nan(img::Matrix{Float64})
     end
     return img
 end
+
+# ---------------------------------------------------------------------------------------------
+# Unit images: fixed-size arrays with values in [0, 1], e.g. for learned priors and data sets.
+
+"""
+    UnitImage
+
+Result of [`unit_image`](@ref): `image` (`n × m`, values in `[0, 1]` inside the domain, row 1 at
+the top), `mask` (pixels whose centre lies in the domain), `bbox = (xmin, xmax, ymin, ymax)` of the
+pixel grid, `range = (lo, hi)` and `scale` (`:linear` or `:log`) of the value mapping. Together
+they allow the way back, [`from_unit_image`](@ref).
+"""
+struct UnitImage
+    image::Matrix{Float64}
+    mask::BitMatrix
+    bbox::NTuple{4, Float64}
+    range::NTuple{2, Float64}
+    scale::Symbol
+end
+
+"""
+    unit_image(disc, σ, n, m; bbox = nothing, pixels = :square, range = :auto, scale = :linear,
+               outside = 0.0, field = :σ)
+
+`n × m` array of the finite element function `σ` on a rectangle that contains the domain, scaled
+to `[0, 1]`:
+
+- `bbox`: the rectangle `(xmin, xmax, ymin, ymax)`; default: the bounding box of the mesh. With
+  `pixels = :square` its shorter side is widened symmetrically so that the pixels are square
+  (the domain keeps its aspect ratio); `pixels = :stretch` keeps the box.
+- `range`: `:auto` maps the smallest and largest value of `σ` to 0 and 1 (a constant `σ` maps
+  to 0); a fixed `(lo, hi)` gives the same scaling for a whole data set, values outside are
+  clamped.
+- `scale = :log` maps `log σ` linearly (for conductivities spanning orders of magnitude; needs
+  positive values).
+- `outside`: value of the pixels whose centre lies outside the domain (see the `mask`).
+
+Pixels are evaluated at their centres (see [`to_image`](@ref)). Returns a [`UnitImage`](@ref).
+"""
+function unit_image(d::FerriteDiscretization, σ::AbstractVector, n::Integer, m::Integer; bbox = nothing,
+                    pixels::Symbol = :square, range = :auto, scale::Symbol = :linear, outside::Real = 0.0,
+                    field::Symbol = :σ)
+    pixels in (:square, :stretch) || throw(ArgumentError("pixels must be :square or :stretch, got :$pixels"))
+    scale in (:linear, :log) || throw(ArgumentError("scale must be :linear or :log, got :$scale"))
+    box = bbox === nothing ? _bounding_box(d.grid) : NTuple{4, Float64}(bbox)
+    pixels === :square && (box = _square_pixel_box(box, n, m))
+    lo, hi = range === :auto ? extrema(σ) : Float64.(Tuple(range))
+    lo <= hi || throw(ArgumentError("range must satisfy lo ≤ hi"))
+    scale === :log && !(lo > 0 && all(>(0), σ)) &&
+        throw(ArgumentError("scale = :log needs positive values and a positive range"))
+    im = ImageMap(d, n, m; field, bbox = box)
+    img = to_image(im, σ; outside = NaN)
+    f(x) = scale === :log ? log(x) : x
+    a, b = f(lo), f(hi)
+    out = [im.inside[k] ? (b > a ? clamp((f(img[k]) - a) / (b - a), 0.0, 1.0) : 0.0) : Float64(outside)
+           for k in eachindex(img)]
+    return UnitImage(reshape(out, n, m), copy(im.inside), box, (Float64(lo), Float64(hi)), scale)
+end
+
+# widen the shorter side of the box (centred) so that its pixels are square
+function _square_pixel_box((xmin, xmax, ymin, ymax), n, m)
+    Δ = max((xmax - xmin) / m, (ymax - ymin) / n)
+    cx, cy = (xmin + xmax) / 2, (ymin + ymax) / 2
+    return (cx - Δ * m / 2, cx + Δ * m / 2, cy - Δ * n / 2, cy + Δ * n / 2)
+end
+
+"""
+    from_unit_image(disc, ui::UnitImage; field = :σ, method = :interpolate)
+    from_unit_image(disc, img, bbox, range; scale = :linear, field = :σ, method = :interpolate)
+
+Finite element coefficients from a unit image: the values are mapped back from `[0, 1]` to
+`range` (linearly or logarithmically) and sampled with [`from_image`](@ref) on the rectangle
+`bbox` (`method = :interpolate` or `:l2`). Pixels outside the domain are ignored. The inverse of
+[`unit_image`](@ref), exact on pixel-aligned meshes when no values were clamped.
+"""
+from_unit_image(d::FerriteDiscretization, ui::UnitImage; kwargs...) =
+    from_unit_image(d, ifelse.(ui.mask, ui.image, NaN), ui.bbox, ui.range; scale = ui.scale, kwargs...)
+
+function from_unit_image(d::FerriteDiscretization, img::AbstractMatrix, bbox, range; scale::Symbol = :linear,
+                         field::Symbol = :σ, method::Symbol = :interpolate)
+    scale in (:linear, :log) || throw(ArgumentError("scale must be :linear or :log, got :$scale"))
+    lo, hi = Float64.(Tuple(range))
+    back(v) = isnan(v) ? NaN : scale === :log ? exp(log(lo) + v * (log(hi) - log(lo))) : lo + v * (hi - lo)
+    return from_image(d, back.(img); field, bbox, method)
+end

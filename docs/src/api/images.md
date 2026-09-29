@@ -26,6 +26,26 @@ to_image
 from_image
 ```
 
+## Unit images
+
+Fixed-size arrays with values in ``[0, 1]``, for example as network inputs or for data sets: a
+rectangle that contains the domain (square pixels by default), a linear or logarithmic value
+scaling (automatic, or a fixed range for a whole data set), a fill value and a mask for the
+pixels outside the domain, and the way back to coefficients.
+
+```julia
+ui = unit_image(disc, σ, 64, 64)                            # auto range, square pixels, 0 outside
+ui = unit_image(disc, σ, 64, 64; range = (0.1, 10.0), scale = :log)
+ui.image, ui.mask, ui.bbox, ui.range
+σ_back = from_unit_image(disc, ui)                          # e.g. after denoising ui.image
+```
+
+```@docs
+UnitImage
+unit_image
+from_unit_image
+```
+
 ## Wiki articles
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):

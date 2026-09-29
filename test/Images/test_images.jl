@@ -86,4 +86,57 @@ using Test
         @test_throws ArgumentError from_image(disc, rand(4, 4); method = :foo)
         @test_throws ArgumentError ImageMap(FerriteDiscretization(generate_grid(Hexahedron, (1, 1, 1))), 4, 4)
     end
+
+    @testset "unit images: rectangle, [0, 1] scaling, round trip" begin
+        rng = MersenneTwister(12)
+        # pixel-aligned square mesh: the unit image and its inverse are exact
+        disc = FerriteDiscretization(generate_grid(Quadrilateral, (16, 16)))
+        σ = 0.5 .+ 2.5 .* rand(rng, ndofs_σ(disc))
+        ui = unit_image(disc, σ, 16, 16)
+        @test ui isa UnitImage
+        @test size(ui.image) == (16, 16) && all(ui.mask)
+        @test ui.bbox == (-1.0, 1.0, -1.0, 1.0)
+        @test ui.range == extrema(σ)
+        @test extrema(ui.image) == (0.0, 1.0)
+        @test from_unit_image(disc, ui) ≈ σ
+        # logarithmic scaling
+        uil = unit_image(disc, σ, 16, 16; scale = :log)
+        @test extrema(uil.image) == (0.0, 1.0)
+        @test uil.image ≈ (log.(to_image(disc, σ, 16, 16)) .- log(minimum(σ))) ./ log(maximum(σ) / minimum(σ))
+        @test from_unit_image(disc, uil) ≈ σ
+        # fixed range (consistent scaling across a data set): values outside are clamped
+        uif = unit_image(disc, σ, 16, 16; range = (1.0, 2.0))
+        @test uif.range == (1.0, 2.0)
+        @test all(0 .<= uif.image .<= 1)
+        @test uif.image ≈ clamp.((to_image(disc, σ, 16, 16) .- 1.0) ./ 1.0, 0, 1)
+
+        # rectangular domain, square array: the rectangle is widened (centred) to square pixels
+        rect = FerriteDiscretization(generate_grid(Quadrilateral, (12, 4), Vec(0.0, 0.0), Vec(3.0, 1.0)))
+        σr = 1 .+ rand(rng, ndofs_σ(rect))
+        ur = unit_image(rect, σr, 30, 30; outside = -1.0)
+        @test ur.bbox == (0.0, 3.0, -1.0, 2.0)
+        @test count(ur.mask) == 30 * 10                       # the middle 10 rows cover the domain
+        @test all(ur.image[.!ur.mask] .== -1.0)
+        @test all(0 .<= ur.image[ur.mask] .<= 1)
+        # ... or stretched to the array (non-square pixels, no outside pixels)
+        us = unit_image(rect, σr, 30, 30; pixels = :stretch)
+        @test us.bbox == (0.0, 3.0, 0.0, 1.0) && all(us.mask)
+        # pixel-aligned rectangle with square pixels: exact round trip
+        ua = unit_image(rect, σr, 4, 12)
+        @test ua.bbox == (0.0, 3.0, 0.0, 1.0)
+        @test from_unit_image(rect, ua) ≈ σr
+
+        # a disk: square box around it, zero outside
+        disk = FerriteDiscretization(polar_grid(6, 48))
+        ud = unit_image(disk, fill(2.0, ndofs_σ(disk)), 40, 40)
+        @test ud.bbox[2] - ud.bbox[1] ≈ ud.bbox[4] - ud.bbox[3]
+        @test all(ud.image[.!ud.mask] .== 0)
+        @test 0.7 < count(ud.mask) / 1600 < π / 4 + 0.02           # ≈ disk / square
+        @test all(ud.image[ud.mask] .== 0)                          # constant σ maps to 0
+
+        @test_throws ArgumentError unit_image(disc, σ, 16, 16; scale = :cubic)
+        @test_throws ArgumentError unit_image(disc, σ, 16, 16; pixels = :round)
+        @test_throws ArgumentError unit_image(disc, σ .- 1, 16, 16; scale = :log)
+        @test_throws ArgumentError unit_image(disc, σ, 16, 16; range = (2.0, 1.0))
+    end
 end
