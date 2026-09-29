@@ -6,6 +6,18 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Discrete Cosine Transform</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</guid>
+    <description><![CDATA[ On a uniform grid, the finite element matrices of Neumann problems are diagonalised by discrete cosine transforms (DCT). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 13:47:49 GMT</pubDate>
+  </item><item>
+    <title>Fast Solvers on Rectangular Domains</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</guid>
+    <description><![CDATA[ On a rectangle discretised by a uniform grid (for example the pixel-aligned bilinear meshes of Pixel Images and Finite Element Functions), the Discrete Cosine Transform inverts the constant-coefficient Neumann operator in O(n\log n) operations. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 13:47:49 GMT</pubDate>
+  </item><item>
     <title>Choosing the Regularization Parameter</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</guid>
@@ -52,18 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
     <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Current Patterns</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns</guid>
-    <description><![CDATA[ A current pattern is a boundary current g with \int_{\partial\Omega} g\,\mathrm ds = 0 (or electrode currents with \sum_\ell I_\ell = 0). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
-  </item><item>
-    <title>Dirichlet Problem</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</guid>
-    <description><![CDATA[ In the Dirichlet problem the voltage on the boundary is prescribed. ]]></description>
     <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item>
     </channel>
