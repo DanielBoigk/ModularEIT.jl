@@ -81,7 +81,8 @@ Gauss–Newton method with truncated-SVD steps: at each iterate, the step uses o
 singular modes of the Jacobian (see [`jacobian_svd`](@ref)), those with index `≤ rank` and
 singular value `≥ rtol · s₁` (at least one of the two must be given). The step is the
 minimum-norm step in the metric `Diagonal(weights)`, followed by projected backtracking; bounds
-are handled on the free set.
+are handled on the free set. `weights = :sensitivity` uses the column norms `‖J eⱼ‖` of the
+current Jacobian (floored), which keeps the steps from concentrating at the electrodes.
 
 Truncation is the regulariser: the objective must be a pure least-squares objective (no
 [`RegularizedObjective`](@ref)). Stop by the discrepancy principle, `ftarget =
@@ -97,7 +98,8 @@ function TruncatedGaussNewton(; rank = nothing, rtol = nothing, weights = nothin
     rank === nothing && rtol === nothing && throw(ArgumentError("give a rank, an rtol or both"))
     rank === nothing || rank >= 1 || throw(ArgumentError("rank must be positive, got $rank"))
     rtol === nothing || 0 <= rtol < 1 || throw(ArgumentError("rtol must lie in [0, 1), got $rtol"))
-    weights === nothing || all(>(0), weights) || throw(ArgumentError("weights must be positive"))
+    weights === nothing || weights === :sensitivity || (weights isa AbstractVector && all(>(0), weights)) ||
+        throw(ArgumentError("weights must be nothing, :sensitivity or a positive vector"))
     return TruncatedGaussNewton(rank === nothing ? typemax(Int) : Int(rank),
                                 rtol === nothing ? 0.0 : Float64(rtol), weights)
 end
@@ -107,7 +109,7 @@ function _workspace(m::TruncatedGaussNewton, obj, n)
         throw(ArgumentError("TruncatedGaussNewton regularizes by truncation; use a pure least-squares objective " *
                             "(or GaussNewton for penalties)"))
     _require_least_squares(obj, "TruncatedGaussNewton")
-    m.weights === nothing || length(m.weights) == n || throw(DimensionMismatch("weights need length $n"))
+    m.weights isa AbstractVector && length(m.weights) != n && throw(DimensionMismatch("weights need length $n"))
     return _workspace(GaussNewton(; damping = :linesearch), obj, n)
 end
 
@@ -119,7 +121,11 @@ function _step!(st, ws::_GaussNewtonWorkspace, m::TruncatedGaussNewton, obj, box
     _binding!(ws.mask, st.σ, st.g, box, _binding_tolerance(st.σ, gnorm))
     F = findall(!, ws.mask)
     isempty(F) && return false
-    U, s, V = _weighted_svd(ws.Jm[:, F], m.weights === nothing ? nothing : m.weights[F])
+    JF = ws.Jm[:, F]
+    w = m.weights === nothing ? nothing :
+        m.weights === :sensitivity ? (d = _sensitivities(JF); max.(d, 1e-5 * max(maximum(d), floatmin()))) :
+        m.weights[F]
+    U, s, V = _weighted_svd(JF, w)
     isempty(s) || s[1] > 0 || return false
     k = min(m.rank, count(>=(m.rtol * s[1]), s), count(>(0), s))
     c = (U[:, 1:k]' * ws.r) ./ s[1:k]

@@ -3,7 +3,8 @@
 # Model Hessian H = JᵀJ + Σₖ αₖ Hₖ(σ) (Hₖ the Gauss–Newton Hessian of the regularizers), step on
 # the free set ℱ:
 #     (H + λD)_ℱℱ δ_ℱ = -g_ℱ
-# with damping matrix D (identity, Marquardt's diag(H) or a user matrix such as M_σ).
+# with damping matrix D (identity, Marquardt's diag(H), the sensitivities diag(‖J eⱼ‖) or a user
+# matrix such as M_σ).
 #
 # Levenberg–Marquardt (`damping = :lm`) adapts λ with the gain ratio
 #     ρ = (J(σ) - J(σ + δ)) / (-gᵀδ - ½ δᵀHδ)
@@ -28,8 +29,11 @@ wrapped in a [`RegularizedObjective`](@ref); regularizers contribute their
   diagonal entry of `JᵀJ + ΣαH`, default `1e-3`);
 - `damping = :linesearch`: fixed damping `λ` (default `1e-8`, relative) and projected Armijo
   backtracking.
-- `scaling`: damping matrix `D`: `:identity`, `:marquardt` (`diag(JᵀJ + ΣαH)`, floored) or a
-  symmetric positive definite matrix (e.g. the σ mass matrix `FEMatrices(disc).M_σ`).
+- `scaling`: damping matrix `D`: `:identity`, `:marquardt` (`diag(JᵀJ + ΣαH)`, floored),
+  `:sensitivity` (`diag(‖J eⱼ‖)`, the column norms of the Jacobian, floored: the geometric mean
+  of the two, which damps the over-sensitive parameters near the electrodes without
+  over-amplifying the insensitive interior) or a symmetric positive definite matrix (e.g. the σ
+  mass matrix `FEMatrices(disc).M_σ`). Updated at every iterate.
 - `linear_solver`: `:dense` (form the n_σ × n_σ matrix), `:woodbury` (sparse Cholesky of
   `ΣαH + λD` and an m × m system for the m residuals) or `:auto`.
 """
@@ -44,8 +48,8 @@ function GaussNewton(; damping::Symbol = :lm, λ = nothing, scaling = :identity,
     damping in (:lm, :linesearch) || throw(ArgumentError("damping must be :lm or :linesearch, got :$damping"))
     linear_solver in (:auto, :dense, :woodbury) ||
         throw(ArgumentError("linear_solver must be :auto, :dense or :woodbury, got :$linear_solver"))
-    scaling isa AbstractMatrix || scaling in (:identity, :marquardt) ||
-        throw(ArgumentError("scaling must be :identity, :marquardt or a matrix"))
+    scaling isa AbstractMatrix || scaling in (:identity, :marquardt, :sensitivity) ||
+        throw(ArgumentError("scaling must be :identity, :marquardt, :sensitivity or a matrix"))
     λ = λ === nothing ? (damping === :lm ? 1e-3 : 1e-8) : Float64(λ)
     λ >= 0 || throw(ArgumentError("λ must be nonnegative"))
     return GaussNewton(damping, λ, scaling, linear_solver)
@@ -104,6 +108,9 @@ function _initialize!(st, ws::_GaussNewtonWorkspace, m::GaussNewton, obj, box)
     return st
 end
 
+# column norms ‖J eⱼ‖
+_sensitivities(J) = vec(sqrt.(sum(abs2, J; dims = 1)))
+
 # diag(JᵀJ + H_R)
 function _model_diagonal(ws)
     d = vec(sum(abs2, ws.Jm; dims = 1))
@@ -117,6 +124,10 @@ function _damping_matrix(m::GaussNewton, ws, F)
     elseif m.scaling === :marquardt
         d = _model_diagonal(ws)[F]
         floor_ = 1e-10 * max(maximum(d; init = 0.0), floatmin())
+        return spdiagm(0 => max.(d, floor_))
+    elseif m.scaling === :sensitivity
+        d = _sensitivities(ws.Jm)[F]
+        floor_ = 1e-5 * max(maximum(d; init = 0.0), floatmin())
         return spdiagm(0 => max.(d, floor_))
     else
         return sparse(m.scaling[F, F])

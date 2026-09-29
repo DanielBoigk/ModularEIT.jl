@@ -85,7 +85,11 @@ res.σ                       # reconstructed conductivity (one value per cell)
 
 A worked version with plots is the tutorial
 [Reconstructing a conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/tutorials/reconstruction/)
-(also as a Jupyter notebook); more in
+(also as a Jupyter notebook). The showcase
+[A landscape as conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/tutorials/showcase_landscape/)
+reconstructs a photograph from 32-electrode data: pixels as unknowns, the boundary-data SVD at
+the noise level, sensitivity-damped Levenberg–Marquardt and a map of what the data determine.
+More in
 [Getting Started](https://danielboigk.github.io/ModularEIT.jl/dev/getting_started/) and the
 [API documentation](https://danielboigk.github.io/ModularEIT.jl/dev/).
 

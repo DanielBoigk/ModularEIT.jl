@@ -63,6 +63,21 @@ end
         @test_throws ArgumentError TruncatedGaussNewton(; rtol = 2.0)
     end
 
+    @testset "sensitivity scaling" begin
+        # damping D = diag(‖A eⱼ‖): between the identity and Marquardt's diag(AᵀA)
+        d = vec(sqrt.(sum(abs2, A; dims = 1)))
+        λ = 1e-2
+        res = minimize(q, zeros(n), GaussNewton(; damping = :linesearch, λ, scaling = :sensitivity); maxiter = 1)
+        λabs = λ * maximum(d .^ 2) / maximum(d)          # relative to the largest diagonal entries
+        @test res.σ ≈ (A' * A + λabs * Diagonal(d)) \ (A' * b) rtol = 1e-8
+        # truncated steps in the sensitivity metric
+        r1 = minimize(q, zeros(n), TruncatedGaussNewton(; rank = 6, weights = :sensitivity); maxiter = 1)
+        r2 = minimize(q, zeros(n), TruncatedGaussNewton(; rank = 6, weights = d); maxiter = 1)
+        @test r1.σ ≈ r2.σ
+        @test_throws ArgumentError GaussNewton(; scaling = :foo)
+        @test_throws ArgumentError TruncatedGaussNewton(; rank = 2, weights = :foo)
+    end
+
     @testset "EIT: pixels, bounds, discrepancy stop" begin
         disc = FerriteDiscretization(generate_grid(Quadrilateral, (16, 16)))
         fm = ForwardModel(disc, CompleteElectrodeModel(angular_electrodes(disc, 16; coverage = 0.5), 0.1))
