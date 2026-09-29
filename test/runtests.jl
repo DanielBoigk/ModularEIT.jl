@@ -20,6 +20,9 @@ end
         runfolder("Adaptivity", ["test_adaptive_meshing.jl", "test_bisection.jl",
                                  "test_residual_estimator.jl"])
     end
+    @testset "optimization" begin
+        runfolder("Optimization", ["test_regularizers.jl", "test_optimizers.jl"])
+    end
     @testset "images" begin
         runfolder("Images", ["test_images.jl"])
     end

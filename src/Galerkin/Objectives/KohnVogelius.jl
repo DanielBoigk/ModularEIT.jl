@@ -116,3 +116,5 @@ boundary_error(obj::KohnVogeliusObjective) = obj.berr
 Contribution `½ ‖x_N,ₛ - x_D,ₛ‖²_A` of every pattern at the last evaluation.
 """
 pattern_values(obj::KohnVogeliusObjective) = obj.values
+
+_gradient_representation(obj::KohnVogeliusObjective) = obj.riesz

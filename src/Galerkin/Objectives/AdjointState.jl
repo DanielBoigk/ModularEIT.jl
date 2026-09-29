@@ -220,3 +220,5 @@ end
     k, j = @index(Global, NTuple)
     @inbounds W[k, j] = Z[rows[k], j] * x[cols[k]]
 end
+
+_gradient_representation(obj::AdjointStateObjective) = obj.riesz

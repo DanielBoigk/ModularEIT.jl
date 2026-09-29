@@ -60,6 +60,23 @@ function space, e.g. the L² gradient `M_σ⁻¹ ∂J/∂σ` ([`L2Gradient`](@re
 abstract type AbstractRieszMap end
 
 """
+    AbstractRegularizer
+
+A regularization functional `R(σ)` with value, coefficient gradient and a Gauss–Newton Hessian
+model, e.g. [`TikhonovRegularizer`](@ref) or [`TotalVariationRegularizer`](@ref). Added to a
+data objective by [`RegularizedObjective`](@ref).
+"""
+abstract type AbstractRegularizer end
+
+"""
+    AbstractOptimizer
+
+Minimization method for [`minimize`](@ref): [`GradientDescent`](@ref), [`LBFGS`](@ref),
+[`GaussNewton`](@ref).
+"""
+abstract type AbstractOptimizer end
+
+"""
     AbstractLinearSolver
 
 Choice of linear solver for the state, adjoint and Dirichlet systems:
@@ -71,14 +88,14 @@ abstract type AbstractLinearSolver end
     AbstractEITProblem
 
 A complete reconstruction problem (discretization, electrode model, data, current guess).
-Reserved for the optimisation layer.
+Reserved for a later reconstruction layer.
 """
 abstract type AbstractEITProblem end
 
 """
     AbstractSolutionState
 
-State of an iterative reconstruction (iterate, step sizes, histories). Reserved for the
-optimisation layer.
+State of an iterative reconstruction (iterate, step sizes, histories), e.g. the
+[`OptimizationState`](@ref) returned by [`minimize`](@ref).
 """
 abstract type AbstractSolutionState end

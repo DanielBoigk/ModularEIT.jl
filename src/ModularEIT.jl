@@ -19,6 +19,7 @@ export AbstractLinearSolver, DirectSolver, BlockCGSolver
 
 export AbstractDiscretization, AbstractElectrodeModel, AbstractForwardModel, AbstractObjective
 export AbstractMisfit, AbstractRieszMap, AbstractEITProblem, AbstractSolutionState
+export AbstractRegularizer, AbstractOptimizer
 
 export FerriteDiscretization, ndofs_u, ndofs_σ
 export FEMatrices, assemble_mass, assemble_mass!, assemble_stiffness, assemble_stiffness!
@@ -38,6 +39,8 @@ export residual_indicator, flux_recovery_indicator, goal_oriented_indicator, jum
 export SquaredEuclidean, WeightedSquaredEuclidean
 export AdjointStateObjective, KohnVogeliusObjective, objective_value, value_and_gradient!
 export residual!, residual_and_jacobian!, n_residual, boundary_error, pattern_values
+export TikhonovRegularizer, TotalVariationRegularizer, RegularizedObjective, gauss_newton_hessian
+export minimize, OptimizationState, GradientDescent, LBFGS, GaussNewton
 
 
 include("AbstractTypes.jl")
@@ -49,9 +52,14 @@ include("LinearSolvers/ProjectedBlockMinres.jl")
 include("LinearSolvers/SolverInterface.jl")
 
 include("Galerkin/ForwardModel.jl")
+include("Galerkin/Regularizers.jl")
 include("Galerkin/Ferrite/Ferrite.jl")
 include("Galerkin/Objectives/Misfits.jl")
 include("Galerkin/Objectives/AdjointState.jl")
 include("Galerkin/Objectives/KohnVogelius.jl")
+
+include("Optimization/Optimizers.jl")
+include("Optimization/FirstOrder.jl")
+include("Optimization/GaussNewton.jl")
 
 end # module ModularEIT
