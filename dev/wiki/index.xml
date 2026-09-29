@@ -6,65 +6,65 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Conformal Invariance of the Conductivity Equation</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</guid>
-    <description><![CDATA[ In two dimensions the Conductivity Equation is invariant under conformal maps. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
+    <title>Anatomy of an EIT Reconstruction</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Anatomy-of-an-EIT-Reconstruction</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Anatomy-of-an-EIT-Reconstruction</guid>
+    <description><![CDATA[ An iterative EIT reconstruction repeatedly compares simulated with measured data and improves the conductivity. It combines five exchangeable pieces. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Fast Solvers on Disk Domains</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</guid>
-    <description><![CDATA[ On a disk, the constant-coefficient Neumann problem separates in polar coordinates: Fourier modes in the angle, and one ordinary differential equation along the radius per mode. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
+    <title>Choosing a Linear Solver</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-a-Linear-Solver</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-a-Linear-Solver</guid>
+    <description><![CDATA[ The systems A(\sigma)X = B of EIT are sparse, symmetric and positive semidefinite. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Numerical Conformal Mapping</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping</guid>
-    <description><![CDATA[ By the Riemann mapping theorem, every simply connected domain \Omega\subsetneq\mathbb C is the image of the unit disk D under a conformal map \Phi. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
+    <title>Choosing an Optimizer</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-an-Optimizer</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-an-Optimizer</guid>
+    <description><![CDATA[ Which method minimises J(\sigma) = \Phi(\sigma)+\alpha R(\sigma) best depends mainly on two properties: whether the misfit \Phi is a sum of squares, and whether the regulariser R is smooth. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>ModularEIT Wiki</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
-    <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
+    <title>Classical and Learned Priors</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Classical-and-Learned-Priors</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Classical-and-Learned-Priors</guid>
+    <description><![CDATA[ Because EIT is severely ill-posed (see Stability of the Calderón Problem), prior knowledge about the conductivity determines what a reconstruction can show. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Fast Solvers on Rectangular Domains</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</guid>
-    <description><![CDATA[ On a rectangle discretised by a uniform grid (for example the pixel-aligned bilinear meshes of Pixel Images and Finite Element Functions), the Discrete Cosine Transform inverts the constant-coefficient Neumann operator in O(n\log n) operations. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 14:17:18 GMT</pubDate>
+    <title>From Physics to Linear Algebra</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/From-Physics-to-Linear-Algebra</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/From-Physics-to-Linear-Algebra</guid>
+    <description><![CDATA[ EIT starts with Maxwell’s equations and ends, in the computer, with sparse symmetric linear systems. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Discrete Cosine Transform</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</guid>
-    <description><![CDATA[ On a uniform grid, the finite element matrices of Neumann problems are diagonalised by discrete cosine transforms (DCT). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 13:47:49 GMT</pubDate>
+    <title>Overviews</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/</guid>
+    <description><![CDATA[ Short articles that connect the topics of the wiki. Each follows one thread through several chapters and links to the detailed articles along the way. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Choosing the Regularization Parameter</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</guid>
-    <description><![CDATA[ The parameter \beta in a variational objective balances data fit against prior. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+    <title>Applications of EIT</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Applications-of-EIT</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Applications-of-EIT</guid>
+    <description><![CDATA[ Electrical Impedance Tomography is used wherever conductivity contrasts show up and a cheap, fast, non-invasive measurement matters more than fine spatial resolution. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Spectral Sobolev Norms on Rectangles</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Spectral-Sobolev-Norms-on-Rectangles</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Spectral-Sobolev-Norms-on-Rectangles</guid>
-    <description><![CDATA[ The spectral construction of Discrete Fractional Sobolev Norms needs the eigenvectors of a pair of matrices (K, M). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+    <title>Complete Electrode Model</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complete-Electrode-Model</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complete-Electrode-Model</guid>
+    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Stopping Criteria</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria</guid>
-    <description><![CDATA[ Common rules for terminating a reconstruction: Discrepancy principle: stop when \|\mathcal F(\sigma_k)-y^\delta\|\le\tau\delta (\tau\gtrsim1, \delta the noise level). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+    <title>Complex Conductivity</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complex-Conductivity</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complex-Conductivity</guid>
+    <description><![CDATA[ Biological tissue both conducts and stores charge: cell membranes act as capacitors. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item><item>
-    <title>Inverse Crime</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</guid>
-    <description><![CDATA[ An inverse crime is committed when synthetic data are generated with the same numerical model that is later used for the reconstruction: same mesh, same element type, same discretisation of \sigma, no noise. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
+    <title>Conductivity Equation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Conductivity-Equation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Conductivity-Equation</guid>
+    <description><![CDATA[ Combining the steady-state Continuity Equation \nabla\cdot\mathbf J = 0 with Ohm’s law \mathbf J = -\gamma\nabla u gives the conductivity equation \nabla\cdot(\gamma\nabla u) = 0 \qquad \text{in } \Omega , for the electric potential u:\Omega\to\mathbb R in a bounded Lipschitz domain \Omega\subset\ma... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item>
     </channel>
   </rss>

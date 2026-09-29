@@ -1,472 +1,532 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Applications-of-EIT</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Anatomy-of-an-EIT-Reconstruction</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-a-Linear-Solver</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complex-Conductivity</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-an-Optimizer</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conductivity-Equation</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Classical-and-Learned-Priors</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</loc>
-    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/From-Physics-to-Linear-Algebra</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Continuity-Equation</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Applications-of-EIT</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complete-Electrode-Model</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-and-Thomson-Principles</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complex-Conductivity</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Conductivity-Equation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrical-Impedance-Tomography</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Continuity-Equation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Current-Patterns</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Forward-Map</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Electrical-Impedance-Tomography</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Gap-Model</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Electrode-Models</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Measurement-Protocols</loc>
-    <lastmod>2026-09-28T14:43:44.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Gap-Model</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Measurement-Protocols</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-to-Dirichlet-Map</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Ohm's-Law-in-Continuum-Form</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Ohm's-Law-in-Continuum-Form</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Point-Electrode-Model</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Point-Electrode-Model</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Quasi-Static-Approximation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Properties-of-the-Boundary-Operators</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Shunt-Model</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Quasi-Static-Approximation</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Tomographic-Imaging-Modalities</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Shunt-Model</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Sobolev-and-Trace-Spaces</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Tomographic-Imaging-Modalities</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Dirichlet-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Anisotropic-Conductivities</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Dirichlet-and-Thomson-Principles</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Bayesian-Inversion</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Dirichlet-to-Neumann-Map</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Boundary-Determination</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Forward-Map</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Calder%C3%B3n-Problem</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Green's-Identities</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Complex-Geometrical-Optics-Solutions</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Lax-Milgram-Theorem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/D-bar-Method</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Neumann-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Deep-Learning-for-EIT</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Neumann-to-Dirichlet-Map</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/EIT-Software-and-Solvers</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Properties-of-the-Boundary-Operators</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Linearized-EIT-and-the-Sensitivity-Kernel</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Sobolev-and-Trace-Spaces</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Reconstruction-Algorithms-with-Guarantees</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Weak-Formulation-of-the-Conductivity-Equation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Stability-of-the-Calder%C3%B3n-Problem</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Uniqueness-in-the-Calder%C3%B3n-Problem</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Anisotropic-Conductivities</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-Inverse-Problem/Well-Posedness</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Bayesian-Inversion</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Choosing-the-Regularization-Parameter</loc>
-    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Boundary-Determination</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Data-Fidelity-Terms</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Calder%C3%B3n-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Implicit-Regularization</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Complex-Geometrical-Optics-Solutions</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Smoothed-Total-Variation</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/D-bar-Method</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Tikhonov-Regularization</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Decay-of-Boundary-Measurements</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Total-Variation</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Linearized-EIT-and-the-Sensitivity-Kernel</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Truncated-SVD-Regularization</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Reconstruction-Algorithms-with-Guarantees</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-Regularization/Variational-Regularization</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Stability-of-the-Calder%C3%B3n-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Uniqueness-in-the-Calder%C3%B3n-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Well-Posedness</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Conjugate-Gradient</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Boundary-Mass-and-Stiffness-Matrices</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Block-Krylov-Methods</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Conductivity-Tensor</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Boundary-Mass-and-Stiffness-Matrices</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Discrete-Boundary-Operator</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Coarsening-of-Bisection-Meshes</loc>
-    <lastmod>2026-09-28T22:03:27.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Discrete-Electrode-Models</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conductivity-Tensor</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Discrete-Fractional-Sobolev-Norms</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Conjugate-Gradient-Method</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Enforcing-Dirichlet-Conditions</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Boundary-Operator</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Galerkin-Method</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform</loc>
-    <lastmod>2026-09-29T13:47:49.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Grounding-of-the-Potential</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Electrode-Models</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/L2-Projection</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Fractional-Sobolev-Norms</loc>
-    <lastmod>2026-09-29T09:44:53.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Lagrange-Finite-Elements</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/D%C3%B6rfler-Marking</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Mass-Matrix</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Enforcing-Dirichlet-Conditions</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Null-Space-of-the-Neumann-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</loc>
-    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Numerical-Quadrature-and-Assembly</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</loc>
-    <lastmod>2026-09-29T14:17:18.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Galerkin-Method</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Stiffness-Matrix</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Goal-Oriented-Error-Estimation</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Weighted-Stiffness-Matrix</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Green's-Identities</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Algebraic-Multigrid</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Hanging-Nodes</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/L2-Projection</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Krylov-Methods</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/LSQR</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Conjugate-Gradient-Method</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Lagrange-Finite-Elements</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Discrete-Cosine-Transform</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Lax-Milgram-Theorem</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Rectangular-Domains</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Mass-Matrix</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/LSQR</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/MINRES</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Projected-Cholesky-Factorization</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping</loc>
-    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Projected-Conjugate-Gradient</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Quadrature-and-Assembly</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Pixel-Images-and-Finite-Element-Functions</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Adaptive-Meshing-in-EIT</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Conjugate-Gradient</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/D%C3%B6rfler-Marking</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Spectral-Sobolev-Norms-on-Rectangles</loc>
-    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Goal-Oriented-Error-Estimation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Stiffness-Matrix</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Hanging-Nodes</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Weak-Formulation-of-the-Conductivity-Equation</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Newest-Vertex-Bisection</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Weighted-Stiffness-Matrix</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Numerical-Conformal-Mapping</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Zienkiewicz-Zhu-Estimator</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Residual-Estimator-for-the-Conductivity-Equation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-Equation</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Zienkiewicz-Zhu-Estimator</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-Method-for-the-Dirichlet-Problem</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Adjoint-State-Method</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Adjoint-Equation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Automatic-Differentiation-vs-Adjoint-Methods</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Adjoint-Method-for-the-Dirichlet-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Discretize-then-Optimize-vs-Optimize-then-Discretize</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Adjoint-State-Method</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Functional-Derivative-of-the-Data-Misfit</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Automatic-Differentiation-vs-Adjoint-Methods</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Gradient-Representation-and-the-Riesz-Map</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Discretize-then-Optimize-vs-Optimize-then-Discretize</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Gradient-Testing</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Functional-Derivative-of-the-Data-Misfit</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Iterative-Reconstruction-Loop</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Gradient-Representation-and-the-Riesz-Map</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/KKT-Conditions</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Gradient-Testing</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Kohn-Vogelius-Functional</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Iterative-Reconstruction-Loop</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Lagrangian-Formulation</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/KKT-Conditions</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/PDE-Constrained-Optimization</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Kohn-Vogelius-Functional</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/Rules-of-the-Calculus-of-Variations</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Lagrangian-Formulation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Adjoint-Gradients/State-Equation</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/PDE-Constrained-Optimization</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/ADMM</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Rules-of-the-Calculus-of-Variations</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Box-Constraints-on-Conductivity</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/State-Equation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Chambolle-Pock-Algorithm</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Gauss-Newton-Method</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Choosing-the-Regularization-Parameter</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/L-BFGS-B</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Data-Fidelity-Terms</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/L-BFGS</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Implicit-Regularization</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Levenberg-Marquardt-Method</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Smoothed-Total-Variation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Line-Search</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Spectral-Sobolev-Norms-on-Rectangles</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Nested-ADMM-Reconstruction</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Tikhonov-Regularization</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Proximal-Operator</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Total-Variation</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stochastic-and-Adaptive-Gradient-Methods</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Optimization/Stopping-Criteria</loc>
-    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Variational-Regularization</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Decay-of-Boundary-Measurements</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</loc>
-    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/ADMM</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Noise-Models-for-EIT-Data</loc>
-    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Box-Constraints-on-Conductivity</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption</loc>
-    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Chambolle-Pock-Algorithm</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Synthetic-Conductivity-Data</loc>
-    <lastmod>2026-09-29T12:56:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Deep-Equilibrium-Models</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/L-BFGS-B</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Energy-Based-Models</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/L-BFGS</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Hallucinations-and-Uncertainty</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Input-Convex-Neural-Networks</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Line-Search</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Langevin-Dynamics</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Nested-ADMM-Reconstruction</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Learned-Regularization</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Proximal-Operator</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Manifold-Hypothesis</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stochastic-and-Adaptive-Gradient-Methods</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Neural-ODEs</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Plug-and-Play-Priors</loc>
-    <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/Regularization-by-Denoising</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Inverse-Crime</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Learned-Priors/U-Net</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Noise-Models-for-EIT-Data</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Continuous-Limit-of-the-DDPM-Chain</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Spectral-Image-Corruption</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/DDPM-Ancestral-Sampling</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Synthetic-Conductivity-Data</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/DDPM-Forward-Process</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Denoising-Score-Matching</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Deep-Equilibrium-Models</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/DiffPIR</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Deep-Learning-for-EIT</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Diffusion-Models-for-EIT</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Energy-Based-Models</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Diffusion-Models</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Hallucinations-and-Uncertainty</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Diffusion-Posterior-Sampling</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Input-Convex-Neural-Networks</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Diffusion-Proximal-Operator</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Langevin-Dynamics</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Euler-Maruyama-Method</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Learned-Regularization</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Noise-Schedule</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Manifold-Hypothesis</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Probability-Flow-ODE</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Neural-ODEs</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/RED-Diff</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Plug-and-Play-Priors</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Reverse-Time-SDE</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Regularization-by-Denoising</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Score-Function</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/U-Net</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Sinusoidal-Time-Embedding</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Tweedie's-Formula</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Continuous-Limit-of-the-DDPM-Chain</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Diffusion-Models/Variance-Preserving-SDE</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DDPM-Ancestral-Sampling</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Geometric-Learning/Dihedral-Group-D4</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DDPM-Forward-Process</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Geometric-Learning/Equivariant-Convolutions</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Denoising-Score-Matching</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Geometric-Learning/Invariant-Filter-Banks</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Geometric-Learning/Invariant-and-Equivariant-Functions</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-for-EIT</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Geometric-Learning/Reynolds-Operator</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Geometric-Learning/Symmetries-of-the-EIT-Problem</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Posterior-Sampling</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Outlook/Design-Principles-for-EIT-Solvers</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Proximal-Operator</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
-    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Outlook/Open-Questions</loc>
-    <lastmod>2026-09-27T15:57:39.000Z</lastmod>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Euler-Maruyama-Method</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Noise-Schedule</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Probability-Flow-ODE</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/RED-Diff</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Reverse-Time-SDE</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Score-Function</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Sinusoidal-Time-Embedding</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Tweedie's-Formula</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Variance-Preserving-SDE</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Dihedral-Group-D4</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Equivariant-Convolutions</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Invariant-Filter-Banks</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Invariant-and-Equivariant-Functions</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Reynolds-Operator</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Symmetries-of-the-EIT-Problem</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Design-Principles-for-EIT-Solvers</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/EIT-Software-and-Solvers</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Open-Questions</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/</loc>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/Notation</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</loc>
-    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
+    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url></urlset>
