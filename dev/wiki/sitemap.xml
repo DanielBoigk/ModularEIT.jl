@@ -11,6 +11,9 @@
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conductivity-Equation</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</loc>
+    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
+  </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Continuity-Equation</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
@@ -177,7 +180,7 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</loc>
-    <lastmod>2026-09-29T14:17:18.000Z</lastmod>
+    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</loc>
     <lastmod>2026-09-29T14:17:18.000Z</lastmod>
@@ -220,6 +223,9 @@
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Null-Space-of-the-Neumann-Problem</loc>
     <lastmod>2026-09-29T10:38:33.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping</loc>
+    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Quadrature-and-Assembly</loc>
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
@@ -462,5 +468,5 @@
     <lastmod>2026-09-27T15:57:39.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</loc>
-    <lastmod>2026-09-29T14:17:18.000Z</lastmod>
+    <lastmod>2026-09-29T14:31:13.000Z</lastmod>
   </url></urlset>

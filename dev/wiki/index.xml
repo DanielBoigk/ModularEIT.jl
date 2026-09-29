@@ -6,22 +6,34 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Conformal Invariance of the Conductivity Equation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</guid>
+    <description><![CDATA[ In two dimensions the Conductivity Equation is invariant under conformal maps. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
+  </item><item>
     <title>Fast Solvers on Disk Domains</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains</guid>
     <description><![CDATA[ On a disk, the constant-coefficient Neumann problem separates in polar coordinates: Fourier modes in the angle, and one ordinary differential equation along the radius per mode. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 14:17:18 GMT</pubDate>
+    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
   </item><item>
-    <title>Fast Solvers on Rectangular Domains</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</guid>
-    <description><![CDATA[ On a rectangle discretised by a uniform grid (for example the pixel-aligned bilinear meshes of Pixel Images and Finite Element Functions), the Discrete Cosine Transform inverts the constant-coefficient Neumann operator in O(n\log n) operations. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 14:17:18 GMT</pubDate>
+    <title>Numerical Conformal Mapping</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Numerical-Conformal-Mapping</guid>
+    <description><![CDATA[ By the Riemann mapping theorem, every simply connected domain \Omega\subsetneq\mathbb C is the image of the unit disk D under a conformal map \Phi. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
   </item><item>
     <title>ModularEIT Wiki</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
     <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 14:31:13 GMT</pubDate>
+  </item><item>
+    <title>Fast Solvers on Rectangular Domains</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains</guid>
+    <description><![CDATA[ On a rectangle discretised by a uniform grid (for example the pixel-aligned bilinear meshes of Pixel Images and Finite Element Functions), the Discrete Cosine Transform inverts the constant-coefficient Neumann operator in O(n\log n) operations. ]]></description>
     <pubDate>Tue, 29 Sep 2026 14:17:18 GMT</pubDate>
   </item><item>
     <title>Discrete Cosine Transform</title>
@@ -52,18 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Inverse-Crime</guid>
     <description><![CDATA[ An inverse crime is committed when synthetic data are generated with the same numerical model that is later used for the reconstruction: same mesh, same element type, same discretisation of \sigma, no noise. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
-  </item><item>
-    <title>Noise Models for EIT Data</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Noise-Models-for-EIT-Data</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Noise-Models-for-EIT-Data</guid>
-    <description><![CDATA[ Simulated EIT data must be corrupted with noise to mimic real measurements and to avoid overly optimistic results (see also Inverse Crime). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
-  </item><item>
-    <title>Spectral Image Corruption</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Data-and-Noise/Spectral-Image-Corruption</guid>
-    <description><![CDATA[ To train a denoiser or deblurrer that should later clean EIT reconstructions, one needs pairs (clean, degraded). ]]></description>
     <pubDate>Tue, 29 Sep 2026 12:56:33 GMT</pubDate>
   </item>
     </channel>
