@@ -6,6 +6,18 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Parametrizations of the Conductivity</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity</guid>
+    <description><![CDATA[ The unknowns of a reconstruction need not be the coefficients of the conductivity in the finite element space of the forward model. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 21:41:57 GMT</pubDate>
+  </item><item>
+    <title>Regularization</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/</guid>
+    <description><![CDATA[ Classical regularisation of the ill-posed EIT problem: penalties that encode prior knowledge, and how to weigh them against the data. Reading order. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 21:41:57 GMT</pubDate>
+  </item><item>
     <title>ModularEIT Wiki</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
@@ -52,18 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Applications-of-EIT</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Applications-of-EIT</guid>
     <description><![CDATA[ Electrical Impedance Tomography is used wherever conductivity contrasts show up and a cheap, fast, non-invasive measurement matters more than fine spatial resolution. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
-  </item><item>
-    <title>Complete Electrode Model</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complete-Electrode-Model</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complete-Electrode-Model</guid>
-    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
-  </item><item>
-    <title>Complex Conductivity</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complex-Conductivity</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Complex-Conductivity</guid>
-    <description><![CDATA[ Biological tissue both conducts and stores charge: cell membranes act as capacitors. ]]></description>
     <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item>
     </channel>
