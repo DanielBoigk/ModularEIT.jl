@@ -27,15 +27,34 @@ function reground(fm::ForwardModel, V::AbstractVecOrMat, grounding::Symbol)
 end
 
 """
-    pattern_svd(disc, fm, currents, voltages; metric = :euclidean)
-    pattern_svd(currents, voltages, Mi, Mv)
+    pattern_svd(disc, fm, currents, voltages; metric = :euclidean, noise = nothing, reference = nothing)
+    pattern_svd(currents, voltages, Mi, Mv; noise = nothing, reference = nothing)
 
 New pairs of boundary data from measured pairs `(currents, voltages)` (`n_inject × s`,
 `n_measure × s`): `currents * C`, `voltages * C` for the `s × s` matrix `C` that makes the new
 currents orthonormal in the inner product `Mi` and the new voltages orthogonal in `Mv`, sorted
 by decreasing singular value (the norms of the new voltages). The voltages are first regrounded
 consistently with the metric (`Mv`-weighted mean zero). Returns
-`(; currents, voltages, values, Mi, Mv)`.
+`(; currents, voltages, values, Mi, Mv, combination, noise, noise_levels, reference)` with the
+combination matrix `C` (new pairs = old pairs · `C`).
+
+With a `reference` (the voltages of a reference conductivity for the same currents, or, with a
+forward model, the reference conductivity itself), the SVD is taken of the difference
+`voltages - reference` (Isaacson's distinguishability: the new currents are the patterns that
+best distinguish the unknown from the reference), `values` are the singular values of the
+difference, and the returned `voltages` and `reference` are the measured and reference data
+rotated by the same `C`, so that the pairs remain valid data for any objective.
+
+With a `noise` model of the measured voltages ([`GaussianNoise`](@ref),
+[`RelativeGaussianNoise`](@ref); the currents are taken as exact), `noise` is the noise of the
+new voltages, a [`GaussianNoise`](@ref) with one standard deviation per entry (the rotation
+mixes patterns of different noise; use it for [`discrepancy_target`](@ref)), and `noise_levels`
+the expected `Mv`-norm of the noise in every new pattern, the scale to compare `values` with (see
+[`truncate_patterns`](@ref)). Both are `nothing` without a noise model.
+
+For relative noise the absolute data have a signal-to-noise ratio of about `1/δ` in every
+pattern, so truncation at the noise level removes nothing: it is the difference to a reference
+whose singular values decay below the noise.
 
 `metric`:
 - `:euclidean`: `Mi = Mv = I` (nodal/electrode values; matches the nodal-sum ground),
@@ -50,22 +69,69 @@ the continuum model with the L² metric the values approximate the singular valu
 Neumann-to-Dirichlet map on the span of the input patterns.
 """
 function pattern_svd(disc::FerriteDiscretization, fm::ForwardModel, currents::AbstractMatrix,
-                     voltages::AbstractMatrix; metric = :euclidean)
+                     voltages::AbstractMatrix; metric = :euclidean, noise = nothing, reference = nothing)
     Mi, Mv = _pattern_metrics(disc, fm, metric)
-    return pattern_svd(currents, voltages, Mi, Mv)
+    reference isa AbstractVector && (reference = forward_neumann(fm, reference, currents)[1])
+    return pattern_svd(currents, voltages, Mi, Mv; noise, reference)
 end
 
-function pattern_svd(currents::AbstractMatrix, voltages::AbstractMatrix, Mi::AbstractMatrix, Mv::AbstractMatrix)
+function pattern_svd(currents::AbstractMatrix, voltages::AbstractMatrix, Mi::AbstractMatrix, Mv::AbstractMatrix;
+                     noise = nothing, reference = nothing)
     G, V = Matrix{Float64}(currents), Matrix{Float64}(voltages)
     size(G, 2) == size(V, 2) || throw(DimensionMismatch("currents and voltages need the same number of patterns"))
     size(Mi) == (size(G, 1), size(G, 1)) || throw(DimensionMismatch("Mi must be $(size(G, 1)) × $(size(G, 1))"))
     size(Mv) == (size(V, 1), size(V, 1)) || throw(DimensionMismatch("Mv must be $(size(V, 1)) × $(size(V, 1))"))
-    Vg = reground(V, Mv * ones(size(V, 1)))
+    w = Mv * ones(size(V, 1))
+    Vg = reground(V, w)
     R = cholesky(Symmetric(G' * Mi * G)).U           # currents: Ĝ = G R⁻¹ is Mi-orthonormal
-    Ĝ, V̂ = G / R, Vg / R
+    Ref = nothing
+    if reference !== nothing
+        size(reference) == size(V) || throw(DimensionMismatch("the reference needs the size of the voltages"))
+        Ref = reground(Matrix{Float64}(reference), w)
+    end
+    Ĝ = G / R
     Lv = cholesky(Symmetric(Matrix(Mv))).L           # ‖v‖²_Mv = ‖Lvᵀ v‖²
-    F = svd(Lv' * V̂)
-    return (; currents = Ĝ * F.V, voltages = V̂ * F.V, values = F.S, Mi, Mv)
+    F = svd(Lv' * ((Ref === nothing ? Vg : Vg - Ref) / R))
+    C = R \ F.V
+    out = (; currents = Ĝ * F.V, voltages = Vg * C, values = F.S, Mi, Mv, combination = C)
+    ref = Ref === nothing ? nothing : Ref * C
+    noise === nothing && return (; out..., noise = nothing, noise_levels = nothing, reference = ref)
+    # rows of E C are independent with variances S C.², then the regrounding Π = I - 1wᵀ/(wᵀ1):
+    # E ‖Lvᵀ Π (E c_k)‖² = Σᵢ ‖Lvᵀ Π eᵢ‖² Var[i, k]
+    Var = (abs2.(_noise_std(noise, V)) .* ones(size(V))) * abs2.(C)
+    B = Lv' * (I - ones(size(V, 1)) * w' ./ sum(w))
+    levels = sqrt.(vec(vec(sum(abs2, B; dims = 1))' * Var))
+    return (; out..., noise = GaussianNoise(sqrt.(Var)), noise_levels = levels, reference = ref)
+end
+
+"""
+    truncate_patterns(p; τ = 2)
+    truncate_patterns(p, K)
+
+The leading pairs of a [`pattern_svd`](@ref) result `p`: the first `K`, or those before the first
+pattern whose singular value drops to `τ` times its noise level (needs `pattern_svd(...; noise)`;
+at least one pair is kept).
+The trailing pairs mostly carry noise; discarding them regularises in data space, without an
+assumption on the conductivity. Directions that carry only noise do not have singular values
+below the noise level but at it (the SVD of noisy data has a noise floor), so `τ` must lie
+clearly above 1. Returns a named tuple with the same fields, restricted to the
+retained pairs.
+"""
+function truncate_patterns(p::NamedTuple; τ::Real = 2)
+    p.noise_levels === nothing &&
+        throw(ArgumentError("no noise levels: compute the pattern SVD with a noise model (pattern_svd(...; noise))"))
+    k = findfirst(p.values .<= τ .* p.noise_levels)
+    return truncate_patterns(p, k === nothing ? length(p.values) : max(k - 1, 1))
+end
+
+function truncate_patterns(p::NamedTuple, K::Integer)
+    1 <= K <= length(p.values) || throw(ArgumentError("K must lie in 1:$(length(p.values)), got $K"))
+    r = 1:K
+    return (; currents = p.currents[:, r], voltages = p.voltages[:, r], values = p.values[r], Mi = p.Mi, Mv = p.Mv,
+            combination = p.combination[:, r],
+            noise = p.noise === nothing ? nothing : GaussianNoise(p.noise.std[:, r]),
+            noise_levels = p.noise_levels === nothing ? nothing : p.noise_levels[r],
+            reference = p.reference === nothing ? nothing : p.reference[:, r])
 end
 
 function _pattern_metrics(disc::FerriteDiscretization, fm::ForwardModel, metric)

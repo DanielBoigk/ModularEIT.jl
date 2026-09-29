@@ -16,14 +16,15 @@ using Random
 """
     GaussianNoise(s)
 
-Additive white Gaussian noise with standard deviation `s`: a scalar, or a vector with one
-standard deviation per measurement channel (data row), e.g. from an instrument specification.
+Additive white Gaussian noise with standard deviation `s`: a scalar, a vector with one
+standard deviation per measurement channel (data row), e.g. from an instrument specification,
+or a matrix with one per data entry (e.g. the noise of rotated data, see [`pattern_svd`](@ref)).
 """
-struct GaussianNoise{S <: Union{Float64, Vector{Float64}}} <: AbstractNoiseModel
+struct GaussianNoise{S <: Union{Float64, Vector{Float64}, Matrix{Float64}}} <: AbstractNoiseModel
     std::S
-    function GaussianNoise(s::Union{Real, AbstractVector{<:Real}})
+    function GaussianNoise(s::Union{Real, AbstractVecOrMat{<:Real}})
         all(>=(0), s) || throw(ArgumentError("standard deviations must be nonnegative"))
-        v = s isa Real ? Float64(s) : Vector{Float64}(s)
+        v = s isa Real ? Float64(s) : s isa AbstractVector ? Vector{Float64}(s) : Matrix{Float64}(s)
         return new{typeof(v)}(v)
     end
 end
@@ -64,6 +65,11 @@ end
 function _noise_std(noise::GaussianNoise{Vector{Float64}}, data::AbstractVecOrMat)
     length(noise.std) == size(data, 1) ||
         throw(DimensionMismatch("the noise model has $(length(noise.std)) channels, the data $(size(data, 1)) rows"))
+    return noise.std
+end
+function _noise_std(noise::GaussianNoise{Matrix{Float64}}, data::AbstractVecOrMat)
+    size(noise.std) == (size(data, 1), size(data, 2)) ||
+        throw(DimensionMismatch("the noise model is $(size(noise.std)), the data $(size(data))"))
     return noise.std
 end
 function _noise_std(noise::RelativeGaussianNoise, data::AbstractVecOrMat)

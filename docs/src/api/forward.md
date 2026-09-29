@@ -41,9 +41,21 @@ back and forth exactly. Linear combinations of measured pairs are measured pairs
 SVD rotates them into orthonormal patterns, either in the Euclidean inner product (matches the
 nodal-sum ground) or in L²(Γ) (matches the boundary-mean ground, independent of the mesh).
 
+Truncating the pairs at the noise level regularizes in data space. It is the difference from a
+reference conductivity whose singular values decay below the noise (for relative noise the
+absolute data have signal/noise ≈ 1/δ in every pattern):
+
+```julia
+p = pattern_svd(disc, fm, currents, voltages; metric = :L2, noise, reference = ones(ndofs_σ(disc)))
+t = truncate_patterns(p; τ = 2)                 # pairs above twice their noise level
+obj = AdjointStateObjective(fm, t.currents, t.voltages)
+res = minimize(obj, σ₀, GaussNewton(); ftarget = discrepancy_target(obj, t.noise))
+```
+
 ```@docs
 reground
 pattern_svd
+truncate_patterns
 ```
 
 ## Wiki articles
@@ -61,6 +73,7 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Forward Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Forward-Map)
 - [Neumann-to-Dirichlet Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Neumann-to-Dirichlet-Map)
 - [Dirichlet-to-Neumann Map](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Dirichlet-to-Neumann-Map)
+- [Truncated SVD Regularization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization)
 - [Discrete Electrode Models](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Discrete-Electrode-Models)
 - [Grounding of the Potential](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Grounding-of-the-Potential)
 - [State Equation](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/State-Equation)

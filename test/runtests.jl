@@ -17,7 +17,7 @@ const SUITES = [
                                     "test_parametrization.jl"]),
     ("adaptivity", "Adaptivity", ["test_adaptive_meshing.jl", "test_bisection.jl", "test_residual_estimator.jl"]),
     ("optimization", "Optimization", ["test_regularizers.jl", "test_optimizers.jl", "test_proximal.jl", "test_truncated_svd.jl", "test_confidence.jl"]),
-    ("data", "Data", ["test_noise.jl", "test_synthetic.jl"]),
+    ("data", "Data", ["test_noise.jl", "test_synthetic.jl", "test_pattern_truncation.jl"]),
     ("images", "Images", ["test_images.jl"]),
 ]
 

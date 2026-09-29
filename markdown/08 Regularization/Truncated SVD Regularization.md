@@ -29,6 +29,12 @@ $$
 
 For proper function space weighting, the SVD should be computed in the discrete $L^2(\partial\Omega)$ geometry, that is, after transforming with $M_\Gamma^{1/2}$ (see [[Boundary Mass and Stiffness Matrices]]).
 
+**Truncation at the noise level.** Three points decide where to cut.
+
+- *Noise of the rotated data.* The new pairs are combinations $F C$ of the measured ones, with $C$ the combination matrix. Independent noise $E$ with entry variances $S$ becomes $E C$, with entry variances $S\,(C\circ C)$. The expected noise norm $\nu_k$ of pattern $k$ follows in the same metric as $s_k$. The discrepancy principle for the retained pairs must use these variances, not the original noise model.
+- *Absolute versus difference data.* With relative noise of level $\delta$, every pattern of the absolute data has signal to noise $s_k/\nu_k\approx1/\delta$, so nothing falls below the noise. The information about the conductivity lies in the difference $F - F_{\text{ref}}$ from a reference conductivity. Its singular values decay quickly, and only the leading patterns (Isaacson's distinguishable patterns) rise above the noise. The difference determines the rotation. The rotated measured data $F C$ remain valid data for any objective.
+- *The noise floor.* Directions that carry only noise do not have singular values below $\nu_k$ but approximately at it, because the SVD of noisy data has a noise floor. The cut therefore requires $s_k>\tau\,\nu_k$ with $\tau$ clearly above 1, for example $\tau=2$.
+
 The singular values of the boundary operator decay (for a homogeneous disc like $1/k$). The singular values of the *linearised* map from conductivity to data decay much faster, which is the actual source of severe ill-posedness (see [[Decay of Boundary Measurements]]).
 
 ## Truncated SVD of the Jacobian
@@ -51,7 +57,7 @@ Iterated until the misfit reaches the noise level (the discrepancy principle, se
 
 **Data-optimal subspace.** Computed once at a reference conductivity, the leading modes $V_K$ form a basis for a subspace parametrisation (see [[Parametrizations of the Conductivity]]). It is the data-adapted counterpart of low-frequency cosine modes. The same SVD gives the pixel-wise confidence of a reconstruction (see [[Resolution and Confidence Maps]]).
 
-**In ModularEIT.jl:** [`jacobian_svd`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.jacobian_svd), [`jacobian_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.jacobian_basis), [`TruncatedGaussNewton`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.TruncatedGaussNewton).
+**In ModularEIT.jl:** [`pattern_svd`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.pattern_svd), [`truncate_patterns`](https://danielboigk.github.io/ModularEIT.jl/dev/api/forward/#ModularEIT.truncate_patterns), [`jacobian_svd`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.jacobian_svd), [`jacobian_basis`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.jacobian_basis), [`TruncatedGaussNewton`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.TruncatedGaussNewton).
 
 ## References
 
