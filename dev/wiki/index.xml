@@ -6,6 +6,12 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Truncated SVD Regularization</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</guid>
+    <description><![CDATA[ Truncated SVD (linear problems). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 22:22:08 GMT</pubDate>
+  </item><item>
     <title>Parametrizations of the Conductivity</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity</guid>
@@ -58,12 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/</guid>
     <description><![CDATA[ Short articles that connect the topics of the wiki. Each follows one thread through several chapters and links to the detailed articles along the way. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
-  </item><item>
-    <title>Applications of EIT</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Applications-of-EIT</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Foundations-of-EIT/Applications-of-EIT</guid>
-    <description><![CDATA[ Electrical Impedance Tomography is used wherever conductivity contrasts show up and a cheap, fast, non-invasive measurement matters more than fine spatial resolution. ]]></description>
     <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item>
     </channel>
