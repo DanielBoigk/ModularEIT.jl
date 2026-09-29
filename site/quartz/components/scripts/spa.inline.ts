@@ -30,6 +30,10 @@ const getOpts = ({ target }: Event): { url: URL; scroll?: boolean } | undefined 
   const a = target.closest("a")
   if (!a) return
   if ("routerIgnore" in a.dataset) return
+  // Absolute links (class "external") may share the origin without being wiki pages, e.g. the
+  // Documenter API docs deployed next to the wiki: load them normally instead of morphing their
+  // HTML into the current page (which mixes both sites' styles).
+  if (a.classList.contains("external")) return
   const { href } = a
   if (!isLocalUrl(href)) return
   return { url: new URL(href), scroll: "routerNoscroll" in a.dataset ? false : undefined }
