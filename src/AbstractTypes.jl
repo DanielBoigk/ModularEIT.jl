@@ -88,8 +88,8 @@ abstract type AbstractNoiseModel end
 """
     AbstractInclusion
 
-A shape with a conductivity value for [`InclusionPhantom`](@ref): [`Circle`](@ref),
-[`Ellipse`](@ref), [`Polygon`](@ref). Membership: `x in inclusion`.
+A shape with a conductivity value for [`InclusionPhantom`](@ref): [`CircleInclusion`](@ref),
+[`EllipseInclusion`](@ref), [`PolygonInclusion`](@ref). Membership: `x in inclusion`.
 """
 abstract type AbstractInclusion end
 

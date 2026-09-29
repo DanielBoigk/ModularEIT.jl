@@ -14,32 +14,32 @@
 _point(p) = (Float64(p[1]), Float64(p[2]))
 
 """
-    Circle(center, radius, value)
+    CircleInclusion(center, radius, value)
 
 Disc inclusion with conductivity `value`.
 """
-struct Circle <: AbstractInclusion
+struct CircleInclusion <: AbstractInclusion
     center::NTuple{2, Float64}
     radius::Float64
     value::Float64
 end
-Circle(center, radius::Real, value::Real) = Circle(_point(center), Float64(radius), Float64(value))
-Base.in(x, c::Circle) = (x[1] - c.center[1])^2 + (x[2] - c.center[2])^2 <= c.radius^2
+CircleInclusion(center, radius::Real, value::Real) = CircleInclusion(_point(center), Float64(radius), Float64(value))
+Base.in(x, c::CircleInclusion) = (x[1] - c.center[1])^2 + (x[2] - c.center[2])^2 <= c.radius^2
 
 """
-    Ellipse(center, (a, b), angle, value)
+    EllipseInclusion(center, (a, b), angle, value)
 
 Elliptic inclusion with semi-axes `a` (along the direction `angle`) and `b`.
 """
-struct Ellipse <: AbstractInclusion
+struct EllipseInclusion <: AbstractInclusion
     center::NTuple{2, Float64}
     semiaxes::NTuple{2, Float64}
     angle::Float64
     value::Float64
 end
-Ellipse(center, semiaxes, angle::Real, value::Real) =
-    Ellipse(_point(center), _point(semiaxes), Float64(angle), Float64(value))
-function Base.in(x, e::Ellipse)
+EllipseInclusion(center, semiaxes, angle::Real, value::Real) =
+    EllipseInclusion(_point(center), _point(semiaxes), Float64(angle), Float64(value))
+function Base.in(x, e::EllipseInclusion)
     dx, dy = x[1] - e.center[1], x[2] - e.center[2]
     c, s = cos(e.angle), sin(e.angle)
     u, v = c * dx + s * dy, -s * dx + c * dy
@@ -47,17 +47,17 @@ function Base.in(x, e::Ellipse)
 end
 
 """
-    Polygon(vertices, value)
+    PolygonInclusion(vertices, value)
 
 Polygonal inclusion (simple polygon, vertices in order) with conductivity `value`.
 """
-struct Polygon <: AbstractInclusion
+struct PolygonInclusion <: AbstractInclusion
     vertices::Vector{NTuple{2, Float64}}
     value::Float64
 end
-Polygon(vertices, value::Real) = Polygon([_point(v) for v in vertices], Float64(value))
-Base.:(==)(a::Polygon, b::Polygon) = a.vertices == b.vertices && a.value == b.value
-function Base.in(x, p::Polygon)                    # even–odd rule
+PolygonInclusion(vertices, value::Real) = PolygonInclusion([_point(v) for v in vertices], Float64(value))
+Base.:(==)(a::PolygonInclusion, b::PolygonInclusion) = a.vertices == b.vertices && a.value == b.value
+function Base.in(x, p::PolygonInclusion)                    # even–odd rule
     inside = false
     V = p.vertices
     j = length(V)
@@ -72,16 +72,16 @@ function Base.in(x, p::Polygon)                    # even–odd rule
 end
 
 # centre and radius of a bounding circle
-_center(c::Circle) = c.center
-_center(e::Ellipse) = e.center
-_center(p::Polygon) = (sum(first, p.vertices) / length(p.vertices), sum(last, p.vertices) / length(p.vertices))
-_bounding_radius(c::Circle) = c.radius
-_bounding_radius(e::Ellipse) = maximum(e.semiaxes)
-_bounding_radius(p::Polygon) = (c = _center(p); maximum(v -> hypot(v[1] - c[1], v[2] - c[2]), p.vertices))
+_center(c::CircleInclusion) = c.center
+_center(e::EllipseInclusion) = e.center
+_center(p::PolygonInclusion) = (sum(first, p.vertices) / length(p.vertices), sum(last, p.vertices) / length(p.vertices))
+_bounding_radius(c::CircleInclusion) = c.radius
+_bounding_radius(e::EllipseInclusion) = maximum(e.semiaxes)
+_bounding_radius(p::PolygonInclusion) = (c = _center(p); maximum(v -> hypot(v[1] - c[1], v[2] - c[2]), p.vertices))
 
-_translate(c::Circle, d) = Circle(c.center .+ d, c.radius, c.value)
-_translate(e::Ellipse, d) = Ellipse(e.center .+ d, e.semiaxes, e.angle, e.value)
-_translate(p::Polygon, d) = Polygon([v .+ d for v in p.vertices], p.value)
+_translate(c::CircleInclusion, d) = CircleInclusion(c.center .+ d, c.radius, c.value)
+_translate(e::EllipseInclusion, d) = EllipseInclusion(e.center .+ d, e.semiaxes, e.angle, e.value)
+_translate(p::PolygonInclusion, d) = PolygonInclusion([v .+ d for v in p.vertices], p.value)
 
 """
     InclusionPhantom(background, inclusions)
@@ -147,11 +147,11 @@ function random_inclusions(rng::AbstractRNG = Random.default_rng(); count = 1:3,
 end
 
 function _random_shape(rng, kind, r, value)
-    kind === :circle && return Circle((0.0, 0.0), r, value)
-    kind === :ellipse && return Ellipse((0.0, 0.0), (r, r * (0.3 + 0.7rand(rng))), π * rand(rng), value)
+    kind === :circle && return CircleInclusion((0.0, 0.0), r, value)
+    kind === :ellipse && return EllipseInclusion((0.0, 0.0), (r, r * (0.3 + 0.7rand(rng))), π * rand(rng), value)
     k = rand(rng, 3:7)
     θ = sort(2π .* rand(rng, k))
-    return Polygon([(ρ * cos(t), ρ * sin(t)) for (t, ρ) in zip(θ, r .* (0.5 .+ 0.5 .* rand(rng, k)))], value)
+    return PolygonInclusion([(ρ * cos(t), ρ * sin(t)) for (t, ρ) in zip(θ, r .* (0.5 .+ 0.5 .* rand(rng, k)))], value)
 end
 
 # uniform centre such that the disc of radius `rb` lies in the domain (nothing if impossible)

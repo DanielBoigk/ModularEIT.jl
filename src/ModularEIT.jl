@@ -47,7 +47,7 @@ export minimize, OptimizationState, GradientDescent, LBFGS, GaussNewton
 export prox, prox!, ProximalMap, lumped_mass, ProximalGradient, ADMM
 export AbstractNoiseModel, GaussianNoise, RelativeGaussianNoise, SourceMeterNoise, add_noise, add_noise!
 export expected_squared_error, discrepancy_target, perturb_boundary_operator, perturb_contact_impedance, electrode_angles
-export AbstractInclusion, Circle, Ellipse, Polygon, InclusionPhantom, random_inclusions
+export AbstractInclusion, CircleInclusion, EllipseInclusion, PolygonInclusion, InclusionPhantom, random_inclusions
 export PixelFunction, image_phantom, TransformedPhantom, lognormal_phantom, levelset_phantom
 export gaussian_random_field, corrupt_image, conductivity, simulate_data
 

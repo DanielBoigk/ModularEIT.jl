@@ -1,7 +1,19 @@
 using Documenter
+using Literate
 using ModularEIT
 
 DocMeta.setdocmeta!(ModularEIT, :DocTestSetup, :(using ModularEIT); recursive=true)
+
+# Tutorials: every Literate script in examples/ becomes a documentation page (executed during
+# the build) and a Jupyter notebook for download (not executed); both are generated files.
+examples = joinpath(@__DIR__, "..", "examples")
+tutorials = joinpath(@__DIR__, "src", "tutorials")
+tutorial_pages = String[]
+for file in sort(filter(endswith(".jl"), readdir(examples)))
+    Literate.markdown(joinpath(examples, file), tutorials; documenter = true, credit = false)
+    Literate.notebook(joinpath(examples, file), tutorials; execute = false, credit = false)
+    push!(tutorial_pages, joinpath("tutorials", replace(file, ".jl" => ".md")))
+end
 
 makedocs(
     sitename="ModularEIT.jl",
@@ -11,6 +23,7 @@ makedocs(
     pages=[
         "Home" => "index.md",
         "Getting Started" => "getting_started.md",
+        "Tutorials" => tutorial_pages,
         "API Reference" => [
             "Discretization" => "api/discretization.md",
             "Electrode Models & Forward Problem" => "api/forward.md",

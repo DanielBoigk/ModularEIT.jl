@@ -9,17 +9,17 @@ using Test
 
 @testset "synthetic data" begin
     @testset "inclusions" begin
-        c = Circle((0.2, -0.1), 0.3, 2.0)
+        c = CircleInclusion((0.2, -0.1), 0.3, 2.0)
         @test Vec(0.2, -0.1) in c
         @test !(Vec(0.6, -0.1) in c)
         @test c.value == 2.0
-        e = Ellipse((0.0, 0.0), (0.5, 0.1), π / 2, 3.0)          # rotated: long axis along y
+        e = EllipseInclusion((0.0, 0.0), (0.5, 0.1), π / 2, 3.0)          # rotated: long axis along y
         @test Vec(0.0, 0.45) in e
         @test !(Vec(0.45, 0.0) in e)
-        p = Polygon([(0.0, 0.0), (1.0, 0.0), (0.0, 1.0)], 0.5)
+        p = PolygonInclusion([(0.0, 0.0), (1.0, 0.0), (0.0, 1.0)], 0.5)
         @test Vec(0.2, 0.2) in p
         @test !(Vec(0.6, 0.6) in p)
-        ph = InclusionPhantom(1.0, [c, Circle((0.2, -0.1), 0.1, 5.0)])  # later inclusions on top
+        ph = InclusionPhantom(1.0, [c, CircleInclusion((0.2, -0.1), 0.1, 5.0)])  # later inclusions on top
         @test ph(Vec(0.2, -0.1)) == 5.0
         @test ph(Vec(0.2, 0.15)) == 2.0
         @test ph(Vec(-0.9, 0.9)) == 1.0
@@ -52,11 +52,15 @@ using Test
     @testset "projection onto a mesh: cell averages" begin
         disc = FerriteDiscretization(generate_grid(Quadrilateral, (40, 40)))
         mats = FEMatrices(disc)
-        ph = InclusionPhantom(1.0, [Circle((0.1, 0.2), 0.4, 3.0)])
+        ph = InclusionPhantom(1.0, [CircleInclusion((0.1, 0.2), 0.4, 3.0)])
         σ = conductivity(disc, ph)
         @test sum(mats.M_σ * σ) ≈ 4 + (3 - 1) * π * 0.4^2 rtol = 2e-3   # ∫σ
         @test all(isapprox.(extrema(σ), (1.0, 3.0); atol = 1e-12))
         @test conductivity(disc, σ) === σ                         # coefficient vectors pass through
+        # nodal interpolation of a phantom (a callable struct) into a continuous σ space
+        p1 = FerriteDiscretization(generate_grid(Triangle, (10, 10)); ip_σ = Lagrange{RefTriangle, 1}())
+        σi = conductivity(p1, ph; method = :interpolate)
+        @test sort(unique(σi)) == [1.0, 3.0]
     end
 
     @testset "Gaussian random fields" begin
@@ -100,7 +104,7 @@ using Test
     end
 
     @testset "simulation on a finer mesh (no inverse crime)" begin
-        ph = InclusionPhantom(1.0, [Circle((0.3, 0.2), 0.35, 2.0)])
+        ph = InclusionPhantom(1.0, [CircleInclusion((0.3, 0.2), 0.35, 2.0)])
         fine = FerriteDiscretization(generate_grid(Quadrilateral, (48, 48)))
         coarse = FerriteDiscretization(generate_grid(Quadrilateral, (16, 16)))
         # the same physical electrodes on both meshes

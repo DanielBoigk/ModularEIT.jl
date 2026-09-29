@@ -68,7 +68,7 @@ fm   = ForwardModel(disc, CompleteElectrodeModel(els, 0.05))
 # simulated data on a finer mesh with the same electrodes, 1 % noise
 fine     = FerriteDiscretization(polar_grid(32, 256; boundary_spacing = 1 / 80))
 fm_fine  = ForwardModel(fine, CompleteElectrodeModel(transfer_electrodes(disc, els, fine), 0.05))
-phantom  = InclusionPhantom(1.0, [Circle((0.3, 0.2), 0.3, 3.0)])
+phantom  = InclusionPhantom(1.0, [CircleInclusion((0.3, 0.2), 0.3, 3.0)])
 currents = trigonometric_patterns(fm, 7)
 noise    = RelativeGaussianNoise(0.01)
 sim      = simulate_data(fine, fm_fine, phantom, currents; noise, rng = MersenneTwister(1))
@@ -83,8 +83,14 @@ res    = minimize(obj, ones(ndofs_σ(disc)), GaussNewton(); lower = 0.05,
 res.σ                       # reconstructed conductivity (one value per cell)
 ```
 
-More in [Getting Started](https://danielboigk.github.io/ModularEIT.jl/dev/getting_started/) and the
+A worked version with plots is the tutorial
+[Reconstructing a conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/tutorials/reconstruction/)
+(also as a Jupyter notebook); more in
+[Getting Started](https://danielboigk.github.io/ModularEIT.jl/dev/getting_started/) and the
 [API documentation](https://danielboigk.github.io/ModularEIT.jl/dev/).
+
+Tutorials are [Literate.jl](https://github.com/fredrikekre/Literate.jl) scripts in `examples/`;
+the documentation build runs them and generates the pages and notebooks.
 
 ## Repository layout
 
@@ -94,6 +100,7 @@ More in [Getting Started](https://danielboigk.github.io/ModularEIT.jl/dev/gettin
 | `ext/` | CUDA and cuDSS extensions |
 | `test/` | Test suite (`julia --project -e 'using Pkg; Pkg.test()'`) |
 | `benchmark/` | Benchmark scripts and results |
+| `examples/` | Tutorials as Literate.jl scripts (rendered into the documentation and notebooks) |
 | `docs/` | Documenter.jl API documentation; the build also renders the wiki and checks the links between both |
 | `markdown/` | The theory wiki (an Obsidian vault) |
 | `site/` | Quartz, which renders the wiki as a website |

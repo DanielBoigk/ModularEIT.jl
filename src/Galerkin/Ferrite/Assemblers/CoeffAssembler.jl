@@ -16,7 +16,7 @@ centroids).
 function interpolate_function(d::FerriteDiscretization, f; field::Symbol = :σ)
     dh = _field_dh(d, field)
     a = zeros(ndofs(dh))
-    apply_analytical!(a, dh, field, f)
+    apply_analytical!(a, dh, field, x -> f(x))      # Ferrite needs a Function (phantoms are callable structs)
     return field === :u ? _restrict(d, a) : a
 end
 

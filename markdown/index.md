@@ -10,7 +10,7 @@ Every article ends with its references, including DOI or arXiv links. Symbols ar
 
 - **New to EIT.** [[Electrical Impedance Tomography]] → [[Conductivity Equation]] → [[Electrode Models]] → [[Forward Map]] → [[Calderón Problem]] → [[Anatomy of an EIT Reconstruction]].
 - **From the model to a simulation.** [[From Physics to Linear Algebra]] → [[Weak Formulation of the Conductivity Equation]] → [[Galerkin Method]] → [[Discrete Electrode Models]] → [[Choosing a Linear Solver]].
-- **Reconstructing a conductivity.** [[Anatomy of an EIT Reconstruction]] → [[Variational Regularization]] → [[Adjoint State Method]] → [[Choosing an Optimizer]] → [[Noise Models for EIT Data]] → [[Inverse Crime]].
+- **Reconstructing a conductivity.** [[Anatomy of an EIT Reconstruction]] → [[Variational Regularization]] → [[Adjoint State Method]] → [[Choosing an Optimizer]] → [[Noise Models for EIT Data]] → [[Inverse Crime]]. A worked example with code is the tutorial [Reconstructing a conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/tutorials/reconstruction/).
 - **Priors learned from data.** [[Classical and Learned Priors]] → [[Learned Regularization]] → [[Plug-and-Play Priors]] → [[Diffusion Models]] → [[Diffusion Models for EIT]].
 - **Fast and adaptive computation.** [[Choosing a Linear Solver]] → [[Fast Solvers on Disk Domains]] → [[Numerical Conformal Mapping]] → [[Adaptive Meshing in EIT]].
 - **The mathematics of uniqueness and stability.** [[Calderón Problem]] → [[Uniqueness in the Calderón Problem]] → [[Stability of the Calderón Problem]] → [[D-bar Method]].

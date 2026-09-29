@@ -57,9 +57,9 @@ transfer_electrodes
 
 ```@docs
 AbstractInclusion
-Circle
-Ellipse
-Polygon
+CircleInclusion
+EllipseInclusion
+PolygonInclusion
 InclusionPhantom
 random_inclusions
 PixelFunction
