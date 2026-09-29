@@ -106,36 +106,41 @@ function minimize(obj::AbstractObjective, σ0::AbstractVector, method::AbstractO
     ws = _workspace(method, obj, n)
     st = OptimizationState(σ, zeros(n), NaN, 0, 0, :running, false, [])
     _initialize!(st, ws, method, obj, box)
-    gnorm0 = _record!(st, box, 0.0)
+    gnorm0 = _record!(st, ws, method, box, 0.0)
     verbose && _log(st)
-    _check_stop!(st, gnorm0, gtol, ftol, ftarget, NaN, maxiter, callback) && return st
+    stop!(Jold) = _check_stop!(st, ws, method, gnorm0, gtol, ftol, ftarget, Jold, maxiter, callback)
+    stop!(NaN) && return st
     while true
         Jold = st.value
         σold = copy(st.σ)
         ok = _step!(st, ws, method, obj, box)
         if !ok
             st.status = :linesearch
-            st.converged = _projected_gradient_norm(st.σ, st.g, box) <= gtol * gnorm0
+            st.converged = _gtol_met(st, ws, method, _optimality(st, ws, method, box), gnorm0, gtol)
             return st
         end
         st.iteration += 1
-        _record!(st, box, norm(st.σ .- σold))
+        _record!(st, ws, method, box, norm(st.σ .- σold))
         verbose && _log(st)
-        _check_stop!(st, gnorm0, gtol, ftol, ftarget, Jold, maxiter, callback) && return st
+        stop!(Jold) && return st
     end
 end
 
-function _record!(st::OptimizationState, box, step)
-    gnorm = _projected_gradient_norm(st.σ, st.g, box)
+# optimality measure recorded as `gnorm` and the convergence test on it; methods may override
+_optimality(st, ws, method, box) = _projected_gradient_norm(st.σ, st.g, box)
+_gtol_met(st, ws, method, gnorm, gnorm0, gtol) = gnorm <= gtol * gnorm0 || gnorm == 0
+
+function _record!(st::OptimizationState, ws, method, box, step)
+    gnorm = _optimality(st, ws, method, box)
     push!(st.history, (value = st.value, gnorm, step, nevals = st.nevals))
     return gnorm
 end
 
 _log(st) = (h = st.history[end]; @info "iteration $(st.iteration)" h.value h.gnorm h.step h.nevals)
 
-function _check_stop!(st, gnorm0, gtol, ftol, ftarget, Jold, maxiter, callback)
+function _check_stop!(st, ws, method, gnorm0, gtol, ftol, ftarget, Jold, maxiter, callback)
     gnorm = st.history[end].gnorm
-    status = gnorm <= gtol * gnorm0 || gnorm == 0 ? :gtol :
+    status = _gtol_met(st, ws, method, gnorm, gnorm0, gtol) ? :gtol :
              st.value <= ftarget ? :ftarget :
              ftol > 0 && isfinite(Jold) && Jold - st.value <= ftol * max(abs(Jold), floatmin()) ? :ftol :
              callback !== nothing && callback(st) === true ? :callback :

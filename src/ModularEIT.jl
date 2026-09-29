@@ -41,6 +41,7 @@ export AdjointStateObjective, KohnVogeliusObjective, objective_value, value_and_
 export residual!, residual_and_jacobian!, n_residual, boundary_error, pattern_values
 export TikhonovRegularizer, TotalVariationRegularizer, RegularizedObjective, gauss_newton_hessian
 export minimize, OptimizationState, GradientDescent, LBFGS, GaussNewton
+export prox, prox!, ProximalMap, lumped_mass, ProximalGradient, ADMM
 
 
 include("AbstractTypes.jl")
@@ -61,5 +62,6 @@ include("Galerkin/Objectives/KohnVogelius.jl")
 include("Optimization/Optimizers.jl")
 include("Optimization/FirstOrder.jl")
 include("Optimization/GaussNewton.jl")
+include("Optimization/Proximal.jl")
 
 end # module ModularEIT

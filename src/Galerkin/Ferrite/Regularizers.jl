@@ -74,7 +74,7 @@ end
 function TotalVariationRegularizer(d::FerriteDiscretization; ε::Real = 1e-3)
     ε >= 0 || throw(ArgumentError("ε must be nonnegative"))
     cache = _is_piecewise_constant(d) ? _facet_graph(d) : nothing
-    return TotalVariationRegularizer(d, Float64(ε), cache)
+    return TotalVariationRegularizer(d, Float64(ε), cache, Ref{Any}(nothing))
 end
 
 objective_value(reg::TotalVariationRegularizer{<:FerriteDiscretization}, σ::AbstractVector) = _tv!(nothing, reg, σ)
@@ -142,4 +142,157 @@ function gauss_newton_hessian(reg::TotalVariationRegularizer{<:FerriteDiscretiza
         assemble!(assembler, dofs, He)
     end
     return H
+end
+
+"""
+    lumped_mass(disc)
+
+Row sums of the σ mass matrix (the diagonal of `M_σ` for piecewise constants): the diagonal
+metric of the discrete L² inner product used by [`prox!`](@ref), [`ProximalGradient`](@ref)
+and [`ADMM`](@ref).
+"""
+lumped_mass(d::FerriteDiscretization) = vec(sum(assemble_mass(d.dh_σ, d.cv_σ); dims = 2))
+
+# ---------------------------------------------------------------------------------------------
+# Exact prox of the (non-smooth) total variation
+#
+#     min_{lo ≤ z ≤ hi}  Σ_g w_g ‖(K z)_g‖₂ + ρ/2 Σᵢ mᵢ (zᵢ - vᵢ)²
+#
+# K: facet differences (piecewise constants, groups of size 1, w_g = |F|) or gradients at the
+# quadrature points (continuous σ, groups of size dim, w_g = quadrature weight × |det J|).
+# Substituting y = D z, D = diag(√(ρm)), makes the data term ½‖y - D v‖² (strongly convex with
+# modulus 1) and the operator K D⁻¹ with scalar steps τ = σ = 1/‖K D⁻¹‖ (Chambolle–Pock,
+# Algorithm 1). The accelerated variant (Algorithm 2, τₖ → 0) converges only like O(1/k) in
+# the iterates, noticeably so from warm starts, while the fixed-step iteration converges
+# linearly on this polyhedral + quadratic problem. Stopping on the primal–dual gap (closed form
+# below), which bounds ‖y - y*‖² ≤ 2 gap. The dual variable is kept between calls (warm start
+# inside ADMM).
+
+mutable struct _TVOperator
+    K::SparseMatrixCSC{Float64, Int}
+    Kt::SparseMatrixCSC{Float64, Int}
+    w::Vector{Float64}            # group weights
+    gd::Int                       # group size
+    p::Vector{Float64}            # dual variable (warm start)
+    m::Vector{Float64}            # metric of the cached norm
+    L2::Float64                   # ‖K diag(1/√m)‖² (for ρ = 1)
+end
+
+function _tv_operator(d::FerriteDiscretization)
+    if _is_piecewise_constant(d)
+        fg = _facet_graph(d)
+        k = length(fg.i)
+        K = sparse(vcat(1:k, 1:k), vcat(fg.i, fg.j), vcat(ones(k), -ones(k)), k, ndofs_σ(d))
+        return _TVOperator(K, sparse(K'), copy(fg.len), 1, zeros(k), Float64[], NaN)
+    end
+    cv = d.cv_σ
+    dim = Ferrite.getspatialdim(d.grid)
+    I, J, V, w = Int[], Int[], Float64[], Float64[]
+    row = 0
+    for cell in CellIterator(d.dh_σ)
+        reinit!(cv, cell)
+        dofs = celldofs(cell)
+        for q in 1:getnquadpoints(cv)
+            push!(w, getdetJdV(cv, q))
+            for a in eachindex(dofs)
+                ∇φ = shape_gradient(cv, q, a)
+                for c in 1:dim
+                    push!(I, row + c); push!(J, dofs[a]); push!(V, ∇φ[c])
+                end
+            end
+            row += dim
+        end
+    end
+    K = sparse(I, J, V, row, ndofs_σ(d))
+    return _TVOperator(K, sparse(K'), w, dim, zeros(row), Float64[], NaN)
+end
+
+function _operator_norm2!(op::_TVOperator, m)
+    op.m == m && return op.L2
+    s = 1 ./ sqrt.(m)
+    x = s .* (1 .+ 0.1 .* sin.(1:length(m)))           # deterministic start vector
+    λ = 0.0
+    for _ in 1:100
+        y = s .* (op.Kt * (op.K * (s .* x)))
+        λnew = norm(y) / norm(x)
+        x = y ./ norm(y)
+        abs(λnew - λ) <= 1e-6 * λnew && (λ = λnew; break)
+        λ = λnew
+    end
+    op.m, op.L2 = copy(m), 1.05 * λ
+    return op.L2
+end
+
+function prox!(z::AbstractVector, reg::TotalVariationRegularizer{<:FerriteDiscretization}, v::AbstractVector, ρ::Real;
+               weights = nothing, lower = nothing, upper = nothing)
+    reg.ε > 0 && return invoke(prox!, Tuple{AbstractVector, AbstractRegularizer, AbstractVector, Real}, z, reg, v, ρ;
+                               weights, lower, upper)
+    ρ > 0 || throw(ArgumentError("ρ must be positive"))
+    reg.prox_state[] === nothing && (reg.prox_state[] = _tv_operator(reg.disc))
+    op = reg.prox_state[]::_TVOperator
+    n = length(v)
+    m = weights === nothing ? ones(n) : Vector{Float64}(weights)
+    lo = lower === nothing ? fill(-Inf, n) : lower isa Real ? fill(Float64(lower), n) : lower
+    hi = upper === nothing ? fill(Inf, n) : upper isa Real ? fill(Float64(upper), n) : upper
+    return _tv_prox_cp!(z, op, v, Float64(ρ), m, lo, hi)
+end
+
+# primal–dual gap of the scaled problem: P(y) - D(p), with the dual value
+# D(p) = min_{y ∈ box} ⟨y, K̃ᵀp⟩ + ½‖y - Dv‖², attained at y* = clamp(Dv - K̃ᵀp)
+function _tv_gap(op::_TVOperator, y, p, D, Dv, ylo, yhi, Ky, Ktp)
+    mul!(Ky, op.K, y ./ D)
+    P = sum(abs2, y .- Dv) / 2
+    @inbounds for g in eachindex(op.w)
+        r = (g - 1) * op.gd
+        P += op.w[g] * sqrt(sum(c -> Ky[r + c]^2, 1:op.gd))
+    end
+    mul!(Ktp, op.Kt, p)
+    q = Ktp ./ D
+    ys = clamp.(Dv .- q, ylo, yhi)
+    return P - (dot(ys, q) + sum(abs2, ys .- Dv) / 2), P
+end
+
+function _tv_prox_cp!(z, op::_TVOperator, v, ρ, m, lo, hi; maxiter = 100_000, rtol = 1e-14)
+    D = sqrt.(ρ .* m)
+    Dv = D .* v
+    ylo, yhi = D .* lo, D .* hi
+    L = sqrt(_operator_norm2!(op, m) / ρ)                 # ‖K D⁻¹‖
+    τ = σs = L > 0 ? 1 / L : 1.0
+    y = clamp.(Dv, ylo, yhi)
+    ybar = copy(y)
+    yold = similar(y)
+    p = op.p
+    Ky = zeros(size(op.K, 1))
+    Ktp = zeros(length(v))
+    gd, w = op.gd, op.w
+    for it in 1:maxiter
+        # dual step: p ← proj_{‖p_g‖ ≤ w_g}(p + σ K D⁻¹ ȳ)
+        mul!(Ky, op.K, ybar ./ D)
+        p .+= σs .* Ky
+        @inbounds for g in eachindex(w)
+            r = (g - 1) * gd
+            s = 0.0
+            for c in 1:gd
+                s += p[r + c]^2
+            end
+            s = sqrt(s)
+            if s > w[g]
+                f = w[g] / s
+                for c in 1:gd
+                    p[r + c] *= f
+                end
+            end
+        end
+        # primal step: y ← clamp((y - τ D⁻¹Kᵀp + τ D v) / (1 + τ))
+        mul!(Ktp, op.Kt, p)
+        copyto!(yold, y)
+        @. y = clamp((y - τ * Ktp / D + τ * Dv) / (1 + τ), ylo, yhi)
+        @. ybar = 2y - yold
+        if it % 20 == 0
+            gap, P = _tv_gap(op, y, p, D, Dv, ylo, yhi, Ky, Ktp)
+            gap <= rtol * (1 + abs(P)) && break
+        end
+    end
+    z .= y ./ D
+    return z
 end

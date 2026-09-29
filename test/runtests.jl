@@ -21,7 +21,7 @@ end
                                  "test_residual_estimator.jl"])
     end
     @testset "optimization" begin
-        runfolder("Optimization", ["test_regularizers.jl", "test_optimizers.jl"])
+        runfolder("Optimization", ["test_regularizers.jl", "test_optimizers.jl", "test_proximal.jl"])
     end
     @testset "images" begin
         runfolder("Images", ["test_images.jl"])

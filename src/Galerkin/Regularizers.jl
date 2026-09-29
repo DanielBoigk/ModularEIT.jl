@@ -63,11 +63,16 @@ Smoothed total variation `R(σ) = TV_ε(σ)` of the conductivity (see [`total_va
 facet jumps `Σ_F |F| √((σ_K - σ_K')² + ε²)` for piecewise constants, `∫ √(|∇σ|² + ε²)` for
 continuous σ. The Gauss–Newton Hessian model is the lagged diffusivity matrix (the jump or
 stiffness matrix weighted by `1/√(… + ε²)` at the current σ).
+
+`ε = 0` gives the exact (non-smooth) total variation. Its proximal operator ([`prox!`](@ref)) is
+computed exactly by the Chambolle–Pock method, but it has no gradient where σ is constant, so
+use it with [`ProximalGradient`](@ref) or [`ADMM`](@ref) rather than with gradient-based methods.
 """
 struct TotalVariationRegularizer{D <: AbstractDiscretization, C} <: AbstractRegularizer
     disc::D
     ε::Float64
-    cache::C          # back-end data, e.g. the facet graph of piecewise constants
+    cache::C                          # back-end data, e.g. the facet graph of piecewise constants
+    prox_state::Base.RefValue{Any}    # operator and warm start of the exact prox (built on first use)
 end
 
 """
@@ -121,4 +126,101 @@ function _require_coefficient_gradient(obj::AbstractObjective)
     _gradient_representation(obj) isa CoefficientGradient && return nothing
     throw(ArgumentError("the objective must deliver coefficient gradients (gradient = CoefficientGradient()); " *
                         "pass the Riesz map to the optimiser instead, e.g. LBFGS(riesz = L2Gradient(mats))"))
+end
+
+# ---------------------------------------------------------------------------------------------
+# Proximal operators
+#
+#     prox(v) = argmin_{lower ≤ z ≤ upper}  R(z) + ρ/2 Σᵢ wᵢ (zᵢ - vᵢ)²
+#
+# in a diagonal metric w (w = 1: Euclidean; w = lumped σ mass matrix: discrete L², independent of
+# the mesh). Diagonal metrics keep the prox of box constraints a clamp and the prox of TV a
+# Chambolle–Pock iteration with closed-form steps. Generic fallback for smooth regularizers: the
+# lagged Newton iteration (H(z) + ρW) z⁺ = ρ W v + H(z) z - ∇R(z) with the Gauss–Newton Hessian
+# model (one step for quadratics, lagged diffusivity for smoothed TV); with bounds, projected
+# L-BFGS on the (PDE-free) prox problem.
+
+"""
+    prox!(z, reg, v, ρ; weights = nothing, lower = nothing, upper = nothing)
+    prox(reg, v, ρ; kwargs...)
+
+Proximal operator `argmin R(z) + ρ/2 Σᵢ wᵢ (zᵢ - vᵢ)²` subject to `lower ≤ z ≤ upper`, in the
+diagonal metric `w = weights` (default: Euclidean; pass [`lumped_mass`](@ref) for the discrete
+L² metric). Exact for [`TikhonovRegularizer`](@ref) without bounds and for the non-smooth
+[`TotalVariationRegularizer`](@ref) with `ε = 0` (Chambolle–Pock); iterative for other smooth
+regularizers. A [`ProximalMap`](@ref) wraps user-defined maps such as denoisers.
+"""
+function prox!(z::AbstractVector, reg::AbstractRegularizer, v::AbstractVector, ρ::Real;
+               weights = nothing, lower = nothing, upper = nothing)
+    ρ > 0 || throw(ArgumentError("ρ must be positive"))
+    w = weights === nothing ? ones(length(v)) : weights
+    if lower === nothing && upper === nothing
+        return _lagged_newton_prox!(z, reg, v, ρ, w)
+    end
+    return _bounded_smooth_prox!(z, reg, v, ρ, w, lower, upper)
+end
+prox(reg::AbstractRegularizer, v::AbstractVector, ρ::Real; kwargs...) = prox!(similar(v, Float64), reg, v, ρ; kwargs...)
+
+function _lagged_newton_prox!(z, reg, v, ρ, w; maxiter = 200, rtol = 1e-12)
+    n = length(v)
+    copyto!(z, v)
+    g = zeros(n)
+    W = spdiagm(0 => ρ .* w)
+    for _ in 1:maxiter
+        value_and_gradient!(g, reg, z)
+        H = gauss_newton_hessian(reg, z)
+        b = ρ .* w .* v .+ H * z .- g
+        znew = cholesky(Symmetric(sparse(H) + W)) \ b
+        δ = norm(znew .- z, Inf)
+        copyto!(z, znew)
+        δ <= rtol * (1 + norm(z, Inf)) && break
+    end
+    return z
+end
+
+# the prox problem as an objective (no PDE), for projected L-BFGS
+struct _ProxObjective{R, V} <: AbstractObjective
+    reg::R
+    v::V
+    ρ::Float64
+    w::Vector{Float64}
+end
+objective_value(p::_ProxObjective, z::AbstractVector) =
+    objective_value(p.reg, z) + p.ρ / 2 * sum(i -> p.w[i] * (z[i] - p.v[i])^2, eachindex(z))
+function value_and_gradient!(g::AbstractVector, p::_ProxObjective, z::AbstractVector)
+    R = value_and_gradient!(g, p.reg, z)
+    g .+= p.ρ .* p.w .* (z .- p.v)
+    return R + p.ρ / 2 * sum(i -> p.w[i] * (z[i] - p.v[i])^2, eachindex(z))
+end
+
+# Riesz map by a diagonal scaling (the inverse metric)
+struct _DiagonalRiesz <: AbstractRieszMap
+    d::Vector{Float64}
+end
+riesz_map!(g::AbstractVector, R::_DiagonalRiesz) = (g .*= R.d; g)
+
+function _bounded_smooth_prox!(z, reg, v, ρ, w, lower, upper)
+    obj = _ProxObjective(reg, v, Float64(ρ), Vector{Float64}(w))
+    res = minimize(obj, v, LBFGS(; riesz = _DiagonalRiesz(1 ./ (ρ .* w))); lower, upper,
+                   maxiter = 2000, gtol = 1e-12)
+    return copyto!(z, res.σ)
+end
+
+"""
+    ProximalMap(f!)
+
+A regularizer given only by its proximal map `f!(z, v, ρ)` (write `argmin R(z) + ρ/2 ‖z - v‖²`
+into `z`), e.g. a denoiser for plug-and-play priors. Bounds are applied by clamping afterwards
+and the metric weights are ignored. Its value is reported as 0.
+"""
+struct ProximalMap{F} <: AbstractRegularizer
+    f!::F
+end
+objective_value(::ProximalMap, σ::AbstractVector) = 0.0
+function prox!(z::AbstractVector, pm::ProximalMap, v::AbstractVector, ρ::Real;
+               weights = nothing, lower = nothing, upper = nothing)
+    pm.f!(z, v, ρ)
+    lower === nothing || (z .= max.(z, lower))
+    upper === nothing || (z .= min.(z, upper))
+    return z
 end
