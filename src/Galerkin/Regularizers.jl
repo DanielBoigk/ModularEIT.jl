@@ -141,7 +141,8 @@ end
 # L-BFGS on the (PDE-free) prox problem.
 
 """
-    prox!(z, reg, v, ρ; weights = nothing, lower = nothing, upper = nothing)
+    prox!(z, reg, v, ρ; weights = nothing, lower = nothing, upper = nothing, tol = nothing,
+          maxiter = nothing)
     prox(reg, v, ρ; kwargs...)
 
 Proximal operator `argmin R(z) + ρ/2 Σᵢ wᵢ (zᵢ - vᵢ)²` subject to `lower ≤ z ≤ upper`, in the
@@ -149,9 +150,13 @@ diagonal metric `w = weights` (default: Euclidean; pass [`lumped_mass`](@ref) fo
 L² metric). Exact for [`TikhonovRegularizer`](@ref) without bounds and for the non-smooth
 [`TotalVariationRegularizer`](@ref) with `ε = 0` (Chambolle–Pock); iterative for other smooth
 regularizers. A [`ProximalMap`](@ref) wraps user-defined maps such as denoisers.
+
+For the iterative TV prox, `tol` is an absolute tolerance on the primal–dual gap, which bounds
+`ρ/2 ‖z - z*‖²_w` (default: round-off level), and `maxiter` caps the iterations. The proximal
+methods pass tolerances tied to their own progress; other proximal maps ignore both.
 """
 function prox!(z::AbstractVector, reg::AbstractRegularizer, v::AbstractVector, ρ::Real;
-               weights = nothing, lower = nothing, upper = nothing)
+               weights = nothing, lower = nothing, upper = nothing, tol = nothing, maxiter = nothing)
     ρ > 0 || throw(ArgumentError("ρ must be positive"))
     w = weights === nothing ? ones(length(v)) : weights
     if lower === nothing && upper === nothing
@@ -218,7 +223,7 @@ struct ProximalMap{F} <: AbstractRegularizer
 end
 objective_value(::ProximalMap, σ::AbstractVector) = 0.0
 function prox!(z::AbstractVector, pm::ProximalMap, v::AbstractVector, ρ::Real;
-               weights = nothing, lower = nothing, upper = nothing)
+               weights = nothing, lower = nothing, upper = nothing, tol = nothing, maxiter = nothing)
     pm.f!(z, v, ρ)
     lower === nothing || (z .= max.(z, lower))
     upper === nothing || (z .= min.(z, upper))

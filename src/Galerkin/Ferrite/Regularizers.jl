@@ -224,7 +224,7 @@ function _operator_norm2!(op::_TVOperator, m)
 end
 
 function prox!(z::AbstractVector, reg::TotalVariationRegularizer{<:FerriteDiscretization}, v::AbstractVector, ρ::Real;
-               weights = nothing, lower = nothing, upper = nothing)
+               weights = nothing, lower = nothing, upper = nothing, tol = nothing, maxiter = nothing)
     reg.ε > 0 && return invoke(prox!, Tuple{AbstractVector, AbstractRegularizer, AbstractVector, Real}, z, reg, v, ρ;
                                weights, lower, upper)
     ρ > 0 || throw(ArgumentError("ρ must be positive"))
@@ -234,7 +234,7 @@ function prox!(z::AbstractVector, reg::TotalVariationRegularizer{<:FerriteDiscre
     m = weights === nothing ? ones(n) : Vector{Float64}(weights)
     lo = lower === nothing ? fill(-Inf, n) : lower isa Real ? fill(Float64(lower), n) : lower
     hi = upper === nothing ? fill(Inf, n) : upper isa Real ? fill(Float64(upper), n) : upper
-    return _tv_prox_cp!(z, op, v, Float64(ρ), m, lo, hi)
+    return _tv_prox_cp!(z, op, v, Float64(ρ), m, lo, hi; maxiter = something(maxiter, 100_000), gap_tol = tol)
 end
 
 # primal–dual gap of the scaled problem: P(y) - D(p), with the dual value
@@ -252,7 +252,11 @@ function _tv_gap(op::_TVOperator, y, p, D, Dv, ylo, yhi, Ky, Ktp)
     return P - (dot(ys, q) + sum(abs2, ys .- Dv) / 2), P
 end
 
-function _tv_prox_cp!(z, op::_TVOperator, v, ρ, m, lo, hi; maxiter = 100_000, rtol = 1e-14)
+# Stops when the gap is below `gap_tol` (absolute; it bounds ρ/2 ‖z - z*‖²_m) or, by default, at
+# the round-off level 1e-14 (1 + |P|). Callers that use the prox inexactly (ADMM, proximal
+# gradient) pass tolerances tied to their own progress: the fixed-step iteration converges only
+# slowly on meshes with very small or thin cells (e.g. near the centre of polar meshes).
+function _tv_prox_cp!(z, op::_TVOperator, v, ρ, m, lo, hi; maxiter = 100_000, gap_tol = nothing)
     D = sqrt.(ρ .* m)
     Dv = D .* v
     ylo, yhi = D .* lo, D .* hi
@@ -288,9 +292,9 @@ function _tv_prox_cp!(z, op::_TVOperator, v, ρ, m, lo, hi; maxiter = 100_000, r
         copyto!(yold, y)
         @. y = clamp((y - τ * Ktp / D + τ * Dv) / (1 + τ), ylo, yhi)
         @. ybar = 2y - yold
-        if it % 20 == 0
+        if it == 2 || it % 20 == 0                        # early check: warm starts may already suffice
             gap, P = _tv_gap(op, y, p, D, Dv, ylo, yhi, Ky, Ktp)
-            gap <= rtol * (1 + abs(P)) && break
+            gap <= max(something(gap_tol, 0.0), 1e-14 * (1 + abs(P))) && break
         end
     end
     z .= y ./ D

@@ -119,6 +119,21 @@ end
         end
     end
 
+    @testset "inexact TV prox: the gap tolerance bounds the error" begin
+        # polar meshes (small, thin cells at the centre) make the fixed-step iteration slow; the
+        # proximal methods therefore request only the accuracy they need
+        disc = FerriteDiscretization(polar_grid(8, 64; boundary_spacing = 1 / 16); ip_σ = Lagrange{RefTriangle, 1}())
+        n = ndofs_σ(disc)
+        w = lumped_mass(disc)
+        v = 1 .+ 0.3 .* randn(rng, n)
+        ρ = 50.0
+        exact = prox(TotalVariationRegularizer(disc; ε = 0), v, ρ; weights = w)
+        for tol in (1e-4, 1e-7)
+            z = prox(TotalVariationRegularizer(disc; ε = 0), v, ρ; weights = w, tol)
+            @test ρ / 2 * sum(w .* (z .- exact) .^ 2) <= tol * (1 + 1e-6)
+        end
+    end
+
     @testset "user-defined proximal map" begin
         # soft thresholding: prox of ‖z‖₁ in the Euclidean metric
         pm = ProximalMap((z, v, ρ) -> (z .= sign.(v) .* max.(abs.(v) .- 1 / ρ, 0)))

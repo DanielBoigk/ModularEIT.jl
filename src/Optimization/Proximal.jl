@@ -9,14 +9,20 @@ _weights(w, n) = w === nothing ? ones(n) : (length(w) == n ? Vector{Float64}(w) 
                                             throw(DimensionMismatch("weights need $n entries")))
 _bound_or_nothing(box::_Box, b) = box.active ? b : nothing
 
-# z = argmin α G(z) + ρ/2 ‖z - v‖²_w over the box
-function _scaled_prox!(z, α, G, v, ρ, w, box)
+# z = argmin α G(z) + ρ/2 ‖z - v‖²_w over the box. Iterative proximal maps are solved inexactly:
+# the error ‖z - z*‖_w only has to be small compared with the method's current progress `scale`
+# (ADMM: primal residual, proximal gradient: last step), which the gap tolerance
+# (ρ/α)/2 (0.1 scale)² guarantees. Inexact ADMM and proximal gradient methods converge when these
+# errors decrease with the progress; solving every prox to round-off would waste most of the time.
+function _scaled_prox!(z, α, G, v, ρ, w, box; scale = nothing)
     if α == 0
         copyto!(z, v)
         return _clamp_box!(z, box)
     end
-    return prox!(z, G, v, ρ / α; weights = w, lower = _bound_or_nothing(box, box.lower),
-                 upper = _bound_or_nothing(box, box.upper))
+    ρG = ρ / α
+    tol, maxiter = scale === nothing || !isfinite(scale) ? (nothing, nothing) : (ρG / 2 * (0.1scale)^2, 5000)
+    return prox!(z, G, v, ρG; weights = w, lower = _bound_or_nothing(box, box.lower),
+                 upper = _bound_or_nothing(box, box.upper), tol, maxiter)
 end
 
 # ---------------------------------------------------------------------------------------------
@@ -60,10 +66,14 @@ mutable struct _ProxGradWorkspace
     v::Vector{Float64}
     t::Float64
     θ::Float64
+    step::Float64                # last ‖z - y‖_w: accuracy scale of the inexact prox
 end
 
 _workspace(m::ProximalGradient, obj, n) =
-    _ProxGradWorkspace(_weights(m.weights, n), zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), NaN, 1.0)
+    _ProxGradWorkspace(_weights(m.weights, n), zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), NaN, 1.0, NaN)
+
+# accuracy scale for the prox: the last step, or 1 % of the point at the start
+_prox_scale(step, w, v) = isfinite(step) && step > 0 ? step : 1e-2 * _wnorm(w, v)
 
 _regularizer_value(α, G, σ) = α == 0 ? 0.0 : α * objective_value(G, σ)
 
@@ -77,8 +87,9 @@ function _initialize!(st, ws::_ProxGradWorkspace, m::ProximalGradient, obj, box)
     ws.t = _initial_step(st.σ, ws.gy ./ ws.w)
     # gradient mapping at σ₀ with the initial step
     ws.v .= st.σ .- ws.t .* ws.gy ./ ws.w
-    _scaled_prox!(ws.z, m.α, m.G, ws.v, 1 / ws.t, ws.w, box)
+    _scaled_prox!(ws.z, m.α, m.G, ws.v, 1 / ws.t, ws.w, box; scale = _prox_scale(ws.step, ws.w, ws.v))
     st.g .= ws.w .* (st.σ .- ws.z) ./ ws.t
+    ws.step = _wnorm(ws.w, st.σ .- ws.z)
     return st
 end
 
@@ -94,7 +105,7 @@ function _step!(st, ws::_ProxGradWorkspace, m::ProximalGradient, obj, box)
     Fz = Inf
     for _ in 1:60
         ws.v .= ws.y .- ws.t .* ws.gy ./ ws.w
-        _scaled_prox!(ws.z, m.α, m.G, ws.v, 1 / ws.t, ws.w, box)
+        _scaled_prox!(ws.z, m.α, m.G, ws.v, 1 / ws.t, ws.w, box; scale = _prox_scale(ws.step, ws.w, ws.v))
         Fz = _try_objective_value(obj, ws.z)
         st.nevals += 1
         d = ws.z .- ws.y
@@ -105,6 +116,7 @@ function _step!(st, ws::_ProxGradWorkspace, m::ProximalGradient, obj, box)
     end
     isfinite(Fz) || return false
     st.g .= ws.w .* (ws.y .- ws.z) ./ ws.t
+    ws.step = _wnorm(ws.w, ws.z .- ws.y)
     Φz = Fz + _regularizer_value(m.α, m.G, ws.z)
     x = st.σ
     copyto!(ws.xprev, x)
@@ -228,7 +240,7 @@ function _step!(st, ws::_ADMMWorkspace, m::ADMM, obj, box)
     st.g .= res.g .- ws.ρ .* w .* (x .- term.reference)          # ∇F(x)
     # regularizer step
     copyto!(ws.zold, z)
-    _scaled_prox!(z, m.α, m.G, x .+ u, ws.ρ, w, box)
+    _scaled_prox!(z, m.α, m.G, x .+ u, ws.ρ, w, box; scale = _prox_scale(ws.r, w, x .+ u))
     # dual step and residuals
     u .+= x .- z
     ws.r = _wnorm(w, x .- z)
