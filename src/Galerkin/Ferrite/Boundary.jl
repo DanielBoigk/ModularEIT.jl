@@ -70,21 +70,23 @@ function CompleteElectrodeModel(electrodes, z; measure = 1:length(electrodes))
 end
 
 """
-    angular_electrodes(disc, L; coverage = 0.5, offset = 0.0, center = nothing)
+    angular_electrodes(disc, L; coverage = 0.5, offset = 0.0, center = nothing, angles = nothing)
 
 `L` electrodes around `center` (default: centroid of the boundary curve), centred at
-the angles `offset + 2π(ℓ-1)/L`. Electrode ℓ is the set of boundary facets whose midpoint lies
+the angles `offset + 2π(ℓ-1)/L`, or at the given `angles` (e.g. perturbed positions from
+[`electrode_angles`](@ref)). Electrode ℓ is the set of boundary facets whose midpoint lies
 within `± coverage π / L` of its angle, so `coverage` is the fraction of the boundary covered.
 """
 function angular_electrodes(disc::FerriteDiscretization, L::Integer; coverage::Real = 0.5,
-                            offset::Real = 0.0, center = nothing)
+                            offset::Real = 0.0, center = nothing, angles = nothing)
     0 < coverage < 1 || throw(ArgumentError("coverage must be in (0, 1)"))
+    angles === nothing || length(angles) == L || throw(DimensionMismatch("need $L electrode angles"))
     mids = [_facet_midpoint(disc.grid, f) for f in disc.boundary_facets]
     c = center === nothing ? _centroid(disc, disc.boundary_facets) : Vec{2}(Tuple(center))
     θ = [atan(m[2] - c[2], m[1] - c[1]) for m in mids]
     half = coverage * π / L
     return map(1:L) do ℓ
-        θℓ = offset + 2π * (ℓ - 1) / L
+        θℓ = angles === nothing ? offset + 2π * (ℓ - 1) / L : angles[ℓ]
         [f for (f, t) in zip(disc.boundary_facets, θ) if abs(mod(t - θℓ + π, 2π) - π) < half]
     end
 end
@@ -243,4 +245,40 @@ function ForwardModel(disc::FerriteDiscretization, model::CompleteElectrodeModel
     θ = [_electrode_angle(disc, e) for e in model.electrodes]
     return _forward_model(model, nu, ndofs_σ(disc), copy(pattern), A₀, ct, P, Q, ones(n), grounding,
                           nu .+ (1:L), sparse(1.0I, L, L), θ, sort(model.measure) == 1:L)
+end
+
+"""
+    transfer_electrodes(src, electrodes, dst)
+
+The electrodes `electrodes` (boundary facets of the discretization `src`) on another 2D mesh
+`dst` of the same domain: every boundary facet of `dst` belongs to the electrode of the nearest
+boundary facet of `src` (distance of its midpoint to the facet segments). Exact for nested
+meshes, e.g. to simulate data on a refined mesh with the same physical electrodes as the
+reconstruction mesh (avoiding the inverse crime without changing the electrodes).
+"""
+function transfer_electrodes(src::FerriteDiscretization, electrodes, dst::FerriteDiscretization)
+    Ferrite.getspatialdim(src.grid) == 2 || throw(ArgumentError("transfer_electrodes is implemented for 2D meshes"))
+    label = Dict{FacetIndex, Int}()
+    for (ℓ, e) in enumerate(electrodes), f in e
+        label[f] = ℓ
+    end
+    segs = map(src.boundary_facets) do fi
+        c, f = fi.idx
+        a, b = (get_node_coordinate(src.grid, n) for n in Ferrite.facets(getcells(src.grid, c))[f])
+        (a, b, get(label, fi, 0))
+    end
+    out = [FacetIndex[] for _ in electrodes]
+    for fi in dst.boundary_facets
+        m = _facet_midpoint(dst.grid, fi)
+        _, k = findmin(s -> _segment_distance(m, s[1], s[2]), segs)
+        ℓ = segs[k][3]
+        ℓ > 0 && push!(out[ℓ], fi)
+    end
+    return out
+end
+
+function _segment_distance(p, a, b)
+    d = b - a
+    t = clamp(((p - a) ⋅ d) / (d ⋅ d), 0, 1)
+    return norm(p - (a + t * d))
 end

@@ -55,6 +55,8 @@ Everything shares the transform plans of [[Fast Solvers on Rectangular Domains]]
 3. `gaussian_random_field(disc; s, ℓ, rng)` for synthetic data.
 4. Tests: $s = 0$ and $s = 1$ agree with the assembled $M$ and $M+\ell^2K$. $A(-s) = M A(s)^{-1} M$. The prox satisfies its optimality condition. The sample covariance of random fields converges to $A(s)^{-1}$.
 
+**In ModularEIT.jl:** [`gaussian_random_field`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.gaussian_random_field).
+
 ## References
 
 1. J. W. Neuberger (2010). *Sobolev Gradients and Differential Equations*, 2nd ed. Lecture Notes in Mathematics 1670, Springer. [doi:10.1007/978-3-642-04041-2](https://doi.org/10.1007/978-3-642-04041-2)

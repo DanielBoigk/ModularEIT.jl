@@ -32,6 +32,8 @@ where $\delta$ is the known noise level: do not fit the data better than the noi
 
 **Continuation.** In practice $\beta$ is often decreased gradually during the iterations. This also helps nonlinear solvers avoid poor local minima.
 
+**In ModularEIT.jl:** [`discrepancy_target`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.discrepancy_target).
+
 ## References
 
 1. H. W. Engl, M. Hanke, A. Neubauer (1996). *Regularization of Inverse Problems*. Kluwer. [doi:10.1007/978-94-009-1740-8](https://doi.org/10.1007/978-94-009-1740-8)

@@ -13,6 +13,8 @@ An **inverse crime** is committed when synthetic data are generated with the *sa
 
 The concept was named by Colton and Kress and is emphasised in the EIT literature by Mueller and Siltanen, and by Kaipio and Somersalo.
 
+**In ModularEIT.jl:** [`simulate_data`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.simulate_data), [`transfer_electrodes`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.transfer_electrodes), [`conductivity`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.conductivity).
+
 ## References
 
 1. D. Colton, R. Kress (2013). *Inverse Acoustic and Electromagnetic Scattering Theory*, 3rd ed. Springer. [doi:10.1007/978-1-4614-4942-3](https://doi.org/10.1007/978-1-4614-4942-3)

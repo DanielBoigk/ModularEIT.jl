@@ -13,6 +13,8 @@ Learned priors (see [[Learned Regularization]]) need samples from a distribution
 
 **Held-out evaluation.** Test conductivities must not appear in training. Test data should also be simulated on a different, preferably finer, mesh than the reconstruction mesh to avoid the [[Inverse Crime]].
 
+**In ModularEIT.jl:** [`random_inclusions`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.random_inclusions), [`InclusionPhantom`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.InclusionPhantom), [`gaussian_random_field`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.gaussian_random_field), [`image_phantom`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.image_phantom), [`conductivity`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.conductivity).
+
 ## References
 
 1. Tiny ImageNet (2017). Kaggle dataset. [kaggle.com/c/tiny-imagenet](https://kaggle.com/competitions/tiny-imagenet)

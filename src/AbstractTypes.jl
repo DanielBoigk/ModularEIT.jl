@@ -77,6 +77,23 @@ Minimization method for [`minimize`](@ref): [`GradientDescent`](@ref), [`LBFGS`]
 abstract type AbstractOptimizer end
 
 """
+    AbstractNoiseModel
+
+Measurement noise added to simulated data: [`GaussianNoise`](@ref),
+[`RelativeGaussianNoise`](@ref), [`SourceMeterNoise`](@ref). See [`add_noise`](@ref) and
+[`simulate_data`](@ref).
+"""
+abstract type AbstractNoiseModel end
+
+"""
+    AbstractInclusion
+
+A shape with a conductivity value for [`InclusionPhantom`](@ref): [`Circle`](@ref),
+[`Ellipse`](@ref), [`Polygon`](@ref). Membership: `x in inclusion`.
+"""
+abstract type AbstractInclusion end
+
+"""
     AbstractLinearSolver
 
 Choice of linear solver for the state, adjoint and Dirichlet systems:

@@ -12,7 +12,7 @@ Common rules for terminating a reconstruction:
 
 Tolerances of the inner linear solves should be tied to the outer progress. Solving to $10^{-12}$ when the gradient is still large wastes effort, while solving too loosely produces gradient noise that stalls line searches.
 
-**In ModularEIT.jl:** [`minimize`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.minimize), [`OptimizationState`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.OptimizationState).
+**In ModularEIT.jl:** [`minimize`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.minimize), [`OptimizationState`](https://danielboigk.github.io/ModularEIT.jl/dev/api/optimization/#ModularEIT.OptimizationState), [`discrepancy_target`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.discrepancy_target).
 
 ## References
 

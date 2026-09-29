@@ -30,6 +30,8 @@ This preserves symmetry but not positive semidefiniteness: for large $s$, small 
 
 **Beyond white noise.** Real data also contain electrode contact-impedance errors, electrode position errors, drift and correlated noise. These *modelling errors* are often larger than instrument noise. The approximation error approach models them statistically.
 
+**In ModularEIT.jl:** [`GaussianNoise`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.GaussianNoise), [`RelativeGaussianNoise`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.RelativeGaussianNoise), [`SourceMeterNoise`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.SourceMeterNoise), [`add_noise`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.add_noise), [`perturb_boundary_operator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.perturb_boundary_operator), [`perturb_contact_impedance`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.perturb_contact_impedance), [`electrode_angles`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.electrode_angles).
+
 ## References
 
 1. J. L. Mueller, S. Siltanen (2012). *Linear and Nonlinear Inverse Problems with Practical Applications*. SIAM, p. 197 ff. [doi:10.1137/1.9781611972344](https://doi.org/10.1137/1.9781611972344)

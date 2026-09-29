@@ -30,7 +30,7 @@ export CoefficientGradient, L2Gradient, riesz_map, riesz_map!
 export interpolate_function, l2_project, fe_inner, fe_norm, total_variation, total_variation!
 
 export ContinuumModel, PointElectrodeModel, GapModel, CompleteElectrodeModel
-export angular_electrodes, electrode_length
+export angular_electrodes, electrode_length, transfer_electrodes
 export ForwardModel, system_matrix!, n_inject, n_measure, n_control, trigonometric_patterns
 export forward_neumann, forward_dirichlet, reground, pattern_svd
 export ImageMap, to_image, from_image
@@ -42,6 +42,11 @@ export residual!, residual_and_jacobian!, n_residual, boundary_error, pattern_va
 export TikhonovRegularizer, TotalVariationRegularizer, RegularizedObjective, gauss_newton_hessian
 export minimize, OptimizationState, GradientDescent, LBFGS, GaussNewton
 export prox, prox!, ProximalMap, lumped_mass, ProximalGradient, ADMM
+export AbstractNoiseModel, GaussianNoise, RelativeGaussianNoise, SourceMeterNoise, add_noise, add_noise!
+export expected_squared_error, discrepancy_target, perturb_boundary_operator, perturb_contact_impedance, electrode_angles
+export AbstractInclusion, Circle, Ellipse, Polygon, InclusionPhantom, random_inclusions
+export PixelFunction, image_phantom, TransformedPhantom, lognormal_phantom, levelset_phantom
+export gaussian_random_field, corrupt_image, conductivity, simulate_data
 
 
 include("AbstractTypes.jl")
@@ -63,5 +68,9 @@ include("Optimization/Optimizers.jl")
 include("Optimization/FirstOrder.jl")
 include("Optimization/GaussNewton.jl")
 include("Optimization/Proximal.jl")
+
+include("Data/Noise.jl")
+include("Data/Phantoms.jl")
+include("Data/Simulation.jl")
 
 end # module ModularEIT

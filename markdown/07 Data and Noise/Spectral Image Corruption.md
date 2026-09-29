@@ -5,7 +5,11 @@ aliases: [Synthetic degradation, DCT corruption]
 
 To train a denoiser or deblurrer that should later clean EIT reconstructions, one needs pairs (clean, degraded). Real EIT reconstructions are expensive to produce, so a cheap **synthetic degradation** is used that imitates their typical artefacts: loss of fine detail, spatially varying blur, and structured noise.
 
-**Discrete cosine transform (DCT).** For an $n\times m$ image $x$, the 2D DCT-II $C = \mathrm{DCT}(x)$ expresses $x$ in cosine modes $\cos\big(\tfrac{\pi k(2i+1)}{2n}\big)\cos\big(\tfrac{\pi\ell(2j+1)}{2m}\big)$. These are the eigenfunctions of the discrete Laplacian with reflecting (Neumann) boundaries. Frequency $(k,\ell)$ has squared magnitude $|\omega|^2 = k^2+\ell^2$.
+**Discrete cosine transform (DCT).** For an $n\times m$ image $x$, the 2D DCT-II $C = \mathrm{DCT}(x)$ expresses $x$ in cosine modes $\cos\big(\tfrac{\pi k(2i+1)}{2n}\big)\cos\big(\tfrac{\pi\ell(2j+1)}{2m}\big)$. These are the eigenvectors of the discrete Laplacian with reflecting (Neumann) boundaries (see [[Discrete Cosine Transform]]). As the squared magnitude of frequency $(k,\ell)$ take the corresponding eigenvalue, scaled to pixel frequencies,
+
+$$
+|\omega|^2 = \Big(\frac{2n}{\pi}\Big)^2\sin^2\frac{\pi k}{2n}+\Big(\frac{2m}{\pi}\Big)^2\sin^2\frac{\pi\ell}{2m}\ \approx\ k^2+\ell^2\quad\text{for small }k,\ell .
+$$
 
 **Iterated corruption.** Repeat $T$ times:
 
@@ -15,9 +19,11 @@ To train a denoiser or deblurrer that should later clean EIT reconstructions, on
 4. damp high frequencies: $C_{k\ell}\leftarrow e^{-\lambda|\omega|^{2s}}C_{k\ell}$;
 5. transform back: $x\leftarrow\mathrm{DCT}^{-1}(C)$.
 
-Step 4 alone is the solution operator of the heat equation (for $s=1$), a linear Gaussian-type blur. Combined with repeated noise injection, the result is a random, nonstationary degradation whose strength is controlled by $T$, $\lambda$, $s$ and the noise levels.
+Step 4 alone (for $s=1$) is the solution operator of the discrete heat equation $\dot x = \Delta_h x$, a linear Gaussian-type blur. It preserves the mean and satisfies the discrete maximum principle, so it creates no new extrema. With $|\omega|^2 = k^2+\ell^2$ instead, the truncated cosine series of the Gaussian multiplier rings near edges. Combined with repeated noise injection, the result is a random, nonstationary degradation whose strength is controlled by $T$, $\lambda$, $s$ and the noise levels.
 
 **Caveat.** This is only a proxy. EIT artefacts depend on depth (the resolution loss grows towards the centre; see [[Decay of Boundary Measurements]]) and on the specific algorithm. Training on actual reconstructions, or learning inside the reconstruction loop, captures the operator-specific degradation better (see [[Learned Regularization]]).
+
+**In ModularEIT.jl:** [`corrupt_image`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.corrupt_image).
 
 ## References
 
