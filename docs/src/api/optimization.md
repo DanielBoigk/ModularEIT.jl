@@ -63,6 +63,26 @@ ProximalGradient
 ADMM
 ```
 
+## Truncated SVD
+
+Singular value decomposition of the Jacobian (modes ordered by how well the data determine
+them, i.e. by depth) and Gauss–Newton with truncated-SVD steps: regularisation by projection,
+no penalty, stopped by the discrepancy principle.
+
+```julia
+obj = ParametrizedObjective(AdjointStateObjective(fm, currents, voltages), pixels)
+js  = jacobian_svd(obj, θ₀)                       # (U, s, V, r), J = U S Vᵀ
+res = minimize(obj, θ₀, TruncatedGaussNewton(; rtol = 1e-2); lower = 0.05,
+               ftarget = discrepancy_target(obj.obj, noise))
+sp  = SubspaceParametrization(pixels, jacobian_basis(obj, θ₀, 40))   # data-optimal subspace
+```
+
+```@docs
+jacobian_svd
+jacobian_basis
+TruncatedGaussNewton
+```
+
 ## Wiki articles
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
