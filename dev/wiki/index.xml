@@ -6,65 +6,65 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Coarsening of Bisection Meshes</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Coarsening-of-Bisection-Meshes</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Coarsening-of-Bisection-Meshes</guid>
-    <description><![CDATA[ Coarsening a mesh produced by Newest Vertex Bisection (NVB) undoes bisections. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 22:03:27 GMT</pubDate>
+    <title>Complete Electrode Model</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Complete-Electrode-Model</guid>
+    <description><![CDATA[ The Complete Electrode Model (CEM) is the standard forward model for real EIT measurements (see Electrode Models). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>Newest Vertex Bisection</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Newest-Vertex-Bisection</guid>
-    <description><![CDATA[ Newest vertex bisection (NVB) refines triangular meshes without creating Hanging Nodes. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 22:03:27 GMT</pubDate>
+    <title>Current Patterns</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Current-Patterns</guid>
+    <description><![CDATA[ A current pattern is a boundary current g with \int_{\partial\Omega} g\,\mathrm ds = 0 (or electrode currents with \sum_\ell I_\ell = 0). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>Pixel Images and Finite Element Functions</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Pixel-Images-and-Finite-Element-Functions</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Pixel-Images-and-Finite-Element-Functions</guid>
-    <description><![CDATA[ Learned priors, image denoisers and plots work with pixel images, while the forward problem works with finite element coefficients. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 22:03:27 GMT</pubDate>
+    <title>Dirichlet Problem</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-Problem</guid>
+    <description><![CDATA[ In the Dirichlet problem the voltage on the boundary is prescribed. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>ModularEIT Wiki</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
-    <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): the physics and mathematics of the forward and inverse problem, finite element discretisation, adjoint-based gradients, optimisation, and classical and learned regularisation. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 22:03:27 GMT</pubDate>
+    <title>Dirichlet-to-Neumann Map</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Dirichlet-to-Neumann-Map</guid>
+    <description><![CDATA[ For a conductivity \gamma, the Dirichlet-to-Neumann (DtN) map sends a boundary voltage to the boundary current it produces: \Lambda_\gamma : H^{1/2}(\partial\Omega)\to H^{-1/2}(\partial\Omega), \qquad f \mapsto \gamma\,\partial_\nu u_f\big|_{\partial\Omega}, where u_f solves the Dirichlet Problem wi... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>Grounding of the Potential</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Grounding-of-the-Potential</guid>
-    <description><![CDATA[ The solution of the Neumann Problem is unique only up to an additive constant: if u solves it, so does u+c. Only potential differences are physical. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 17:22:18 GMT</pubDate>
+    <title>Electrode Models</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Electrode-Models</guid>
+    <description><![CDATA[ The mathematical boundary conditions have to model how current actually enters the body through L metal electrodes e_1,\dots,e_L\subset\partial\Omega. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>A Posteriori Error Estimation and Adaptive Meshing</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</guid>
-    <description><![CDATA[ A finite element solution u_h satisfies the discrete equations exactly. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 16:34:22 GMT</pubDate>
+    <title>Forward Map</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Forward-Map</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Forward-Map</guid>
+    <description><![CDATA[ The forward map of EIT takes a conductivity to the boundary operator it generates: \mathcal F:\ \gamma \mapsto \Lambda_\gamma \quad(\text{or } \gamma\mapsto\mathcal R_\gamma = \Lambda_\gamma^{-1}). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>Adaptive Meshing in EIT</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Adaptive-Meshing-in-EIT</guid>
-    <description><![CDATA[ Adaptive mesh refinement repeats SOLVE → ESTIMATE → MARK → REFINE (see A Posteriori Error Estimation and Adaptive Meshing). ]]></description>
-    <pubDate>Mon, 28 Sep 2026 16:34:22 GMT</pubDate>
+    <title>Gap Model</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Gap-Model</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Gap-Model</guid>
+    <description><![CDATA[ The gap model spreads the current of each electrode e_\ell\subset\partial\Omega uniformly over the electrode and assumes no current in the gaps between electrodes (see Electrode Models): \nabla\cdot(\sigma\nabla u) = 0\ \text{ in }\Omega,\qquad \sigma\,\partial_\nu u = \begin{cases} I_\ell/|e_\ell| ... ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>Residual Estimator for the Conductivity Equation</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Residual-Estimator-for-the-Conductivity-Equation</guid>
-    <description><![CDATA[ The residual-based estimator of A Posteriori Error Estimation and Adaptive Meshing, written out for the discretised Conductivity Equation with the boundary conditions of the Electrode Models. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 16:34:22 GMT</pubDate>
+    <title>Neumann Problem</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-Problem</guid>
+    <description><![CDATA[ In the Neumann problem the current density on the boundary is prescribed. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>Dörfler Marking</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/D%C3%B6rfler-Marking</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/D%C3%B6rfler-Marking</guid>
-    <description><![CDATA[ Dörfler (bulk) marking decides which cells to refine from the local error indicators \eta_K. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
+    <title>Neumann-to-Dirichlet Map</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-to-Dirichlet-Map</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Neumann-to-Dirichlet-Map</guid>
+    <description><![CDATA[ Real EIT devices inject currents and measure voltages. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item><item>
-    <title>Goal-Oriented Error Estimation</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Goal-Oriented-Error-Estimation</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Goal-Oriented-Error-Estimation</guid>
-    <description><![CDATA[ Energy-norm estimators control the error everywhere in \Omega. EIT, however, only uses a few numbers: the electrode voltages. ]]></description>
-    <pubDate>Mon, 28 Sep 2026 15:35:47 GMT</pubDate>
+    <title>Point Electrode Model</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Point-Electrode-Model</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/01-Physics-and-Forward-Problem/Point-Electrode-Model</guid>
+    <description><![CDATA[ The point electrode model idealises every electrode as a single boundary point x_\ell\in\partial\Omega (see Electrode Models). ]]></description>
+    <pubDate>Tue, 29 Sep 2026 10:38:33 GMT</pubDate>
   </item>
     </channel>
   </rss>
