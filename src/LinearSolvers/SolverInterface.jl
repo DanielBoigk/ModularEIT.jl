@@ -19,20 +19,25 @@ DirectSolver(; backend::Symbol = :auto) = DirectSolver(backend)
     BlockCGSolver(; preconditioner = :amg, rtol = 1e-10, maxiter = 0)
 
 Projected block conjugate gradients ([`pbcg!`](@ref)) with an `:amg`, `:jacobi` or `:none`
-preconditioner. `maxiter = 0` uses the default of `pbcg!`. The previous solution is the initial
-guess of the next solve (warm start across conductivity updates).
+preconditioner, or a preconditioner choice that needs the discretization, such as
+[`DCTPreconditioner`](@ref)`(disc)` on uniform rectangle grids. `maxiter = 0` uses the default
+of `pbcg!`. The previous solution is the initial guess of the next solve (warm start across
+conductivity updates).
 """
-struct BlockCGSolver <: AbstractLinearSolver
-    preconditioner::Symbol
+struct BlockCGSolver{P} <: AbstractLinearSolver
+    preconditioner::P
     rtol::Float64
     maxiter::Int
-    function BlockCGSolver(preconditioner::Symbol, rtol::Real, maxiter::Integer)
-        preconditioner in (:amg, :jacobi, :none) ||
+    function BlockCGSolver(preconditioner::P, rtol::Real, maxiter::Integer) where {P}
+        if preconditioner === :dct
+            throw(ArgumentError("the DCT preconditioner needs the discretization: preconditioner = DCTPreconditioner(disc)"))
+        elseif preconditioner isa Symbol && !(preconditioner in (:amg, :jacobi, :none))
             throw(ArgumentError("preconditioner must be :amg, :jacobi or :none, got :$preconditioner"))
-        return new(preconditioner, rtol, maxiter)
+        end
+        return new{P}(preconditioner, rtol, maxiter)
     end
 end
-BlockCGSolver(; preconditioner::Symbol = :amg, rtol::Real = 1e-10, maxiter::Integer = 0) =
+BlockCGSolver(; preconditioner = :amg, rtol::Real = 1e-10, maxiter::Integer = 0) =
     BlockCGSolver(preconditioner, rtol, maxiter)
 
 mutable struct _DirectState{F}
@@ -45,18 +50,19 @@ end
 _update_solver!(st::_DirectState, A::SparseMatrixCSC) = (refactor!(st.F, A); st)
 _solve!(X, st::_DirectState, B) = ldiv!(X, st.F, B)
 
-mutable struct _CGState{MA}
-    choice::BlockCGSolver
+mutable struct _CGState{MA, C <: BlockCGSolver}
+    choice::C
     A::MA
     nullspace::Matrix{Float64}
     grounding::Matrix{Float64}
     workspaces::Dict{Int, Any}        # per block size
     preconditioners::Dict{Int, Any}   # per block size, rebuilt after matrix updates
+    pcstate::Any                      # structure of a discretization-aware preconditioner
 end
 
 function _init_solver(s::BlockCGSolver, A::SparseMatrixCSC, nullspace, grounding)
     return _CGState(s, A, Matrix{Float64}(_as_matrix(nullspace)), Matrix{Float64}(_as_matrix(grounding)),
-                    Dict{Int, Any}(), Dict{Int, Any}())
+                    Dict{Int, Any}(), Dict{Int, Any}(), nothing)
 end
 
 function _update_solver!(st::_CGState, A::SparseMatrixCSC)
@@ -68,6 +74,11 @@ end
 function _cg_preconditioner(st::_CGState, s::Integer)
     return get!(st.preconditioners, s) do
         pc = st.choice.preconditioner
+        if !(pc isa Symbol)
+            st.pcstate === nothing &&
+                throw(ArgumentError("this preconditioner needs a forward model; use the solver through a ForwardModel"))
+            return update_preconditioner!(st.pcstate, st.A)
+        end
         pc === :amg ? AMGPreconditioner(st.A, s) : pc === :jacobi ? JacobiPreconditioner(st.A) : nothing
     end
 end

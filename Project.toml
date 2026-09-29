@@ -4,9 +4,11 @@ version = "0.0.1-dev"
 authors = ["Daniel Boigk"]
 
 [deps]
+AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
 AlgebraicMultigrid = "2169fc97-5a83-5252-b627-83903c6c433c"
 DifferentiationInterface = "a0c0ee7d-e4b9-4e03-894e-1c5f64a51d63"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
 Ferrite = "c061ca5d-56c9-439f-9c0e-210fe06d3992"
 FerriteGmsh = "4f95f4f8-b27c-4ae5-9a39-ea55e634e36b"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"

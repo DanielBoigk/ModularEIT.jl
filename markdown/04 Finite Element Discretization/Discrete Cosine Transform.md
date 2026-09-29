@@ -80,6 +80,8 @@ $$
 
 and $V$ is symmetric, so $V c = (V^\top W)(W^{-1}c)$ uses the same routine. DCT-II and DST-I follow from analogous extensions, or from one FFT of length $n$ after reordering (Makhoul). A complex FFT is therefore sufficient, which matters on GPUs, where FFT libraries do not provide cosine transforms. Several right-hand sides are transformed as one batch.
 
+**In ModularEIT.jl:** [`dct_neumann_solve`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.dct_neumann_solve), [`StructuredGrid`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.StructuredGrid).
+
 ## References
 
 1. G. Strang (1999). *The Discrete Cosine Transform*. SIAM Rev. 41(1), 135–147. [doi:10.1137/S0036144598336745](https://doi.org/10.1137/S0036144598336745)

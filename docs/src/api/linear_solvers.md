@@ -114,6 +114,28 @@ used for the tall-skinny Gram products `XᵀY` by one GEMV per column for Float6
 GPUs run Float64 at 1/64 of the Float32 rate, so Float32 is usually the better choice there
 (see `benchmark/`).
 
+## DCT preconditioner (uniform rectangle grids)
+
+On a uniform rectangle grid of bilinear elements (e.g. pixel-aligned image meshes) the
+constant-conductivity system is inverted by fast cosine transforms. As a preconditioner, the
+iteration count only depends on the conductivity contrast, not on the mesh:
+
+```julia
+solver = BlockCGSolver(preconditioner = DCTPreconditioner(disc))
+obj = AdjointStateObjective(fm, currents, voltages; solver)
+```
+
+Theory: wiki articles [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform) and [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains).
+
+```@docs
+DCTPreconditioner
+dct_preconditioner
+update_preconditioner!
+StructuredGrid
+structured_grid
+dct_neumann_solve
+```
+
 ## Wiki articles
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
@@ -127,3 +149,5 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Projected Cholesky Factorization](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Projected-Cholesky-Factorization)
 - [MINRES](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/MINRES)
 - [Algebraic Multigrid](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid)
+- [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform)
+- [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains)

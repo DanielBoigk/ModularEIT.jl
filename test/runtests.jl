@@ -10,7 +10,8 @@ end
 @testset "ModularEIT" begin
     @testset "linear solvers" begin
         runfolder("LinearSolvers", ["test_projected_block_cg.jl", "test_projected_cholesky.jl",
-                                    "test_krylov_ldl.jl", "test_gpu_agnostic.jl"])
+                                    "test_krylov_ldl.jl", "test_gpu_agnostic.jl",
+                                    "test_dct_preconditioner.jl"])
     end
     @testset "Galerkin layer" begin
         runfolder("Galerkin", ["test_fem_assembly.jl", "test_electrode_models.jl",
