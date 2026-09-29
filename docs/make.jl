@@ -30,6 +30,7 @@ makedocs(
             "Objectives" => "api/objectives.md",
             "Regularization & Optimization" => "api/optimization.md",
             "Synthetic Data & Noise" => "api/data.md",
+            "Parametrizations" => "api/parametrization.md",
             "Adaptive Meshing" => "api/adaptivity.md",
             "Images" => "api/images.md",
             "Linear Solvers" => "api/linear_solvers.md",

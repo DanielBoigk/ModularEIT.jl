@@ -73,7 +73,7 @@ function _try_value_and_gradient!(g, obj, σ)
     try
         return value_and_gradient!(g, obj, σ)
     catch e
-        e isa Union{PosDefException, SingularException, ZeroPivotException, LAPACKException} || rethrow()
+        e isa _INFEASIBLE_EXCEPTIONS || rethrow()
         return Inf
     end
 end

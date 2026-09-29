@@ -202,7 +202,7 @@ Update a fast-transform preconditioner (from [`dct_preconditioner`](@ref) or
 function update_preconditioner!(st::_FastSystem, A::AbstractMatrix)
     size(A, 1) == length(st.sys) || throw(DimensionMismatch("matrix does not match the system"))
     sdiag = [(A[i, i] - st.A0[i, i]) for i in st.su] ./ st.Kdiag
-    any(<=(0), sdiag) && throw(ArgumentError("nonpositive nodal conductivity estimate"))
+    any(<=(0), sdiag) && throw(InfeasibleConductivityError("nonpositive nodal conductivity estimate"))
     fill!(st.sqs, 1.0)
     if st.variant === :constant
         σ̄ = exp(sum(log, sdiag) / length(sdiag))

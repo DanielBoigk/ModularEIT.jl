@@ -1,3 +1,19 @@
+"""
+    InfeasibleConductivityError(msg)
+
+Thrown when a conductivity is not admissible for the forward problem (e.g. non-positive values
+seen by a preconditioner). Optimizers treat it like a failed factorization: the trial point is
+rejected and the step shortened.
+"""
+struct InfeasibleConductivityError <: Exception
+    msg::String
+end
+Base.showerror(io::IO, e::InfeasibleConductivityError) = print(io, "InfeasibleConductivityError: ", e.msg)
+
+# exceptions that mark a trial conductivity as infeasible rather than a bug
+const _INFEASIBLE_EXCEPTIONS = Union{PosDefException, SingularException, ZeroPivotException, LAPACKException,
+                                     InfeasibleConductivityError}
+
 # Swappable linear solvers for the forward model and the objectives. A solver choice
 # (DirectSolver, BlockCGSolver) is instantiated for one matrix (`_init_solver`), updated when the
 # matrix values change (`_update_solver!`, same sparsity pattern) and applied to blocks of

@@ -209,7 +209,7 @@ function _try_objective_value(obj, σ)
     try
         return objective_value(obj, σ)
     catch e
-        e isa Union{PosDefException, SingularException, ZeroPivotException, LAPACKException} || rethrow()
+        e isa _INFEASIBLE_EXCEPTIONS || rethrow()
         return Inf
     end
 end

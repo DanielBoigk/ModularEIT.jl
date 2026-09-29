@@ -94,6 +94,15 @@ A shape with a conductivity value for [`InclusionPhantom`](@ref): [`CircleInclus
 abstract type AbstractInclusion end
 
 """
+    AbstractParametrization
+
+A linear map `σ = P θ` from reconstruction parameters to conductivity coefficients, e.g. pixel
+values ([`PixelParametrization`](@ref)) or subspaces of them ([`SubspaceParametrization`](@ref)).
+Objectives in the parameters: [`ParametrizedObjective`](@ref).
+"""
+abstract type AbstractParametrization end
+
+"""
     AbstractLinearSolver
 
 Choice of linear solver for the state, adjoint and Dirichlet systems:

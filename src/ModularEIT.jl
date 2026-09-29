@@ -15,7 +15,7 @@ export JacobiPreconditioner, AMGPreconditioner
 export ProjectedCholesky, projected_cholesky, projected_ldl, refactor!
 export ProjectedMinresWorkspace, BlockMinresStats, pbminres, pbminres!
 export DeviceSparseMatrixCSR, device_converter
-export AbstractLinearSolver, DirectSolver, BlockCGSolver
+export AbstractLinearSolver, DirectSolver, BlockCGSolver, InfeasibleConductivityError
 export StructuredGrid, DCTPreconditioner, dct_preconditioner
 export AbstractFastPreconditioner, PolarStructure, PolarPreconditioner, polar_preconditioner, polar_grid
 export ConformalMap, map_derivative, ConformalGrid, conformal_grid
@@ -50,6 +50,8 @@ export expected_squared_error, discrepancy_target, perturb_boundary_operator, pe
 export AbstractInclusion, CircleInclusion, EllipseInclusion, PolygonInclusion, InclusionPhantom, random_inclusions
 export PixelFunction, image_phantom, TransformedPhantom, lognormal_phantom, levelset_phantom
 export gaussian_random_field, corrupt_image, conductivity, simulate_data
+export AbstractParametrization, PixelParametrization, SubspaceParametrization, ParametrizedObjective
+export parameter_count, pixel_image, pixel_parameters, dct_basis, boundary_band_basis
 
 
 include("AbstractTypes.jl")
@@ -70,6 +72,7 @@ include("Galerkin/FastPreconditioner.jl")
 include("Galerkin/Objectives/Misfits.jl")
 include("Galerkin/Objectives/AdjointState.jl")
 include("Galerkin/Objectives/KohnVogelius.jl")
+include("Galerkin/Parametrization.jl")
 
 include("Optimization/Optimizers.jl")
 include("Optimization/FirstOrder.jl")

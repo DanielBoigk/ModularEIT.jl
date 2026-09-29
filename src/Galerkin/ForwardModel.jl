@@ -80,10 +80,12 @@ n_control(fm::ForwardModel) = size(fm.E, 2)
     system_matrix!(fm, σ)
 
 Update `fm.A = A₀ + L(σ)` (and its Dirichlet block) for the conductivity coefficients `σ`;
-returns `fm.A`.
+returns `fm.A`. Non-positive coefficients throw an [`InfeasibleConductivityError`](@ref), which
+the optimizers treat as a rejected trial point.
 """
 function system_matrix!(fm::ForwardModel, σ::AbstractVector)
     length(σ) == fm.n_σ || throw(DimensionMismatch("σ must have $(fm.n_σ) entries"))
+    all(>(0), σ) || throw(InfeasibleConductivityError("the conductivity must be positive"))
     assemble_weighted_stiffness!(fm.A, fm.tensor, σ; A₀ = fm.A₀)
     Af, A = nonzeros(fm.A_ff), nonzeros(fm.A)
     @inbounds for (i, p) in enumerate(fm.ff_map)

@@ -119,9 +119,10 @@ end
 
 # quadrature order resolving every pixel by a few points: ~2 points per pixel and direction
 function _pixel_quadrature_order(im::ImageMap)
-    grid = im.disc.grid
     xmin, xmax, ymin, ymax = im.bbox
-    pixel = min((xmax - xmin) / im.m, (ymax - ymin) / im.n)
+    return _pixel_quadrature_order(im.disc.grid, min((xmax - xmin) / im.m, (ymax - ymin) / im.n))
+end
+function _pixel_quadrature_order(grid, pixel::Real)
     h = maximum(1:getncells(grid)) do c
         x = getcoordinates(grid, c)
         maximum(norm(a - b) for a in x for b in x)

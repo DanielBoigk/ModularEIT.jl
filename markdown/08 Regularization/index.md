@@ -10,7 +10,8 @@ Classical regularisation of the ill-posed EIT problem: penalties that encode pri
 1. The framework: [[Variational Regularization]] and [[Data Fidelity Terms]].
 2. Penalties: [[Tikhonov Regularization]], [[Total Variation]], [[Smoothed Total Variation]], [[Spectral Sobolev Norms on Rectangles]].
 3. Regularisation without a penalty: [[Truncated SVD Regularization]] and [[Implicit Regularization]] by early stopping.
-4. The weight: [[Choosing the Regularization Parameter]].
+4. What is sought: [[Parametrizations of the Conductivity]] (pixels on any mesh, coarse-to-fine subspaces).
+5. The weight: [[Choosing the Regularization Parameter]].
 
 **Related.** Priors learned from data are in [[11 Learned Priors/index|Learned Priors]]; the connection is described in [[Classical and Learned Priors]]. Minimising the regularised functionals: [[09 Optimization/index|Optimization]].
 
