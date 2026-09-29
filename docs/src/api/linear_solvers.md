@@ -136,6 +136,30 @@ structured_grid
 dct_neumann_solve
 ```
 
+## FFT preconditioner (disk meshes)
+
+On rotationally symmetric disk meshes of linear triangles ([`polar_grid`](@ref), with rings
+graded towards the boundary if desired) the constant-conductivity system is inverted with an FFT
+in the angle and tridiagonal solves along the radius. The iteration count again only depends on
+the contrast; algebraic multigrid degrades on these anisotropic meshes.
+
+```julia
+disc = FerriteDiscretization(polar_grid(32, 256; boundary_spacing = 1 / 64))
+solver = BlockCGSolver(preconditioner = PolarPreconditioner(disc))
+```
+
+Theory: wiki article [Fast Solvers on Disk Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains).
+
+```@docs
+AbstractFastPreconditioner
+PolarPreconditioner
+polar_preconditioner
+polar_grid
+PolarStructure
+polar_structure
+fast_neumann_solve
+```
+
 ## Wiki articles
 
 Theory behind this page in the [theory wiki](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/):
@@ -151,3 +175,4 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Algebraic Multigrid](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Algebraic-Multigrid)
 - [Discrete Cosine Transform](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Discrete-Cosine-Transform)
 - [Fast Solvers on Rectangular Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Rectangular-Domains)
+- [Fast Solvers on Disk Domains](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Element-Discretization/Fast-Solvers-on-Disk-Domains)

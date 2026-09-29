@@ -32,12 +32,11 @@ using Test
             @test 1 <= length(ph.inclusions) <= 4
             for inc in ph.inclusions
                 @test 0.2 <= inc.value <= 5.0
-                # the inclusion (with margin) lies inside the domain: sample its boundary region
-                for θ in range(0, 2π; length = 64), r in (0.0, 0.5, 1.0)
-                    x = ModularEIT._center(inc) .+ r .* ModularEIT._bounding_radius(inc) .* (cos(θ), sin(θ))
-                    domain === :disk ? (@test norm(x) <= 1 - 0.05 + 1e-12) :
-                                       (@test all(abs.(x) .<= 1 - 0.05 + 1e-12))
-                end
+                # the bounding circle (with margin) lies inside the domain, checked at 64 × 3 points
+                pts = [ModularEIT._center(inc) .+ r .* ModularEIT._bounding_radius(inc) .* (cos(θ), sin(θ))
+                       for θ in range(0, 2π; length = 64), r in (0.0, 0.5, 1.0)]
+                inside(x) = domain === :disk ? norm(x) <= 1 - 0.05 + 1e-12 : all(abs.(x) .<= 1 - 0.05 + 1e-12)
+                @test all(inside, pts)
             end
             # no overlaps (bounding circles)
             incs = ph.inclusions

@@ -1,5 +1,7 @@
-# DCT preconditioner for the systems of a ForwardModel on a uniform rectangle grid (wiki: Fast
-# Solvers on Rectangular Domains).
+# Fast-transform preconditioners for the systems of a ForwardModel: DCT on uniform rectangle grids,
+# FFT in the angle on rotationally symmetric disk meshes (wiki: Fast Solvers on Rectangular
+# Domains, Fast Solvers on Disk Domains). Both only provide a fast pseudo-inverse K⁺ of the
+# constant-coefficient stiffness matrix; everything else here is shared.
 #
 # The system is either the full current-driven system A (size n) or the voltage-driven block
 # A_ff on the free dofs. Its dofs split into u dofs (grid nodes) and extra dofs (the electrode
@@ -26,6 +28,15 @@
 # Nodal conductivity estimates are read off the matrix: s_i = (A - A₀)_ii / K_ii.
 
 """
+    AbstractFastPreconditioner
+
+Preconditioner choice for [`BlockCGSolver`](@ref) that inverts the constant-conductivity system
+with fast transforms: [`DCTPreconditioner`](@ref) (uniform rectangle grids),
+[`PolarPreconditioner`](@ref) (rotationally symmetric disk meshes).
+"""
+abstract type AbstractFastPreconditioner end
+
+"""
     DCTPreconditioner(disc; variant = :constant)
 
 Choice of the DCT preconditioner for [`BlockCGSolver`](@ref) on a uniform rectangle grid of
@@ -43,15 +54,37 @@ not grow with the mesh size, only with the conductivity contrast.
 The setup costs one transform solve per contact node (complete electrode model) and per
 constrained node (voltage-driven problems), once per forward model.
 """
-struct DCTPreconditioner{D}
+struct DCTPreconditioner{D} <: AbstractFastPreconditioner
     disc::D
     grid::StructuredGrid
     variant::Symbol
 end
 function DCTPreconditioner(disc::AbstractDiscretization; variant::Symbol = :constant)
-    variant in (:constant, :scaled) || throw(ArgumentError("variant must be :constant or :scaled, got :$variant"))
+    _check_variant(variant)
     return DCTPreconditioner(disc, structured_grid(disc), variant)
 end
+
+"""
+    PolarPreconditioner(disc; variant = :constant)
+
+Choice of the FFT preconditioner for [`BlockCGSolver`](@ref) on a rotationally symmetric disk
+mesh of linear triangles, e.g. [`polar_grid`](@ref): the constant-conductivity system is
+inverted with an FFT in the angle and one tridiagonal solve per angular mode along the radius
+(`O(n log n)`), for every electrode model and for current- and voltage-driven problems. The
+radial spacing is arbitrary (e.g. graded towards the boundary). Variants and costs as for
+[`DCTPreconditioner`](@ref).
+"""
+struct PolarPreconditioner{D} <: AbstractFastPreconditioner
+    disc::D
+    grid::PolarStructure
+    variant::Symbol
+end
+function PolarPreconditioner(disc::AbstractDiscretization; variant::Symbol = :constant)
+    _check_variant(variant)
+    return PolarPreconditioner(disc, polar_structure(disc), variant)
+end
+
+_check_variant(v) = v in (:constant, :scaled) || throw(ArgumentError("variant must be :constant or :scaled, got :$v"))
 
 """
     dct_preconditioner(disc, fm; system = :neumann, variant = :constant)
@@ -62,14 +95,25 @@ voltage-driven block `fm.A_ff` (`:dirichlet`) of a forward model, for use with [
 """
 dct_preconditioner(disc::AbstractDiscretization, fm::ForwardModel; system::Symbol = :neumann,
                    variant::Symbol = :constant) =
-    _DCTSystem(DCTPreconditioner(disc; variant), fm, system)
+    _FastSystem(DCTPreconditioner(disc; variant), fm, system)
 
-mutable struct _DCTSystem
-    grid::StructuredGrid
+"""
+    polar_preconditioner(disc, fm; system = :neumann, variant = :constant)
+
+FFT preconditioner (see [`PolarPreconditioner`](@ref)) for the current-driven system `fm.A` or
+the voltage-driven block `fm.A_ff` of a forward model on a disk mesh, for [`pbcg!`](@ref); call
+[`update_preconditioner!`](@ref) after every change of the matrix values.
+"""
+polar_preconditioner(disc::AbstractDiscretization, fm::ForwardModel; system::Symbol = :neumann,
+                     variant::Symbol = :constant) =
+    _FastSystem(PolarPreconditioner(disc; variant), fm, system)
+
+mutable struct _FastSystem{S}
+    grid::S                    # StructuredGrid or PolarStructure
     variant::Symbol
     sys::Vector{Int}           # system index → dof of the forward model
     su::Vector{Int}            # system indices of u dofs
-    su_lex::Vector{Int}        # their lexicographic grid positions
+    su_lex::Vector{Int}        # their positions in the fast solver's node order
     se::Vector{Int}            # system indices of extra dofs (CEM electrode voltages)
     A0::SparseMatrixCSC{Float64, Int}   # constant part of the system matrix
     Kdiag::Vector{Float64}     # K_ii of the system u dofs
@@ -88,13 +132,13 @@ mutable struct _DCTSystem
     Spinv::Matrix{Float64}
 end
 
-function _DCTSystem(spec::DCTPreconditioner, fm::ForwardModel, system::Symbol)
+function _FastSystem(spec::AbstractFastPreconditioner, fm::ForwardModel, system::Symbol)
     system in (:neumann, :dirichlet) || throw(ArgumentError("system must be :neumann or :dirichlet"))
     g = spec.grid
     nu = fm.n_u
-    length(g.perm) == nu || throw(DimensionMismatch("the forward model does not belong to this discretization"))
+    length(_fast_perm(g)) == nu || throw(DimensionMismatch("the forward model does not belong to this discretization"))
     sys = system === :neumann ? collect(1:fm.n) : fm.free_dofs
-    lex_of_dof = invperm(g.perm)
+    lex_of_dof = invperm(_fast_perm(g))
     su = findall(<=(nu), sys)
     se = findall(>(nu), sys)
     su_lex = lex_of_dof[sys[su]]
@@ -110,33 +154,27 @@ function _DCTSystem(spec::DCTPreconditioner, fm::ForwardModel, system::Symbol)
     freeu[sys[su]] .= true
     d_lex = lex_of_dof[findall(!, freeu)]
     hasG = !isempty(b_lex) || !isempty(d_lex)
-    # K_ii of the Q1 stiffness in lexicographic order: tensor formula, K = Kx ⊗ My + Mx ⊗ Ky
-    kx = [(i == 1 || i == g.nx ? 1 : 2) / g.hx for i in 1:g.nx]
-    mx = [(i == 1 || i == g.nx ? 2 : 4) * g.hx / 6 for i in 1:g.nx]
-    ky = [(j == 1 || j == g.ny ? 1 : 2) / g.hy for j in 1:g.ny]
-    my = [(j == 1 || j == g.ny ? 2 : 4) * g.hy / 6 for j in 1:g.ny]
-    Kdiag = vec(kx .* my' .+ mx .* ky')[su_lex]
-    st = _DCTSystem(g, spec.variant, sys, su, su_lex, se, A0, Kdiag, b_lex, b_su, Br, d_lex, hasG,
-                    zeros(0, 0), Matrix(A0[su, se]), Matrix(A0[se, se]), ones(g.nx * g.ny), nothing,
+    Kdiag = _fast_kdiag(g)[su_lex]
+    st = _FastSystem(g, spec.variant, sys, su, su_lex, se, A0, Kdiag, b_lex, b_su, Br, d_lex, hasG,
+                    zeros(0, 0), Matrix(A0[su, se]), Matrix(A0[se, se]), ones(_fast_n(g)), nothing,
                     zeros(length(su), length(se)), zeros(length(se), length(se)))
     hasG && (st.GtKG = _capacitance_base(st))
     return st
 end
 
-_ncap(st::_DCTSystem) = length(st.b_lex) + length(st.d_lex)
+_ncap(st::_FastSystem) = length(st.b_lex) + length(st.d_lex)
 
 # G ν for a block ν (m × k) → grid vectors (nx ny × k); G = [E_B  E_D]
-function _G_mul(st::_DCTSystem, ν::AbstractMatrix)
-    g = st.grid
+function _G_mul(st::_FastSystem, ν::AbstractMatrix)
     r = length(st.b_lex)
-    T = zeros(g.nx * g.ny, size(ν, 2))
+    T = zeros(_fast_n(st.grid), size(ν, 2))
     T[st.b_lex, :] .+= ν[1:r, :]
     T[st.d_lex, :] .+= ν[(r + 1):end, :]
     return T
 end
-_Gt_mul(st::_DCTSystem, Y::AbstractMatrix) = [Y[st.b_lex, :]; Y[st.d_lex, :]]
+_Gt_mul(st::_FastSystem, Y::AbstractMatrix) = [Y[st.b_lex, :]; Y[st.d_lex, :]]
 
-function _capacitance_base(st::_DCTSystem; chunk::Int = 64)
+function _capacitance_base(st::_FastSystem; chunk::Int = 64)
     m = _ncap(st)
     GtKG = zeros(m, m)
     for c0 in 1:chunk:m
@@ -145,7 +183,7 @@ function _capacitance_base(st::_DCTSystem; chunk::Int = 64)
         for (k, c) in enumerate(cols)
             E[c, k] = 1
         end
-        GtKG[:, cols] = _Gt_mul(st, dct_neumann_solve(st.grid, _G_mul(st, E)))
+        GtKG[:, cols] = _Gt_mul(st, fast_neumann_solve(st.grid, _G_mul(st, E)))
     end
     return (GtKG + GtKG') / 2
 end
@@ -153,10 +191,10 @@ end
 """
     update_preconditioner!(M, A)
 
-Update a DCT preconditioner (from [`dct_preconditioner`](@ref)) to new values of its system
-matrix `A` (same sparsity pattern).
+Update a fast-transform preconditioner (from [`dct_preconditioner`](@ref) or
+[`polar_preconditioner`](@ref)) to new values of its system matrix `A` (same sparsity pattern).
 """
-function update_preconditioner!(st::_DCTSystem, A::AbstractMatrix)
+function update_preconditioner!(st::_FastSystem, A::AbstractMatrix)
     size(A, 1) == length(st.sys) || throw(DimensionMismatch("matrix does not match the system"))
     sdiag = [(A[i, i] - st.A0[i, i]) for i in st.su] ./ st.Kdiag
     any(<=(0), sdiag) && throw(ArgumentError("nonpositive nodal conductivity estimate"))
@@ -188,21 +226,21 @@ function update_preconditioner!(st::_DCTSystem, A::AbstractMatrix)
 end
 
 # approximate inverse of the u block on the system u dofs (block of vectors)
-function _apply_H(st::_DCTSystem, R::AbstractMatrix)
+function _apply_H(st::_FastSystem, R::AbstractMatrix)
     g = st.grid
-    b = zeros(g.nx * g.ny, size(R, 2))
+    b = zeros(_fast_n(g), size(R, 2))
     b[st.su_lex, :] .= R ./ st.sqs[st.su_lex]
-    y = dct_neumann_solve(g, b)
+    y = fast_neumann_solve(g, b)
     if st.hasG
         m = _ncap(st)
         sol = st.cap \ [_Gt_mul(st, y); -sum(b; dims = 1)]
-        y .-= dct_neumann_solve(g, _G_mul(st, sol[1:m, :]))
+        y .-= fast_neumann_solve(g, _G_mul(st, sol[1:m, :]))
         y .+= sol[m + 1:m + 1, :]                                  # constant mode c
     end
     return y[st.su_lex, :] ./ st.sqs[st.su_lex]
 end
 
-function apply_preconditioner!(Z, st::_DCTSystem, R)
+function apply_preconditioner!(Z, st::_FastSystem, R)
     Rh = Matrix{Float64}(_as_matrix(R))
     Zh = zeros(size(Rh))
     U1 = _apply_H(st, Rh[st.su, :])
@@ -217,15 +255,15 @@ function apply_preconditioner!(Z, st::_DCTSystem, R)
     return Z
 end
 
-# BlockCGSolver with a DCT preconditioner: the forward model provides the system structure
-function _init_neumann_solver(s::BlockCGSolver{<:DCTPreconditioner}, fm::ForwardModel)
+# BlockCGSolver with a fast-transform preconditioner: the forward model provides the structure
+function _init_neumann_solver(s::BlockCGSolver{<:AbstractFastPreconditioner}, fm::ForwardModel)
     st = _init_solver(s, fm.A, fm.nullspace, fm.grounding)
-    st.pcstate = _DCTSystem(s.preconditioner, fm, :neumann)
+    st.pcstate = _FastSystem(s.preconditioner, fm, :neumann)
     return st
 end
-function _init_dirichlet_solver(s::BlockCGSolver{<:DCTPreconditioner}, fm::ForwardModel)
+function _init_dirichlet_solver(s::BlockCGSolver{<:AbstractFastPreconditioner}, fm::ForwardModel)
     k = size(fm.A_ff, 1)
     st = _init_solver(s, fm.A_ff, zeros(k, 0), zeros(k, 0))
-    st.pcstate = _DCTSystem(s.preconditioner, fm, :dirichlet)
+    st.pcstate = _FastSystem(s.preconditioner, fm, :dirichlet)
     return st
 end

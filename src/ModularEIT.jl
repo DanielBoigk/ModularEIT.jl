@@ -17,6 +17,7 @@ export ProjectedMinresWorkspace, BlockMinresStats, pbminres, pbminres!
 export DeviceSparseMatrixCSR, device_converter
 export AbstractLinearSolver, DirectSolver, BlockCGSolver
 export StructuredGrid, DCTPreconditioner, dct_preconditioner
+export AbstractFastPreconditioner, PolarStructure, PolarPreconditioner, polar_preconditioner, polar_grid
 
 export AbstractDiscretization, AbstractElectrodeModel, AbstractForwardModel, AbstractObjective
 export AbstractMisfit, AbstractRieszMap, AbstractEITProblem, AbstractSolutionState
@@ -58,11 +59,12 @@ include("LinearSolvers/DeviceSparse.jl")
 include("LinearSolvers/ProjectedBlockMinres.jl")
 include("LinearSolvers/SolverInterface.jl")
 include("LinearSolvers/DCT.jl")
+include("LinearSolvers/Polar.jl")
 
 include("Galerkin/ForwardModel.jl")
 include("Galerkin/Regularizers.jl")
 include("Galerkin/Ferrite/Ferrite.jl")
-include("Galerkin/DCTPreconditioner.jl")
+include("Galerkin/FastPreconditioner.jl")
 include("Galerkin/Objectives/Misfits.jl")
 include("Galerkin/Objectives/AdjointState.jl")
 include("Galerkin/Objectives/KohnVogelius.jl")
