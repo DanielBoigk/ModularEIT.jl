@@ -2,13 +2,23 @@ name: Documentation
 
 # Builds the Documenter API docs (docs/) and the Quartz wiki (markdown/ via site/)
 # and deploys both to the gh-pages branch: API docs at /dev/, wiki at /dev/wiki/.
+#
+# Only runs when the published sites can change: pushes to master that touch the sources of
+# the docs or the wiki, release tags, or a manual start ("Run workflow"). Tests are run locally
+# before pushing, not on GitHub.
 on:
   push:
     branches:
       - master
-      - redo
+    paths:
+      - "src/**"
+      - "ext/**"
+      - "docs/**"
+      - "markdown/**"
+      - "site/**"
+      - "Project.toml"
+      - ".github/workflows/documentation.yml"
     tags: ["*"]
-  pull_request:
   workflow_dispatch:
 
 permissions:
