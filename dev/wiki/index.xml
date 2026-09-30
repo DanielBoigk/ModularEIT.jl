@@ -6,17 +6,17 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Plasma Nitrogen Fixation as a Moonshot</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</guid>
+    <description><![CDATA[ Proposal in one paragraph. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 08:52:09 GMT</pubDate>
+  </item><item>
     <title>DiffPIR</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</guid>
     <description><![CDATA[ DiffPIR (Zhu et al. 2023) integrates a diffusion model into a plug-and-play half-quadratic splitting scheme. ]]></description>
     <pubDate>Wed, 30 Sep 2026 08:13:06 GMT</pubDate>
-  </item><item>
-    <title>Plasma Nitrogen Fixation as a Moonshot</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</guid>
-    <description><![CDATA[ Proposal in one paragraph. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:51:34 GMT</pubDate>
   </item><item>
     <title>Outlook</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/</link>

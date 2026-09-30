@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Outlook: topology optimisation of a toy plasma reactor · ModularEIT.jl</title><meta name="title" content="Outlook: topology optimisation of a toy plasma reactor · ModularEIT.jl"/><meta property="og:title" content="Outlook: topology optimisation of a toy plasma reactor · ModularEIT.jl"/><meta property="twitter:title" content="Outlook: topology optimisation of a toy plasma reactor · ModularEIT.jl"/><meta name="description" content="Documentation for ModularEIT.jl."/><meta property="og:description" content="Documentation for ModularEIT.jl."/><meta property="twitter:description" content="Documentation for ModularEIT.jl."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.63.2/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">ModularEIT.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../getting_started/">Getting Started</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../reconstruction/">Reconstructing a conductivity</a></li><li><a class="tocitem" href="../showcase_landscape/">Showcase: a landscape as conductivity</a></li><li class="is-active"><a class="tocitem" href>Outlook: topology optimisation of a toy plasma reactor</a><ul class="internal"><li><a class="tocitem" href="#Model"><span>Model</span></a></li><li><a class="tocitem" href="#Design-parametrisation"><span>Design parametrisation</span></a></li><li><a class="tocitem" href="#State-and-objective"><span>State and objective</span></a></li><li><a class="tocitem" href="#Adjoint-gradient"><span>Adjoint gradient</span></a></li><li><a class="tocitem" href="#Optimisation"><span>Optimisation</span></a></li><li><a class="tocitem" href="#Result"><span>Result</span></a></li><li><a class="tocitem" href="#What-a-real-study-needs"><span>What a real study needs</span></a></li></ul></li></ul></li><li><span class="tocitem">API Reference</span><ul><li><a class="tocitem" href="../../api/discretization/">Discretization</a></li><li><a class="tocitem" href="../../api/forward/">Electrode Models &amp; Forward Problem</a></li><li><a class="tocitem" href="../../api/objectives/">Objectives</a></li><li><a class="tocitem" href="../../api/optimization/">Regularization &amp; Optimization</a></li><li><a class="tocitem" href="../../api/data/">Synthetic Data &amp; Noise</a></li><li><a class="tocitem" href="../../api/parametrization/">Parametrizations</a></li><li><a class="tocitem" href="../../api/adaptivity/">Adaptive Meshing</a></li><li><a class="tocitem" href="../../api/images/">Images</a></li><li><a class="tocitem" href="../../api/linear_solvers/">Linear Solvers</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Outlook: topology optimisation of a toy plasma reactor</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Outlook: topology optimisation of a toy plasma reactor</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/DanielBoigk/ModularEIT.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/DanielBoigk/ModularEIT.jl/blob/master/examples/toy_plasma_reactor.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Outlook:-topology-optimisation-of-a-toy-plasma-reactor"><a class="docs-heading-anchor" href="#Outlook:-topology-optimisation-of-a-toy-plasma-reactor">Outlook: topology optimisation of a toy plasma reactor</a><a id="Outlook:-topology-optimisation-of-a-toy-plasma-reactor-1"></a><a class="docs-heading-anchor-permalink" href="#Outlook:-topology-optimisation-of-a-toy-plasma-reactor" title="Permalink"></a></h1><p>The same mathematics as in EIT (the conductivity equation, adjoint gradients, a parametrisation of the unknown) can <em>design</em> devices instead of imaging them. This page is a deliberately small illustration of the proposal in <a href="https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot">Plasma Nitrogen Fixation as a Moonshot</a>: in plasma reactors for nitrogen fixation most of the gas bypasses the arc, so the energy per mol of fixed nitrogen is far higher than necessary. Can a gradient-based topology optimisation find a channel that routes the gas through the arc, without being told how?</p><p><strong>The toy.</strong> A 2D channel with a fixed arc: a small hot zone that converts the gas flowing through it. The gas flows through a porous medium whose permeability is the design (Darcy flow, a standard setting for topology optimisation of flow paths). What is <em>not</em> modelled: the arc physics (Joule heating, the arc moving with the flow, magnetic fields), real chemistry and back-reactions, turbulence. The numbers are dimensionless.</p><p>This page is generated from <code>examples/toy_plasma_reactor.jl</code> and is also available as a <a href="../toy_plasma_reactor.ipynb">Jupyter notebook</a>.</p><pre><code class="language-julia hljs">using ModularEIT, Ferrite, SparseArrays, LinearAlgebra, Random, Printf
+using CairoMakie</code></pre><h2 id="Model"><a class="docs-heading-anchor" href="#Model">Model</a><a id="Model-1"></a><a class="docs-heading-anchor-permalink" href="#Model" title="Permalink"></a></h2><p>On the channel <span>$\Omega = (0, 3) \times (0, 1)$</span>:</p><p class="math-container">\[\begin{aligned}
+-\nabla\cdot\big(K(\rho)\nabla p\big) &amp;= 0, &amp; u &amp;= -K(\rho)\nabla p &amp;&amp;\text{Darcy flow, inflow flux 1 at the left, } p = 0 \text{ at the right},\\
+-D\,\Delta c + u\cdot\nabla c &amp;= \kappa(x)\,(1 - c), &amp; c &amp;= 0 \text{ at the inlet} &amp;&amp;\text{treated fraction of the gas}.
+\end{aligned}\]</p><p>The flow equation is the <strong>conductivity equation</strong> with the permeability <span>$K$</span> as conductivity, so ModularEIT&#39;s <a href="../../api/discretization/#ModularEIT.ConductivityTensor"><code>ConductivityTensor</code></a> assembles it and <a href="../../api/discretization/#ModularEIT.tensor_gradient!"><code>tensor_gradient!</code></a> differentiates it. The arc converts gas at the rate <span>$\kappa(x)(1-c)$</span>, a Gaussian hot zone, so the production rate is <span>$J = \int\kappa\,(1 - c)\,\mathrm dx$</span> per unit flow. At fixed arc power and flow, the <strong>energy per mol</strong> is</p><p class="math-container">\[E = \frac{P_\text{arc} + P_\text{pump}}{J}, \qquad P_\text{pump} = Q\,\Delta p ,\]</p><p>with the pumping power normalised to 1 % of the arc power for the empty channel.</p><pre><code class="language-julia hljs">Lx, Ly, nx, ny = 3.0, 1.0, 90, 30
+grid = generate_grid(Quadrilateral, (nx, ny), Ferrite.Vec(0.0, 0.0), Ferrite.Vec(Lx, Ly))
+disc = FerriteDiscretization(grid)                 # P1 for p and c, P0 for the design
+dh, cv, nb = disc.dh_u, disc.cv_u, getnbasefunctions(disc.cv_u)
+n, ncell = ndofs(dh), getncells(grid)
+
+function facet_dofs(name)
+    ch = ConstraintHandler(dh)
+    add!(ch, Dirichlet(first(Ferrite.getfieldnames(dh)), getfacetset(grid, name), x -&gt; 0.0))
+    close!(ch)
+    return ch.prescribed_dofs
+end
+inlet, outlet = facet_dofs(&quot;left&quot;), facet_dofs(&quot;right&quot;)
+free_p, free_c = setdiff(1:n, outlet), setdiff(1:n, inlet)
+b = zeros(n)
+assemble_boundary_load!(b, dh, disc.fv_u, getfacetset(grid, &quot;left&quot;))   # inflow: flux 1, Q = 1
+Q = 1.0
+
+D, κ0, xa, wa = 0.02, 40.0, (1.2, 0.5), 0.1
+κ(x) = κ0 * exp(-((x[1] - xa[1])^2 + (x[2] - xa[2])^2) / wa^2);</code></pre><p>The design-independent part of the transport operator, <span>$D\,S + M_\kappa$</span>, and the load <span>$f_i = \int\kappa\,\varphi_i$</span>:</p><pre><code class="language-julia hljs">cellσ = [celldofs(disc.dh_σ, e)[1] for e in 1:ncell]     # design dof of every cell
+centres = Vector{Ferrite.Vec{2, Float64}}(undef, ncell)
+S0, f = allocate_matrix(dh), zeros(n)
+let asm = start_assemble(S0), Ke = zeros(nb, nb)
+    for cell in CellIterator(dh)
+        reinit!(cv, cell)
+        xs, cd = getcoordinates(cell), celldofs(cell)
+        centres[cellσ[cellid(cell)]] = sum(xs) / length(xs)
+        fill!(Ke, 0)
+        for q in 1:getnquadpoints(cv)
+            dΩ, kx = getdetJdV(cv, q), κ(spatial_coordinate(cv, q, xs))
+            for i in 1:nb
+                f[cd[i]] += kx * shape_value(cv, q, i) * dΩ
+                for j in 1:nb
+                    Ke[i, j] += (D * (shape_gradient(cv, q, i) ⋅ shape_gradient(cv, q, j)) +
+                                 kx * shape_value(cv, q, i) * shape_value(cv, q, j)) * dΩ
+                end
+            end
+        end
+        assemble!(asm, cd, Ke)
+    end
+end</code></pre><h2 id="Design-parametrisation"><a class="docs-heading-anchor" href="#Design-parametrisation">Design parametrisation</a><a id="Design-parametrisation-1"></a><a class="docs-heading-anchor-permalink" href="#Design-parametrisation" title="Permalink"></a></h2><p>One density <span>$\rho_e\in[0,1]$</span> per cell, smoothed by a density filter <span>$W$</span> (radius 1.5 cells) and sharpened by a Heaviside projection <span>$H_\beta$</span>, and the permeability <span>$K = K_\text{min} + (1 - K_\text{min})\,H_\beta(W\rho)^3$</span>: open where <span>$\rho = 1$</span>, nearly closed where <span>$\rho = 0$</span>. This is the pixel parametrisation of a reconstruction (see <a href="https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity">Parametrizations of the Conductivity</a>), with the filter as regulariser.</p><pre><code class="language-julia hljs">rf, Kmin, ε = 1.5 * Lx / nx, 1e-3, 0.01 / 3            # ε: pumping of the empty channel = 1 %
+W = let I = Int[], J = Int[], V = Float64[]
+    for a in 1:ncell, c in 1:ncell
+        d = norm(centres[a] - centres[c])
+        d &lt; rf &amp;&amp; (push!(I, a); push!(J, c); push!(V, rf - d))
+    end
+    Wr = sparse(I, J, V, ncell, ncell)
+    Diagonal(1 ./ vec(sum(Wr; dims = 2))) * Wr
+end
+β = Ref(1.0)
+heaviside(x) = (tanh(β[] / 2) + tanh(β[] * (x - 0.5))) / (2tanh(β[] / 2))
+dheaviside(x) = β[] * (1 - tanh(β[] * (x - 0.5))^2) / (2tanh(β[] / 2))
+permeability(r) = Kmin + (1 - Kmin) * r^3
+dpermeability(r) = 3 * (1 - Kmin) * r^2;</code></pre><h2 id="State-and-objective"><a class="docs-heading-anchor" href="#State-and-objective">State and objective</a><a id="State-and-objective-1"></a><a class="docs-heading-anchor-permalink" href="#State-and-objective" title="Permalink"></a></h2><p>The flow matrix comes from the conductivity tensor. The advection matrix <span>$\int\varphi_i\,u\cdot\nabla\varphi_j$</span> needs the Darcy velocity at the quadrature points.</p><pre><code class="language-julia hljs">ct = ConductivityTensor(disc)
+A = copy(ct.pattern)
+
+function advection(K, p)
+    Adv = allocate_matrix(dh)
+    asm, Ke = start_assemble(Adv), zeros(nb, nb)
+    for cell in CellIterator(dh)
+        reinit!(cv, cell)
+        fill!(Ke, 0)
+        pe, Kc = p[celldofs(cell)], K[cellσ[cellid(cell)]]
+        for q in 1:getnquadpoints(cv)
+            u, dΩ = -Kc * function_gradient(cv, q, pe), getdetJdV(cv, q)
+            for i in 1:nb, j in 1:nb
+                Ke[i, j] += shape_value(cv, q, i) * (u ⋅ shape_gradient(cv, q, j)) * dΩ
+            end
+        end
+        assemble!(asm, celldofs(cell), Ke)
+    end
+    return Adv
+end
+
+function solve_state(ρ)
+    ρf = W * ρ
+    ρ̃ = heaviside.(ρf)
+    K = permeability.(ρ̃)
+    assemble_weighted_stiffness!(A, ct, K)
+    p = zeros(n)
+    p[free_p] = A[free_p, free_p] \ b[free_p]
+    T = S0 + advection(K, p)
+    c = zeros(n)
+    c[free_c] = T[free_c, free_c] \ f[free_c]
+    J = (sum(f) - f ⋅ c) / Q                          # production
+    Ppump = ε * (b ⋅ p)                               # Q Δp, relative to the arc power
+    return (; ρf, ρ̃, K, p, c, T, J, Ppump, E = (1 + Ppump) / J)
+end;</code></pre><h2 id="Adjoint-gradient"><a class="docs-heading-anchor" href="#Adjoint-gradient">Adjoint gradient</a><a id="Adjoint-gradient-1"></a><a class="docs-heading-anchor-permalink" href="#Adjoint-gradient" title="Permalink"></a></h2><p>The discrete adjoint, in three steps:</p><ol><li>transport adjoint <span>$T^\top\lambda = f/Q$</span>, so that <span>$\mathrm dJ = \lambda^\top(\mathrm dT)\,c$</span>;</li><li>the advection term <span>$\lambda^\top\mathrm{Adv}\,c = -\sum_e K_e\int_e\lambda\,\nabla p\cdot\nabla c$</span> depends on <span>$K$</span> directly and through the pressure: the flow adjoint <span>$A\mu = h$</span> with <span>$h = \partial(\lambda^\top\mathrm{Adv}\,c)/\partial p$</span>;</li><li><span>$\partial J/\partial K_e = -\int_e\lambda\,\nabla p\cdot\nabla c - \int_e\nabla\mu\cdot\nabla p$</span>, where the second term is <a href="../../api/discretization/#ModularEIT.tensor_gradient!"><code>tensor_gradient!</code></a>, exactly as in the adjoint state method of EIT; the pumping power <span>$b^\top p$</span> is self-adjoint (<span>$\mu = p$</span>).</li></ol><p>Then the chain rule through <span>$K$</span>, the projection and the filter.</p><pre><code class="language-julia hljs">function gradient(ρ, s = solve_state(ρ))
+    (; ρf, ρ̃, K, p, c, T) = s
+    λ = zeros(n)
+    λ[free_c] = T[free_c, free_c]&#39; \ (f[free_c] ./ Q)
+    gK, h = zeros(ncell), zeros(n)
+    for cell in CellIterator(dh)
+        reinit!(cv, cell)
+        cd = celldofs(cell)
+        e = cellσ[cellid(cell)]
+        pe, ce, λe = p[cd], c[cd], λ[cd]
+        for q in 1:getnquadpoints(cv)
+            dΩ = getdetJdV(cv, q)
+            ∇p, ∇c, λq = function_gradient(cv, q, pe), function_gradient(cv, q, ce), function_value(cv, q, λe)
+            gK[e] -= λq * (∇p ⋅ ∇c) * dΩ
+            for a in 1:nb
+                h[cd[a]] -= K[e] * λq * (∇c ⋅ shape_gradient(cv, q, a)) * dΩ
+            end
+        end
+    end
+    μ = zeros(n)
+    μ[free_p] = A[free_p, free_p] \ h[free_p]
+    tensor_gradient!(gK, ct, μ, p; α = -1, β = 1)            # dJ/dK
+    gP = zeros(ncell)
+    tensor_gradient!(gP, ct, p, p; α = -ε)                   # d(ε bᵀp)/dK
+    gE = (-(1 + s.Ppump) .* gK ./ s.J .+ gP) ./ s.J          # dE/dK
+    return W&#39; * (gE .* dpermeability.(ρ̃) .* dheaviside.(ρf))
+end;</code></pre><p>Check against central finite differences in a random direction:</p><pre><code class="language-julia hljs">ρ0 = fill(0.4, ncell)
+δ = randn(MersenneTwister(1), ncell)
+fd = (solve_state(ρ0 .+ 1e-5 .* δ).E - solve_state(ρ0 .- 1e-5 .* δ).E) / 2e-5
+(adjoint = gradient(ρ0) ⋅ δ, finite_difference = fd)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(adjoint = -0.736870733452088, finite_difference = -0.7368707222621395)</code></pre><h2 id="Optimisation"><a class="docs-heading-anchor" href="#Optimisation">Optimisation</a><a id="Optimisation-1"></a><a class="docs-heading-anchor-permalink" href="#Optimisation" title="Permalink"></a></h2><p>Projected gradient descent on the energy per mol, with the open volume fixed to 40 % (the projection onto <span>$\{0\le\rho\le1,\ \mathrm{mean}(\rho) = 0.4\}$</span> is a bisection), a backtracking step size, and the projection sharpened (<span>$\beta$</span> doubled) every 40 iterations.</p><pre><code class="language-julia hljs">function project(ρ, V)
+    lo, hi = -1.0, 1.0
+    for _ in 1:60
+        η = (lo + hi) / 2
+        sum(clamp.(ρ .- η, 0, 1)) / length(ρ) &gt; V ? (lo = η) : (hi = η)
+    end
+    return clamp.(ρ .- (lo + hi) / 2, 0, 1)
+end
+
+function optimise(ρ; V = 0.4, iterations = 200)
+    s, α, history = solve_state(ρ), 0.2, Float64[]
+    for it in 1:iterations
+        if it % 40 == 0 &amp;&amp; β[] &lt; 16
+            β[] *= 2
+            s, α = solve_state(ρ), 0.2
+        end
+        g = gradient(ρ, s)
+        while α &gt; 1e-4
+            ρn = project(ρ .- α .* g ./ maximum(abs, g), V)
+            sn = solve_state(ρn)
+            if sn.E &lt; s.E
+                ρ, s, α = ρn, sn, min(1.5α, 0.5)
+                break
+            end
+            α /= 2
+        end
+        push!(history, s.E)
+    end
+    return ρ, s, history
+end
+
+ρ, s, history = optimise(copy(ρ0))
+empty = solve_state(ones(ncell))
+(energy_per_mol_empty = empty.E, optimised = s.E, improvement = empty.E / s.E,
+ pumping_empty = empty.Ppump, pumping_optimised = s.Ppump)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(energy_per_mol_empty = 2.9959544858101457, optimised = 1.477593417119576, improvement = 2.0275905747133516, pumping_empty = 0.00999999999999619, pumping_optimised = 0.02850720212321128)</code></pre><h2 id="Result"><a class="docs-heading-anchor" href="#Result">Result</a><a id="Result-1"></a><a class="docs-heading-anchor-permalink" href="#Result" title="Permalink"></a></h2><pre><code class="language-julia hljs">function cell_image(v)
+    M = zeros(nx, ny)
+    for e in 1:ncell
+        x = centres[e]
+        M[clamp(ceil(Int, x[1] / Lx * nx), 1, nx), clamp(ceil(Int, x[2] / Ly * ny), 1, ny)] = v[e]
+    end
+    return M
+end
+cell_of = invperm(cellσ)                          # design dof → cell
+node_image(v) = cell_image([sum(v[celldofs(dh, cell_of[e])]) / 4 for e in 1:ncell])
+
+fig = Figure(size = (1000, 480))
+xs, ys = range(0, Lx; length = nx), range(0, Ly; length = ny)
+arc = [(xa[1] + wa * cos(t), xa[2] + wa * sin(t)) for t in range(0, 2π; length = 60)]
+for (row, st, name) in ((1, empty, &quot;empty channel&quot;), (2, s, &quot;optimised&quot;))
+    ax = Axis(fig[row, 1]; title = &quot;$name: design (black = open)&quot;, aspect = DataAspect())
+    hidedecorations!(ax)
+    heatmap!(ax, xs, ys, cell_image(st.ρ̃); colormap = Reverse(:grays), colorrange = (0, 1))
+    ax = Axis(fig[row, 2]; title = @sprintf(&quot;treated fraction, energy per mol %.2f&quot;, st.E), aspect = DataAspect())
+    hidedecorations!(ax)
+    heatmap!(ax, xs, ys, node_image(st.c); colormap = :inferno, colorrange = (0, 1))
+    lines!(ax, first.(arc), last.(arc); color = :cyan)
+end
+fig</code></pre><img src="91ad5889.png" alt="Example block output"/><p>In the empty channel most of the gas passes above and below the arc (circle) and leaves untreated; the gas that does pass the arc is over-treated. The optimiser, starting from a uniform design and told nothing about the geometry, closes the channel above and below the arc and leaves a converging–diverging nozzle whose throat is the arc: all the gas is treated once, the energy per mol halves, and the pumping power stays at a few percent of the arc power.</p><pre><code class="language-julia hljs">lines(history; axis = (xlabel = &quot;iteration&quot;, ylabel = &quot;energy per mol&quot;, title = &quot;convergence&quot;))</code></pre><img src="b5dcc722.png" alt="Example block output"/><h2 id="What-a-real-study-needs"><a class="docs-heading-anchor" href="#What-a-real-study-needs">What a real study needs</a><a id="What-a-real-study-needs-1"></a><a class="docs-heading-anchor-permalink" href="#What-a-real-study-needs" title="Permalink"></a></h2><ul><li>The arc itself: current continuity with a temperature-dependent conductivity, Joule heating, the energy equation and the arc blown by the flow. The electrical part is the conductivity equation of EIT again, now with a strongly nonlinear coefficient.</li><li>Compressible or low-Mach flow instead of Darcy flow, and turbulence.</li><li>Chemistry with back-reactions and quenching, which makes the region <em>behind</em> the arc as important as the arc.</li><li>Unsteady arcs and time-averaged objectives, calibration against experiments (an inverse problem), and fast surrogates.</li></ul><p>The structure stays the same: a state equation, an objective, one adjoint solve per state equation, and a parametrised, regularised design.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../showcase_landscape/">« Showcase: a landscape as conductivity</a><a class="docs-footer-nextpage" href="../../api/discretization/">Discretization »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Wednesday 30 September 2026 09:20">Wednesday 30 September 2026</span>. Using Julia version 1.13.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
