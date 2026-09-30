@@ -89,6 +89,10 @@ A worked version with plots is the tutorial
 [A landscape as conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/tutorials/showcase_landscape/)
 reconstructs a photograph from 32-electrode data: pixels as unknowns, the boundary-data SVD at
 the noise level, sensitivity-damped Levenberg–Marquardt and a map of what the data determine.
+The outlook
+[toy plasma reactor](https://danielboigk.github.io/ModularEIT.jl/dev/tutorials/toy_plasma_reactor/)
+uses the same machinery (conductivity equation, adjoint gradients) for topology optimisation
+of a flow channel around a plasma arc.
 More in
 [Getting Started](https://danielboigk.github.io/ModularEIT.jl/dev/getting_started/) and the
 [API documentation](https://danielboigk.github.io/ModularEIT.jl/dev/).

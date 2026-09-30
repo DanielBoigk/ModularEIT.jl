@@ -72,6 +72,8 @@ Nothing on the list above is foreign to inverse problems and machine learning. E
 
 The competence is assembled already: inverse problems, regularisation, learning, numerical PDEs. The code exists for the conductivity equation (see [[Design Principles for EIT Solvers]]). The step is from *identifying* a conductivity to *designing* a device that is governed by one. What is new is the scale of the modelling effort, and there language models change what a small group can do.
 
+**A first toy.** The tutorial [Topology optimisation of a toy plasma reactor](https://danielboigk.github.io/ModularEIT.jl/dev/tutorials/toy_plasma_reactor/) shows the idea in its simplest form. A fixed arc sits in a 2D channel, the flow is Darcy flow through a designable porous medium (the conductivity equation again), and the gradient comes from the discrete adjoint. Starting from a uniform design, the optimiser finds a converging–diverging nozzle with the arc at its throat, and halves the energy per mol against the empty channel, including pumping power.
+
 **Possible first milestones.**
 
 1. Reproduce a published reactor in simulation, e.g. the modelled gliding arc plasmatron of Vervloessem et al. (2020), as validation.
