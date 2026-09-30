@@ -35,8 +35,11 @@ New pairs of boundary data from measured pairs `(currents, voltages)` (`n_inject
 currents orthonormal in the inner product `Mi` and the new voltages orthogonal in `Mv`, sorted
 by decreasing singular value (the norms of the new voltages). The voltages are first regrounded
 consistently with the metric (`Mv`-weighted mean zero). Returns
-`(; currents, voltages, values, Mi, Mv, combination, noise, noise_levels, reference)` with the
-combination matrix `C` (new pairs = old pairs · `C`).
+`(; currents, voltages, values, Mi, Mv, combination, projection, noise, noise_levels, reference)`
+with the combination matrix `C` (new pairs = old pairs · `C`) and the measurement modes
+`projection` (one row per mode, orthonormal in the `Mv⁻¹` inner product, ordered like the
+patterns): `projection * (voltages - reference)` is the diagonal matrix of `values`. For a
+two-sided truncation of the data, keep the leading rows as a [`ProjectedMisfit`](@ref).
 
 With a `reference` (the voltages of a reference conductivity for the same currents, or, with a
 forward model, the reference conductivity itself), the SVD is taken of the difference
@@ -93,7 +96,8 @@ function pattern_svd(currents::AbstractMatrix, voltages::AbstractMatrix, Mi::Abs
     Lv = cholesky(Symmetric(Matrix(Mv))).L           # ‖v‖²_Mv = ‖Lvᵀ v‖²
     F = svd(Lv' * ((Ref === nothing ? Vg : Vg - Ref) / R))
     C = R \ F.V
-    out = (; currents = Ĝ * F.V, voltages = Vg * C, values = F.S, Mi, Mv, combination = C)
+    out = (; currents = Ĝ * F.V, voltages = Vg * C, values = F.S, Mi, Mv, combination = C,
+           projection = Matrix(F.U' * Lv'))
     ref = Ref === nothing ? nothing : Ref * C
     noise === nothing && return (; out..., noise = nothing, noise_levels = nothing, reference = ref)
     # rows of E C are independent with variances S C.², then the regrounding Π = I - 1wᵀ/(wᵀ1):
@@ -105,8 +109,8 @@ function pattern_svd(currents::AbstractMatrix, voltages::AbstractMatrix, Mi::Abs
 end
 
 """
-    truncate_patterns(p; τ = 2)
-    truncate_patterns(p, K)
+    truncate_patterns(p; τ = 2, measurements = nothing)
+    truncate_patterns(p, K; measurements = nothing)
 
 The leading pairs of a [`pattern_svd`](@ref) result `p`: the first `K`, or those before the first
 pattern whose singular value drops to `τ` times its noise level (needs `pattern_svd(...; noise)`;
@@ -115,20 +119,23 @@ The trailing pairs mostly carry noise; discarding them regularises in data space
 assumption on the conductivity. Directions that carry only noise do not have singular values
 below the noise level but at it (the SVD of noisy data has a noise floor), so `τ` must lie
 clearly above 1. Returns a named tuple with the same fields, restricted to the
-retained pairs.
+retained pairs. With `measurements = M`, only the leading `M` measurement modes are kept in
+`projection`; use them as `misfit = ProjectedMisfit(t.projection)` for `K M` residuals.
 """
-function truncate_patterns(p::NamedTuple; τ::Real = 2)
+function truncate_patterns(p::NamedTuple; τ::Real = 2, measurements = nothing)
     p.noise_levels === nothing &&
         throw(ArgumentError("no noise levels: compute the pattern SVD with a noise model (pattern_svd(...; noise))"))
     k = findfirst(p.values .<= τ .* p.noise_levels)
-    return truncate_patterns(p, k === nothing ? length(p.values) : max(k - 1, 1))
+    return truncate_patterns(p, k === nothing ? length(p.values) : max(k - 1, 1); measurements)
 end
 
-function truncate_patterns(p::NamedTuple, K::Integer)
+function truncate_patterns(p::NamedTuple, K::Integer; measurements = nothing)
     1 <= K <= length(p.values) || throw(ArgumentError("K must lie in 1:$(length(p.values)), got $K"))
+    M = measurements === nothing ? size(p.projection, 1) : Int(measurements)
+    1 <= M <= size(p.projection, 1) || throw(ArgumentError("measurements must lie in 1:$(size(p.projection, 1)), got $M"))
     r = 1:K
     return (; currents = p.currents[:, r], voltages = p.voltages[:, r], values = p.values[r], Mi = p.Mi, Mv = p.Mv,
-            combination = p.combination[:, r],
+            combination = p.combination[:, r], projection = p.projection[1:M, :],
             noise = p.noise === nothing ? nothing : GaussianNoise(p.noise.std[:, r]),
             noise_levels = p.noise_levels === nothing ? nothing : p.noise_levels[r],
             reference = p.reference === nothing ? nothing : p.reference[:, r])

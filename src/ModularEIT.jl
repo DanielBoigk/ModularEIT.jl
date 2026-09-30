@@ -39,7 +39,7 @@ export forward_neumann, forward_dirichlet, reground, pattern_svd, truncate_patte
 export ImageMap, to_image, from_image, UnitImage, unit_image, from_unit_image
 export AdaptiveMesh, current_grid, refine_mesh!, coarsen_mesh!, is_nonconforming, cell_levels, max_level
 export residual_indicator, flux_recovery_indicator, goal_oriented_indicator, jump_indicator, dorfler_marking, transfer_conductivity
-export SquaredEuclidean, WeightedSquaredEuclidean
+export SquaredEuclidean, WeightedSquaredEuclidean, ProjectedMisfit
 export AdjointStateObjective, KohnVogeliusObjective, objective_value, value_and_gradient!
 export residual!, residual_and_jacobian!, n_residual, boundary_error, pattern_values
 export TikhonovRegularizer, TotalVariationRegularizer, RegularizedObjective, gauss_newton_hessian

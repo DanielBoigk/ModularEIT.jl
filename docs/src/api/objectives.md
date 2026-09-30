@@ -42,6 +42,7 @@ pattern_values
 AbstractMisfit
 SquaredEuclidean
 WeightedSquaredEuclidean
+ProjectedMisfit
 ```
 
 ## Reserved types

@@ -105,6 +105,34 @@ central_fd(f, σ, δ, h) = (f(σ .+ h .* δ) .- f(σ .- h .* δ)) ./ 2h
         @test dot(g, δ) ≈ central_fd(s -> objective_value(obj, s), σ, δ, 1e-5) rtol = 1e-6
     end
 
+    @testset "projected misfit (rectangular U): $mode" for mode in (:neumann, :dirichlet)
+        disc = discs[1][2]
+        fm = build_model(:cem, disc)
+        inputs, obs = synthetic_data(fm, 1 .+ rand(rng, ndofs_σ(disc)), mode; K = 3)
+        n_obs, s = size(obs)
+        k = n_obs - 3
+        U = Matrix(qr(randn(rng, n_obs, n_obs)).Q)[1:k, :]        # k orthonormal rows
+        obj = AdjointStateObjective(fm, inputs, obs; mode, misfit = ProjectedMisfit(U))
+        ref = AdjointStateObjective(fm, inputs, obs; mode)
+        σ = 1 .+ rand(rng, ndofs_σ(disc))
+        @test n_residual(obj) == k * s
+        r0 = residual!(zeros(n_obs * s), ref, σ)
+        @test objective_value(obj, σ) ≈ sum(abs2, U * reshape(r0, n_obs, s)) / 2
+        g = zeros(length(σ))
+        value_and_gradient!(g, obj, σ)
+        δ = randn(rng, length(σ))
+        @test dot(g, δ) ≈ central_fd(t -> objective_value(obj, t), σ, δ, 1e-5) rtol = 1e-6
+        r, Jm = zeros(k * s), zeros(k * s, length(σ))
+        residual_and_jacobian!(r, Jm, obj, σ)
+        @test Jm * δ ≈ central_fd(t -> residual!(zeros(k * s), obj, t), σ, δ, 1e-5) rtol = 1e-6
+        @test Jm' * r ≈ g rtol = 1e-8
+        # the full orthogonal projection is the Euclidean misfit
+        full = AdjointStateObjective(fm, inputs, obs; mode, misfit = ProjectedMisfit(Matrix(qr(randn(rng, n_obs, n_obs)).Q)))
+        @test objective_value(full, σ) ≈ objective_value(ref, σ)
+        @test discrepancy_target(full, GaussianNoise(0.01)) ≈ discrepancy_target(ref, GaussianNoise(0.01))
+        @test discrepancy_target(obj, GaussianNoise(0.01)) < discrepancy_target(ref, GaussianNoise(0.01))
+    end
+
     @testset "swappable linear solvers" begin
         disc = discs[3][2]
         fm = build_model(:cem, disc)

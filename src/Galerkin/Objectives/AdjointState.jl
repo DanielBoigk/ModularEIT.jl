@@ -55,7 +55,7 @@ mutable struct AdjointStateObjective{FM <: ForwardModel, S <: AbstractLinearSolv
     Xf::Matrix{Float64}            # free-dof blocks        nf × s
     Rf::Matrix{Float64}
     E::Matrix{Float64}             # error                  n_obs × s
-    R::Matrix{Float64}             # whitened residual      n_obs × s
+    R::Matrix{Float64}             # whitened residual      k × s (k = n_obs unless projected)
     G::Matrix{Float64}             # adjoint weights        n_obs × s / n_ctrl × s
     jac::Any                       # Jacobian buffers (created on first use)
 end
@@ -75,7 +75,7 @@ function AdjointStateObjective(fm::ForwardModel, inputs::AbstractVecOrMat, data:
     z(r, c) = zeros(r, c)
     return AdjointStateObjective(fm, mode, In, D, solver, nothing, misfit, gradient,
                                  z(n, s), z(n, s), z(n, s), z(n, s), z(nf, s), z(nf, s),
-                                 z(n_obs, s), z(n_obs, s), z(n_obs, s), nothing)
+                                 z(n_obs, s), z(_residual_rows(misfit, n_obs), s), z(n_obs, s), nothing)
 end
 
 """
@@ -162,14 +162,16 @@ end
     residual_and_jacobian!(r, J, obj, σ)
 
 Whitened residual `r` and its Jacobian `J = ∂r/∂σ` (`n_residual(obj) × n_σ`, coefficient
-representation) at `σ`. Costs one block solve with `n_obs` right-hand sides plus
-`n_obs × s` sparse products with the conductivity tensor.
+representation) at `σ`. Costs one block solve with `k` right-hand sides plus `k × s` sparse
+products with the conductivity tensor, `k` the residual entries per pattern (`n_obs`, or the
+rows of a [`ProjectedMisfit`](@ref)).
 """
 function residual_and_jacobian!(r::AbstractVector, Jm::AbstractMatrix, obj::AdjointStateObjective,
                                 σ::AbstractVector)
     fm = obj.fm
-    n_obs, s = size(obj.R)
-    size(Jm) == (n_obs * s, fm.n_σ) || throw(DimensionMismatch("J must be $(n_obs * s) × $(fm.n_σ)"))
+    n_obs = size(obj.E, 1)
+    nr, s = size(obj.R)                                   # residual rows per pattern
+    size(Jm) == (nr * s, fm.n_σ) || throw(DimensionMismatch("J must be $(nr * s) × $(fm.n_σ)"))
     residual!(r, obj, σ)
     jb = _jacobian_buffers!(obj)
     Ut = _whitening_adjoint_matrix(obj.misfit, n_obs)
@@ -185,13 +187,13 @@ function residual_and_jacobian!(r::AbstractVector, Jm::AbstractMatrix, obj::Adjo
     end
     ct = fm.tensor
     chunk = size(jb.W, 2)
-    for k in 1:s, m0 in 1:chunk:n_obs
-        cols = m0:min(m0 + chunk - 1, n_obs)
+    for k in 1:s, m0 in 1:chunk:nr
+        cols = m0:min(m0 + chunk - 1, nr)
         W = view(jb.W, :, 1:length(cols))
         _outer_pair_products!(W, ct, view(jb.Z, :, cols), view(obj.X, :, k))
         Gv = view(jb.Gσ, :, 1:length(cols))
         mul!(Gv, ct.Tt, W)
-        view(Jm, (k - 1) * n_obs .+ cols, :) .= sgn .* Gv'
+        view(Jm, (k - 1) * nr .+ cols, :) .= sgn .* Gv'
     end
     return r, Jm
 end
@@ -199,11 +201,11 @@ end
 function _jacobian_buffers!(obj::AdjointStateObjective)
     obj.jac === nothing || return obj.jac
     fm = obj.fm
-    n_obs = size(obj.R, 1)
-    chunk = min(n_obs, 64)
+    nr = size(obj.R, 1)
+    chunk = min(nr, 64)
     nf = length(fm.free_dofs)
-    obj.jac = (Z = zeros(fm.n, n_obs), B = zeros(fm.n, n_obs), AX = zeros(fm.n, n_obs),
-               Xf = zeros(nf, n_obs), Rf = zeros(nf, n_obs), W = zeros(nnz(fm.tensor.pattern), chunk),
+    obj.jac = (Z = zeros(fm.n, nr), B = zeros(fm.n, nr), AX = zeros(fm.n, nr),
+               Xf = zeros(nf, nr), Rf = zeros(nf, nr), W = zeros(nnz(fm.tensor.pattern), chunk),
                Gσ = zeros(fm.n_σ, chunk))
     return obj.jac
 end

@@ -79,6 +79,16 @@ using Test
         @test t.currents == p.currents[:, 1:K] && t.voltages == p.voltages[:, 1:K]
         @test t.noise.std == p.noise.std[:, 1:K] && t.noise_levels == p.noise_levels[1:K]
         @test t.reference == p.reference[:, 1:K]
+        # measurement modes: orthonormal in the dual metric, diagonalising the difference data
+        @test p.projection * (p.Mv \ Matrix(p.projection')) ≈ I atol = 1e-8
+        @test p.projection * (p.voltages - p.reference) ≈ Diagonal(p.values) atol = 1e-8 * p.values[1]
+        @test t.projection == p.projection                  # all measurement modes by default
+        # two-sided truncation: K patterns × M measurement modes = K M residuals
+        t35 = truncate_patterns(p, 3; measurements = 5)
+        @test size(t35.projection) == (5, size(p.voltages, 1))
+        obj35 = AdjointStateObjective(fm, t35.currents, t35.voltages; misfit = ProjectedMisfit(t35.projection))
+        @test n_residual(obj35) == 15
+        @test discrepancy_target(obj35, t35.noise) > 0
         # only the leading patterns distinguish the inclusion from the reference above the noise
         @test 2 <= K <= s ÷ 2
         t3 = truncate_patterns(p, 3)

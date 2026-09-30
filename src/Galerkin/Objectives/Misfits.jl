@@ -22,15 +22,37 @@ end
 WeightedSquaredEuclidean(W::Diagonal) = WeightedSquaredEuclidean(W, Diagonal(sqrt.(W.diag)))
 WeightedSquaredEuclidean(W::AbstractMatrix) = WeightedSquaredEuclidean(W, cholesky(Symmetric(Matrix(W))).U)
 
+"""
+    ProjectedMisfit(U)
+
+`J = ½ Σₛ ‖U eₛ‖²` for a rectangular `U` (`k × n_obs`, `k ≤ n_obs`): only `k` combinations of the
+measurements enter the misfit, e.g. the leading measurement modes of [`pattern_svd`](@ref)
+(`truncate_patterns(p, K; measurements = M)`, a two-sided truncation of the data with `K M`
+residuals instead of `n_obs K`). The residual has `k` entries per pattern.
+"""
+struct ProjectedMisfit{MU <: AbstractMatrix} <: AbstractMisfit
+    U::MU
+end
+
+# number of residual entries per pattern
+_residual_rows(::AbstractMisfit, n_obs) = n_obs
+function _residual_rows(m::ProjectedMisfit, n_obs)
+    size(m.U, 2) == n_obs || throw(DimensionMismatch("the projection needs $n_obs columns, got $(size(m.U, 2))"))
+    return size(m.U, 1)
+end
+
 # r ← U e
 _whiten!(R, ::SquaredEuclidean, E) = copyto!(R, E)
 _whiten!(R, m::WeightedSquaredEuclidean, E) = mul!(R, m.U, E)
+_whiten!(R, m::ProjectedMisfit, E) = mul!(R, m.U, E)
 # G ← Uᵀ R
 _whiten_adjoint!(G, ::SquaredEuclidean, R) = copyto!(G, R)
 _whiten_adjoint!(G, m::WeightedSquaredEuclidean, R) = mul!(G, m.U', R)
-# Uᵀ as a dense n_obs × n_obs matrix (Jacobians)
+_whiten_adjoint!(G, m::ProjectedMisfit, R) = mul!(G, m.U', R)
+# Uᵀ as a dense n_obs × k matrix (Jacobians)
 _whitening_adjoint_matrix(::SquaredEuclidean, n) = Matrix(1.0I, n, n)
 _whitening_adjoint_matrix(m::WeightedSquaredEuclidean, n) = Matrix(m.U')
+_whitening_adjoint_matrix(m::ProjectedMisfit, n) = Matrix{Float64}(m.U')
 
 # X ← X - column means (voltages are only defined up to a constant)
 function _remove_mean!(X)
