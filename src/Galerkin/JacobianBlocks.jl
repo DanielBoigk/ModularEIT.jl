@@ -29,8 +29,15 @@ function LinearAlgebra.mul!(g::AbstractVector, A::AdjointJacobianOperator{<:Para
     return mul!(g, J.P', J.buf)
 end
 
-_jacobian_blocks!(f, o::ParametrizedObjective, θ::AbstractVector) =
-    _jacobian_blocks!((rows, B, rr) -> f(rows, B * o.par.P, rr), o.obj, conductivity(o.par, θ))
+function _jacobian_blocks!(f, o::ParametrizedObjective, θ::AbstractVector)
+    P = o.par.P
+    buf = zeros(64, size(P, 2))                      # (row blocks have at most 64 rows)
+    return _jacobian_blocks!(o.obj, conductivity(o.par, θ)) do rows, B, rr
+        Bθ = view(buf, 1:size(B, 1), :)
+        mul!(Bθ, B, P)
+        f(rows, Bθ, rr)
+    end
+end
 
 """
     jacobian_column_norms(obj, θ)
