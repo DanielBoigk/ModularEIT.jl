@@ -6,6 +6,12 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Levenberg-Marquardt Method</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method</guid>
+    <description><![CDATA[ The Levenberg–Marquardt (LM) method damps each Gauss–Newton step: \big(J^\top J+\lambda\,L_{\text{LM}}\big)\,\delta = -J^\top r , with a damping parameter \lambda&gt;0 and a symmetric positive definite matrix L_{\text{LM}}. ]]></description>
+    <pubDate>Tue, 29 Sep 2026 23:54:17 GMT</pubDate>
+  </item><item>
     <title>Truncated SVD Regularization</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</guid>
@@ -58,12 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-an-Optimizer</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-an-Optimizer</guid>
     <description><![CDATA[ Which method minimises J(\sigma) = \Phi(\sigma)+\alpha R(\sigma) best depends mainly on two properties: whether the misfit \Phi is a sum of squares, and whether the regulariser R is smooth. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
-  </item><item>
-    <title>Classical and Learned Priors</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Classical-and-Learned-Priors</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Classical-and-Learned-Priors</guid>
-    <description><![CDATA[ Because EIT is severely ill-posed (see Stability of the Calderón Problem), prior knowledge about the conductivity determines what a reconstruction can show. ]]></description>
     <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
   </item>
     </channel>
