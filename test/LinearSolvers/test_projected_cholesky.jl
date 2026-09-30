@@ -87,4 +87,23 @@ isdefined(Main, :neumann_laplacian) || include("helpers.jl")
         end
         @test allocs(64) < allocs(16) + 4096
     end
+
+    @testset "CHOLMOD workspace is reused (no allocation per solve)" begin
+        # every solve used to allocate an n × s workspace in CHOLMOD through Julia's counting
+        # allocator without its release being credited, so the GC heuristics drifted and real
+        # garbage piled up; the workspace is now kept with the factorisation
+        n = 2000
+        A = spdiagm(-1 => -ones(n - 1), 0 => 2.1 .* ones(n), 1 => -ones(n - 1))
+        F = projected_cholesky(A)
+        B = randn(n, 64)
+        X = similar(B)
+        ldiv!(X, F, B)
+        @test X ≈ projected_ldl(A) \ B rtol = 1e-8                 # independent backend
+        live0 = Base.gc_live_bytes()
+        for _ in 1:100
+            ldiv!(X, F, B)
+        end
+        @test Base.gc_live_bytes() - live0 < 20 * n * 64 * 8      # (was 100 workspaces)
+        @test X ≈ projected_ldl(A) \ B rtol = 1e-8                 # reused workspace, same result
+    end
 end

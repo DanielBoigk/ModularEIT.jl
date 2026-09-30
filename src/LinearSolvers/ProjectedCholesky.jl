@@ -37,6 +37,46 @@ _chol_refactor!(F::SparseArrays.CHOLMOD.Factor, A::SparseMatrixCSC) = (cholesky!
 # X ← A⁻¹ B for the reduced system (X, B are nJ × s)
 _chol_solve!(X, F::SparseArrays.CHOLMOD.Factor, B) = ldiv!(X, F, B)
 
+# CHOLMOD's `ldiv!` lets CHOLMOD allocate its n × s workspaces Y and E for every solve, through
+# Julia's counting allocator, and their release is not credited: every solve then inflates
+# Julia's count of live memory by n × s × 8 bytes, the GC collects ever less often, and real
+# garbage piles up (tens of GB in long reconstructions). The workspaces are therefore kept with
+# the factorisation and reused (cholmod_l_solve2 reallocates them only when too small). Uses
+# SparseArrays.CHOLMOD internals (wrap_dense_and_ptr, cholmod_l_solve2, free!).
+mutable struct _CholmodWorkspace
+    Y::Ptr{SparseArrays.CHOLMOD.cholmod_dense_struct}
+    E::Ptr{SparseArrays.CHOLMOD.cholmod_dense_struct}
+    function _CholmodWorkspace()
+        ws = new(C_NULL, C_NULL)
+        return finalizer(_free_cholmod_workspace!, ws)
+    end
+end
+function _free_cholmod_workspace!(ws::_CholmodWorkspace)
+    ws.Y != C_NULL && SparseArrays.CHOLMOD.free!(ws.Y)
+    ws.E != C_NULL && SparseArrays.CHOLMOD.free!(ws.E)
+    ws.Y = ws.E = C_NULL
+    return nothing
+end
+_chol_workspace(::SparseArrays.CHOLMOD.Factor{Float64, Int64}) = _CholmodWorkspace()
+_chol_workspace(_) = nothing
+
+_chol_solve!(X, F, B, ::Nothing) = _chol_solve!(X, F, B)
+function _chol_solve!(x::StridedMatrix{Float64}, L::SparseArrays.CHOLMOD.Factor{Float64, Int64},
+                      b::StridedMatrix{Float64}, ws::_CholmodWorkspace)
+    CM = SparseArrays.CHOLMOD
+    issuccess(L) || return ldiv!(x, L, b)                # (raises the appropriate exception)
+    dense_x, dense_x_ptr = CM.wrap_dense_and_ptr(x)
+    dense_b, _ = CM.wrap_dense_and_ptr(b)
+    Xh = Ref(Ptr{CM.cholmod_dense_struct}(dense_x_ptr))
+    Yh, Eh = Ref(ws.Y), Ref(ws.E)
+    status = GC.@preserve x dense_x b dense_b begin
+        CM.cholmod_l_solve2(CM.CHOLMOD_A, L, Ref(dense_b), C_NULL, Xh, C_NULL, Yh, Eh, CM.getcommon(Int64))
+    end
+    ws.Y, ws.E = Yh[], Eh[]
+    iszero(status) && error("CHOLMOD solve failed")
+    return x
+end
+
 # LDLᵀ backend (LDLFactorizations.jl, pure Julia, any floating-point type). It reads the upper
 # triangle only, so the reduced matrix is stored as triu(A[J, J]) and marked with this wrapper.
 struct _UpperTriangle{M}
@@ -112,6 +152,7 @@ mutable struct ProjectedCholesky{T, MA, FT, MT <: AbstractMatrix{T}, IT <: Abstr
     bJ::MT                         # nJ × s buffers
     xJ::MT
     to_device::DV
+    cholws::Any                    # reusable backend solve workspace (CHOLMOD) or nothing
 end
 
 # choose k pinned indices with V[I, :] well conditioned (column-pivoted QR of Vᵀ)
@@ -151,7 +192,7 @@ function ProjectedCholesky(A::SparseMatrixCSC{T}; nullspace = nothing, grounding
     buf(r, c) = to_device(zeros(T, r, c))
     return ProjectedCholesky(n, pinned, to_device(J), Ared, nzmap, Adev, fact,
                              dev(Vh), dev(Vh[J, :]), dev(Wh), dev(Vh / WV),
-                             buf(k, nrhs), buf(nJ, nrhs), buf(nJ, nrhs), to_device)
+                             buf(k, nrhs), buf(nJ, nrhs), buf(nJ, nrhs), to_device, _chol_workspace(fact))
 end
 
 Base.size(F::ProjectedCholesky) = (F.n, F.n)
@@ -200,7 +241,7 @@ function LinearAlgebra.ldiv!(X::AbstractVecOrMat, F::ProjectedCholesky, B::Abstr
     _gram!(K, F.V, Bm)
     bJ .= view(Bm, F.J, :)
     mul!(bJ, F.VJ, K, -1, 1)
-    _chol_solve!(xJ, F.fact, bJ)
+    _chol_solve!(xJ, F.fact, bJ, F.cholws)
     # X = [x_J; 0] then ground: X ← X - V (WᵀV)⁻¹ Wᵀ X
     fill!(Xm, zero(eltype(Xm)))
     view(Xm, F.J, :) .= xJ
