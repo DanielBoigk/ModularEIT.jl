@@ -21,10 +21,14 @@ get a density independent of the element size).
 """
 function sensitivity_map(obj::AbstractObjective, θ::AbstractVector; weights = nothing)
     _require_least_squares(obj, "sensitivity_map")
-    r = zeros(n_residual(obj))
-    J = zeros(length(r), length(θ))
-    residual_and_jacobian!(r, J, obj, Vector{Float64}(θ))
-    s = vec(sqrt.(sum(abs2, J; dims = 1)))
+    s = if hasmethod(_jacobian_blocks!, Tuple{Function, typeof(obj), Vector{Float64}})
+        jacobian_column_norms(obj, Vector{Float64}(θ))          # row blocks, J never stored
+    else
+        r = zeros(n_residual(obj))
+        J = zeros(length(r), length(θ))
+        residual_and_jacobian!(r, J, obj, Vector{Float64}(θ))
+        vec(sqrt.(sum(abs2, J; dims = 1)))
+    end
     weights === nothing || (s ./= weights)
     return s
 end

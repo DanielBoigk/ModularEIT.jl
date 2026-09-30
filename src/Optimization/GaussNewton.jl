@@ -16,10 +16,15 @@
 # sparse SPD B = Σ αₖ Hₖ + λD,
 #     (B + JᵀJ)⁻¹ b = B⁻¹b - W (I + J W)⁻¹ J B⁻¹b,   W = B⁻¹Jᵀ,
 # i.e. one sparse Cholesky of B, m + 1 sparse solves and an m × m dense system. `:auto` uses
-# Woodbury when n_σ > m and B is available (λ > 0 with a sparse D).
+# Woodbury when n_σ > m and B is available (λ > 0 with a sparse D). `:cg` is matrix-free: the
+# Jacobian is never stored, only applied (J v: linearized forward solves, Jᵀ w: adjoint solves,
+# see jacobian_operator), and the damped normal equations are solved inexactly by preconditioned
+# CG. Its diagonal (column norms of J, for the Jacobi preconditioner and for Marquardt and
+# sensitivity scaling) is accumulated from row blocks of J.
 
 """
-    GaussNewton(; damping = :lm, λ = nothing, scaling = :identity, linear_solver = :auto)
+    GaussNewton(; damping = :lm, λ = nothing, scaling = :identity, linear_solver = :auto,
+                cg_rtol = 1e-2, cg_itmax = 200)
 
 Gauss–Newton method for least-squares objectives ([`AdjointStateObjective`](@ref), possibly
 wrapped in a [`RegularizedObjective`](@ref); regularizers contribute their
@@ -35,24 +40,30 @@ wrapped in a [`RegularizedObjective`](@ref); regularizers contribute their
   over-amplifying the insensitive interior) or a symmetric positive definite matrix (e.g. the σ
   mass matrix `FEMatrices(disc).M_σ`). Updated at every iterate.
 - `linear_solver`: `:dense` (form the n_σ × n_σ matrix), `:woodbury` (sparse Cholesky of
-  `ΣαH + λD` and an m × m system for the m residuals) or `:auto`.
+  `ΣαH + λD` and an m × m system for the m residuals), `:auto`, or `:cg`: matrix-free, the
+  Jacobian is only applied (one linearized and one adjoint solve per pattern and CG iteration)
+  and never stored, for problems whose Jacobian does not fit into memory. `cg_rtol` and
+  `cg_itmax` control the inexact CG solve.
 """
 struct GaussNewton{DM} <: AbstractOptimizer
     damping::Symbol
     λ::Float64
     scaling::DM
     linear_solver::Symbol
+    cg_rtol::Float64
+    cg_itmax::Int
 end
 
-function GaussNewton(; damping::Symbol = :lm, λ = nothing, scaling = :identity, linear_solver::Symbol = :auto)
+function GaussNewton(; damping::Symbol = :lm, λ = nothing, scaling = :identity, linear_solver::Symbol = :auto,
+                     cg_rtol::Real = 1e-2, cg_itmax::Integer = 200)
     damping in (:lm, :linesearch) || throw(ArgumentError("damping must be :lm or :linesearch, got :$damping"))
-    linear_solver in (:auto, :dense, :woodbury) ||
-        throw(ArgumentError("linear_solver must be :auto, :dense or :woodbury, got :$linear_solver"))
+    linear_solver in (:auto, :dense, :woodbury, :cg) ||
+        throw(ArgumentError("linear_solver must be :auto, :dense, :woodbury or :cg, got :$linear_solver"))
     scaling isa AbstractMatrix || scaling in (:identity, :marquardt, :sensitivity) ||
         throw(ArgumentError("scaling must be :identity, :marquardt, :sensitivity or a matrix"))
     λ = λ === nothing ? (damping === :lm ? 1e-3 : 1e-8) : Float64(λ)
     λ >= 0 || throw(ArgumentError("λ must be nonnegative"))
-    return GaussNewton(damping, λ, scaling, linear_solver)
+    return GaussNewton(damping, λ, scaling, linear_solver, Float64(cg_rtol), Int(cg_itmax))
 end
 
 mutable struct _GaussNewtonWorkspace{O}
@@ -66,6 +77,8 @@ mutable struct _GaussNewtonWorkspace{O}
     mask::BitVector
     λ::Float64                    # absolute damping
     ν::Float64
+    Jop::Any                      # matrix-free Jacobian (linear_solver = :cg) or nothing
+    c2::Vector{Float64}           # squared column norms of J (matrix-free)
 end
 
 _least_squares_part(obj::AbstractObjective) = obj
@@ -78,15 +91,23 @@ function _workspace(m::GaussNewton, obj, n)
         throw(ArgumentError("GaussNewton needs a least-squares objective with residual_and_jacobian! and n_residual " *
                             "(e.g. AdjointStateObjective), got $(nameof(typeof(data)))"))
     nr = n_residual(data)
-    return _GaussNewtonWorkspace(data, zeros(nr), zeros(nr, n), nothing, zeros(n), zeros(n), zeros(n),
-                                 falses(n), NaN, 2.0)
+    cg = m.linear_solver === :cg
+    return _GaussNewtonWorkspace(data, zeros(nr), cg ? zeros(0, 0) : zeros(nr, n), nothing, zeros(n), zeros(n),
+                                 zeros(n), falses(n), NaN, 2.0, nothing, zeros(cg ? n : 0))
 end
 
 # value, gradient, residual, Jacobian and regularizer Hessians at st.σ
 function _linearize!(st, ws::_GaussNewtonWorkspace, obj)
-    residual_and_jacobian!(ws.r, ws.Jm, ws.data, st.σ)
+    if ws.Jop === nothing && !isempty(ws.Jm)
+        residual_and_jacobian!(ws.r, ws.Jm, ws.data, st.σ)
+        mul!(st.g, ws.Jm', ws.r)
+    else                                          # matrix-free
+        residual!(ws.r, ws.data, st.σ)
+        ws.c2 .= jacobian_column_norms(ws.data, st.σ) .^ 2
+        ws.Jop = jacobian_operator(ws.data, st.σ)
+        mul!(st.g, ws.Jop', ws.r)
+    end
     st.value = sum(abs2, ws.r) / 2
-    mul!(st.g, ws.Jm', ws.r)
     ws.HR = nothing
     if obj isa RegularizedObjective
         gr = ws.gt
@@ -112,8 +133,10 @@ end
 _sensitivities(J) = vec(sqrt.(sum(abs2, J; dims = 1)))
 
 # diag(JᵀJ + H_R)
+_jac_colnorm2(ws) = ws.Jop === nothing && !isempty(ws.Jm) ? vec(sum(abs2, ws.Jm; dims = 1)) : ws.c2
+
 function _model_diagonal(ws)
-    d = vec(sum(abs2, ws.Jm; dims = 1))
+    d = copy(_jac_colnorm2(ws))
     ws.HR === nothing || (d .+= diag(ws.HR))
     return d
 end
@@ -126,7 +149,7 @@ function _damping_matrix(m::GaussNewton, ws, F)
         floor_ = 1e-10 * max(maximum(d; init = 0.0), floatmin())
         return spdiagm(0 => max.(d, floor_))
     elseif m.scaling === :sensitivity
-        d = _sensitivities(ws.Jm)[F]
+        d = sqrt.(_jac_colnorm2(ws))[F]
         floor_ = 1e-5 * max(maximum(d; init = 0.0), floatmin())
         return spdiagm(0 => max.(d, floor_))
     else
@@ -136,6 +159,7 @@ end
 
 # δ_ℱ = -(JᵀJ + H_R + λD)_ℱℱ⁻¹ g_ℱ; returns false if the system is not positive definite
 function _gauss_newton_direction!(ws, m::GaussNewton, g, F, D, λ)
+    m.linear_solver === :cg && return _cg_direction!(ws, m, g, F, D, λ)
     JF = view(ws.Jm, :, F)
     bF = -g[F]
     B = λ * D
@@ -163,9 +187,46 @@ function _gauss_newton_direction!(ws, m::GaussNewton, g, F, D, λ)
     return true
 end
 
+# matrix-free: (JᵀJ + H_R + λD)_ℱℱ on the free set, applied through the Jacobian operator
+struct _NormalOperator{J, H, M}
+    Jop::J
+    HR::H
+    D::M
+    λ::Float64
+    F::Vector{Int}
+    full::Vector{Float64}
+    Jv::Vector{Float64}
+    g::Vector{Float64}
+end
+Base.size(A::_NormalOperator) = (length(A.F), length(A.F))
+Base.size(A::_NormalOperator, d::Integer) = d <= 2 ? length(A.F) : 1
+Base.eltype(::_NormalOperator) = Float64
+function LinearAlgebra.mul!(y::AbstractVector, A::_NormalOperator, v::AbstractVector)
+    fill!(A.full, 0)
+    A.full[A.F] .= v
+    mul!(A.Jv, A.Jop, A.full)
+    mul!(A.g, A.Jop', A.Jv)
+    y .= view(A.g, A.F) .+ A.λ .* (A.D * v)
+    A.HR === nothing || (y .+= A.HR * v)
+    return y
+end
+
+function _cg_direction!(ws, m::GaussNewton, g, F, D, λ)
+    HRF = ws.HR === nothing ? nothing : ws.HR[F, F]
+    op = _NormalOperator(ws.Jop, HRF, D, λ, F, zeros(length(ws.δ)), zeros(length(ws.r)), zeros(length(ws.δ)))
+    d = ws.c2[F] .+ λ .* diag(D)
+    HRF === nothing || (d .+= diag(HRF))
+    d = max.(d, 1e-12 * max(maximum(d; init = 0.0), floatmin()))
+    x, stats = Krylov.cg(op, -g[F]; M = Diagonal(1 ./ d), rtol = m.cg_rtol, atol = 0.0, itmax = m.cg_itmax)
+    all(isfinite, x) || return false
+    fill!(ws.δ, 0)
+    ws.δ[F] .= x
+    return true
+end
+
 # predicted decrease of the quadratic model for the step δ: -gᵀδ - ½ δᵀHδ
 function _predicted_decrease(ws, g, δ)
-    q = sum(abs2, ws.Jm * δ)
+    q = ws.Jop === nothing && !isempty(ws.Jm) ? sum(abs2, ws.Jm * δ) : sum(abs2, ws.Jop * δ)
     ws.HR === nothing || (q += dot(δ, ws.HR, δ))
     return -dot(g, δ) - q / 2
 end

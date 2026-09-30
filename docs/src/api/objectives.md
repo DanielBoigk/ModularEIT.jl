@@ -26,6 +26,28 @@ residual_and_jacobian!
 n_residual
 ```
 
+## Matrix-free Jacobians
+
+For problems whose Jacobian does not fit into memory: `J * v` costs one linearized forward
+solve per pattern, `J' * w` one adjoint solve per pattern (both reuse the factorization of the
+forward problem). Column norms and the Gram matrix `JᵀJ` are accumulated from row blocks of
+the Jacobian without storing it. `GaussNewton(; linear_solver = :cg)` uses these.
+
+```julia
+J = jacobian_operator(obj, θ)        # AdjointStateObjective or ParametrizedObjective
+y = J * v; g = J' * w
+s = jacobian_column_norms(obj, θ)    # sensitivities
+G, g = jacobian_gram(obj, θ)         # JᵀJ and Jᵀr
+```
+
+```@docs
+jacobian_operator
+JacobianOperator
+ParametrizedJacobian
+jacobian_column_norms
+jacobian_gram
+```
+
 ## Kohn–Vogelius
 
 Theory: wiki article [Kohn-Vogelius Functional](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/07-Adjoint-Gradients/Kohn-Vogelius-Functional).

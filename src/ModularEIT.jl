@@ -42,6 +42,7 @@ export residual_indicator, flux_recovery_indicator, goal_oriented_indicator, jum
 export SquaredEuclidean, WeightedSquaredEuclidean, ProjectedMisfit
 export AdjointStateObjective, KohnVogeliusObjective, objective_value, value_and_gradient!
 export residual!, residual_and_jacobian!, n_residual, boundary_error, pattern_values
+export jacobian_operator, JacobianOperator, ParametrizedJacobian, jacobian_column_norms, jacobian_gram
 export TikhonovRegularizer, TotalVariationRegularizer, RegularizedObjective, gauss_newton_hessian
 export minimize, OptimizationState, GradientDescent, LBFGS, GaussNewton
 export jacobian_svd, jacobian_basis, TruncatedGaussNewton
@@ -75,6 +76,7 @@ include("Galerkin/Objectives/Misfits.jl")
 include("Galerkin/Objectives/AdjointState.jl")
 include("Galerkin/Objectives/KohnVogelius.jl")
 include("Galerkin/Parametrization.jl")
+include("Galerkin/JacobianBlocks.jl")
 
 include("Optimization/Optimizers.jl")
 include("Optimization/FirstOrder.jl")

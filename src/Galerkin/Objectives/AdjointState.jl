@@ -58,6 +58,7 @@ mutable struct AdjointStateObjective{FM <: ForwardModel, S <: AbstractLinearSolv
     R::Matrix{Float64}             # whitened residual      k × s (k = n_obs unless projected)
     G::Matrix{Float64}             # adjoint weights        n_obs × s / n_ctrl × s
     jac::Any                       # Jacobian buffers (created on first use)
+    version::Int                   # incremented at every new σ (validity of Jacobian operators)
 end
 
 function AdjointStateObjective(fm::ForwardModel, inputs::AbstractVecOrMat, data::AbstractVecOrMat;
@@ -75,7 +76,7 @@ function AdjointStateObjective(fm::ForwardModel, inputs::AbstractVecOrMat, data:
     z(r, c) = zeros(r, c)
     return AdjointStateObjective(fm, mode, In, D, solver, nothing, misfit, gradient,
                                  z(n, s), z(n, s), z(n, s), z(n, s), z(nf, s), z(nf, s),
-                                 z(n_obs, s), z(_residual_rows(misfit, n_obs), s), z(n_obs, s), nothing)
+                                 z(n_obs, s), z(_residual_rows(misfit, n_obs), s), z(n_obs, s), nothing, 0)
 end
 
 """
@@ -88,6 +89,7 @@ n_residual(obj::AdjointStateObjective) = length(obj.R)
 # assemble A(σ) and (re)factorise / update the solver
 function _update!(obj::AdjointStateObjective, σ)
     fm = obj.fm
+    obj.version += 1
     system_matrix!(fm, σ)
     if obj.mode === :neumann
         obj.state === nothing ? (obj.state = _init_neumann_solver(obj.solver, fm)) : _update_solver!(obj.state, fm.A)
@@ -168,11 +170,29 @@ rows of a [`ProjectedMisfit`](@ref)).
 """
 function residual_and_jacobian!(r::AbstractVector, Jm::AbstractMatrix, obj::AdjointStateObjective,
                                 σ::AbstractVector)
+    nr, s = size(obj.R)
+    size(Jm) == (nr * s, obj.fm.n_σ) || throw(DimensionMismatch("J must be $(nr * s) × $(obj.fm.n_σ)"))
+    residual!(r, obj, σ)
+    _jacobian_blocks_at_state!(obj) do rows, B, _
+        view(Jm, rows, :) .= B
+    end
+    return r, Jm
+end
+
+# Row blocks of the Jacobian at σ: calls f(rows, B, r_rows) with B = J[rows, :] (at most 64
+# rows, reused buffer) and the residual rows. The full Jacobian is never stored, so column norms
+# or JᵀJ can be accumulated for problems whose Jacobian does not fit into memory.
+function _jacobian_blocks!(f, obj::AdjointStateObjective, σ::AbstractVector)
+    _forward!(obj, σ)
+    _jacobian_blocks_at_state!(f, obj)
+    return obj
+end
+
+# (the forward solve at σ is done)
+function _jacobian_blocks_at_state!(f, obj::AdjointStateObjective)
     fm = obj.fm
     n_obs = size(obj.E, 1)
     nr, s = size(obj.R)                                   # residual rows per pattern
-    size(Jm) == (nr * s, fm.n_σ) || throw(DimensionMismatch("J must be $(nr * s) × $(fm.n_σ)"))
-    residual!(r, obj, σ)
     jb = _jacobian_buffers!(obj)
     Ut = _whitening_adjoint_matrix(obj.misfit, n_obs)
     if obj.mode === :neumann
@@ -187,15 +207,111 @@ function residual_and_jacobian!(r::AbstractVector, Jm::AbstractMatrix, obj::Adjo
     end
     ct = fm.tensor
     chunk = size(jb.W, 2)
+    Bbuf = zeros(chunk, fm.n_σ)
+    r = vec(obj.R)
     for k in 1:s, m0 in 1:chunk:nr
         cols = m0:min(m0 + chunk - 1, nr)
         W = view(jb.W, :, 1:length(cols))
         _outer_pair_products!(W, ct, view(jb.Z, :, cols), view(obj.X, :, k))
         Gv = view(jb.Gσ, :, 1:length(cols))
         mul!(Gv, ct.Tt, W)
-        view(Jm, (k - 1) * nr .+ cols, :) .= sgn .* Gv'
+        B = view(Bbuf, 1:length(cols), :)
+        B .= sgn .* Gv'
+        rows = (k - 1) * nr .+ cols
+        f(rows, B, view(r, rows))
     end
-    return r, Jm
+    return obj
+end
+
+"""
+    jacobian_operator(obj, σ)
+
+The Jacobian `J = ∂r/∂σ` of the residual at `σ` as a matrix-free operator: `J * v` (one
+linearized forward solve per pattern) and `J' * w` (one adjoint solve per pattern), with
+`mul!` for both, reusing the factorization of the forward solves. Neumann (current-driven)
+mode. The operator re-linearizes by itself if the objective has been evaluated at another `σ`
+in the meantime. For Krylov methods, Gauss–Newton with `linear_solver = :cg`, and problems whose
+Jacobian does not fit into memory.
+"""
+function jacobian_operator(obj::AdjointStateObjective, σ::AbstractVector)
+    obj.mode === :neumann || throw(ArgumentError("matrix-free Jacobians are implemented for mode = :neumann"))
+    _forward!(obj, σ)
+    fm = obj.fm
+    n_obs, s = size(obj.E)
+    nr = size(obj.R, 1)
+    Lv = copy(fm.tensor.pattern)
+    return JacobianOperator(obj, Vector{Float64}(σ), obj.version, nr * s, fm.n_σ, Lv,
+                            zeros(fm.n, s), zeros(fm.n, s), zeros(n_obs, s), zeros(nr, s), zeros(fm.n_σ))
+end
+
+"""
+    JacobianOperator
+
+Matrix-free Jacobian of an [`AdjointStateObjective`](@ref); see [`jacobian_operator`](@ref).
+"""
+mutable struct JacobianOperator{O}
+    obj::O
+    σ::Vector{Float64}
+    version::Int
+    m::Int
+    n::Int
+    Lv::SparseMatrixCSC{Float64, Int}
+    Y::Matrix{Float64}
+    Z::Matrix{Float64}
+    E::Matrix{Float64}
+    R::Matrix{Float64}
+    g::Vector{Float64}
+end
+
+struct AdjointJacobianOperator{J}
+    J::J
+end
+
+Base.size(J::JacobianOperator) = (J.m, J.n)
+Base.size(J::JacobianOperator, d::Integer) = d == 1 ? J.m : d == 2 ? J.n : 1
+Base.eltype(::JacobianOperator) = Float64
+Base.adjoint(J::JacobianOperator) = AdjointJacobianOperator(J)
+Base.size(A::AdjointJacobianOperator) = reverse(size(A.J))
+Base.size(A::AdjointJacobianOperator, d::Integer) = d == 1 ? size(A.J, 2) : d == 2 ? size(A.J, 1) : 1
+Base.eltype(::AdjointJacobianOperator) = Float64
+Base.adjoint(A::AdjointJacobianOperator) = A.J
+Base.:*(J::Union{JacobianOperator, AdjointJacobianOperator}, v::AbstractVector) = mul!(zeros(size(J, 1)), J, v)
+
+# the objective's state (factorization, states X) must be the one at J.σ
+function _ensure_state!(J::JacobianOperator)
+    J.obj.version == J.version && return J
+    _forward!(J.obj, J.σ)
+    J.version = J.obj.version
+    return J
+end
+
+# J v = U Π Q δX,   A δX = -L(v) X
+function LinearAlgebra.mul!(y::AbstractVector, J::JacobianOperator, v::AbstractVector)
+    _ensure_state!(J)
+    obj, fm = J.obj, J.obj.fm
+    weighted_stiffness_values!(nonzeros(J.Lv), fm.tensor, v)
+    mul!(J.Y, J.Lv, obj.X)
+    J.Y .*= -1
+    _solve!(J.Z, obj.state, J.Y)
+    mul!(J.E, fm.Q, J.Z)
+    _project!(J.E, fm.measure_weights)
+    _whiten!(J.R, obj.misfit, J.E)
+    copyto!(y, J.R)
+    return y
+end
+
+# Jᵀ w = -Σₛ ∫ ∇λₛ⋅∇xₛ ψ,   A λ = Qᵀ Πᵀ Uᵀ w   (the adjoint gradient with r replaced by w)
+function LinearAlgebra.mul!(g::AbstractVector, A::AdjointJacobianOperator{<:JacobianOperator}, w::AbstractVector)
+    J = A.J
+    _ensure_state!(J)
+    obj, fm = J.obj, J.obj.fm
+    copyto!(J.R, w)
+    _whiten_adjoint!(J.E, obj.misfit, J.R)
+    _project_adjoint!(J.E, fm.measure_weights)
+    mul!(J.Y, fm.Q', J.E)
+    _solve!(J.Z, obj.state, J.Y)
+    tensor_gradient!(g, fm.tensor, J.Z, obj.X; α = -1)
+    return g
 end
 
 function _jacobian_buffers!(obj::AdjointStateObjective)
