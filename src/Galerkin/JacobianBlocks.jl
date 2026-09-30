@@ -39,6 +39,9 @@ function _jacobian_blocks!(f, o::ParametrizedObjective, θ::AbstractVector)
     end
 end
 
+# whether an objective provides Jacobian row blocks (column norms, Gram matrix without J)
+_has_row_blocks(obj) = hasmethod(_jacobian_blocks!, Tuple{Function, typeof(obj), Vector{Float64}})
+
 """
     jacobian_column_norms(obj, θ)
 

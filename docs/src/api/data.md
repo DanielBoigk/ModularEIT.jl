@@ -53,6 +53,26 @@ electrode_angles
 transfer_electrodes
 ```
 
+## Approximation-error model
+
+The modelling error of the reconstruction model (coarser mesh, pixels, …) as a Gaussian, from
+samples simulated with both models (Kaipio–Somersalo), with a leave-one-out variance floor for the
+directions the samples do not span:
+
+```julia
+R = reduce(hcat, [residual!(zeros(m), obj_i, θ_i) for (obj_i, θ_i) in samples])  # noise-free fine data
+ae = ApproximationError(R; noise = η)
+aobj = ApproximationErrorObjective(obj, ae)
+res = minimize(aobj, θ0, GaussNewton(; linear_solver = :cg); ftarget = discrepancy_target(aobj))
+```
+
+```@docs
+ApproximationError
+whiten
+ApproximationErrorObjective
+discrepancy_target(::ApproximationErrorObjective)
+```
+
 ## Phantoms
 
 ```@docs
@@ -93,6 +113,7 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Noise Models for EIT Data](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Noise-Models-for-EIT-Data)
 - [Synthetic Conductivity Data](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Synthetic-Conductivity-Data)
 - [Inverse Crime](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Inverse-Crime)
+- [Approximation Error Approach](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Approximation-Error-Approach)
 - [Spectral Image Corruption](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Spectral-Image-Corruption)
 
 ## Index

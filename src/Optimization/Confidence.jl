@@ -21,7 +21,7 @@ get a density independent of the element size).
 """
 function sensitivity_map(obj::AbstractObjective, θ::AbstractVector; weights = nothing)
     _require_least_squares(obj, "sensitivity_map")
-    s = if hasmethod(_jacobian_blocks!, Tuple{Function, typeof(obj), Vector{Float64}})
+    s = if _has_row_blocks(obj)
         jacobian_column_norms(obj, Vector{Float64}(θ))          # row blocks, J never stored
     else
         r = zeros(n_residual(obj))

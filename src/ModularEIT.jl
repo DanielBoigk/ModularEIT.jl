@@ -49,6 +49,7 @@ export jacobian_svd, jacobian_basis, TruncatedGaussNewton
 export sensitivity_map, resolution_map, posterior_std
 export prox, prox!, ProximalMap, lumped_mass, ProximalGradient, ADMM
 export AbstractNoiseModel, GaussianNoise, RelativeGaussianNoise, SourceMeterNoise, add_noise, add_noise!
+export ApproximationError, whiten, ApproximationErrorObjective
 export expected_squared_error, discrepancy_target, perturb_boundary_operator, perturb_contact_impedance, electrode_angles
 export AbstractInclusion, CircleInclusion, EllipseInclusion, PolygonInclusion, InclusionPhantom, random_inclusions
 export PixelFunction, image_phantom, TransformedPhantom, lognormal_phantom, levelset_phantom
@@ -86,6 +87,7 @@ include("Optimization/Confidence.jl")
 include("Optimization/Proximal.jl")
 
 include("Data/Noise.jl")
+include("Data/ApproximationError.jl")
 include("Data/Phantoms.jl")
 include("Data/Simulation.jl")
 
