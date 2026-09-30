@@ -11,6 +11,7 @@ Diffusion models learn a prior distribution by learning to reverse a gradual noi
 2. The continuous view: [[Continuous Limit of the DDPM Chain]], [[Variance-Preserving SDE]], [[Reverse-Time SDE]], [[Probability Flow ODE]], [[Euler-Maruyama Method]].
 3. Scores: [[Score Function]], [[Denoising Score Matching]], [[Tweedie's Formula]].
 4. Inverse problems: [[Diffusion Posterior Sampling]], [[DiffPIR]], [[RED-Diff]], [[Diffusion Proximal Operator]], and [[Diffusion Models for EIT]].
+5. Beyond pixels: [[Diffusion Models on Finite Element Spaces]].
 
 **Related.** Other learned priors: [[11 Learned Priors/index|Learned Priors]]; the broader picture: [[Classical and Learned Priors]].
 

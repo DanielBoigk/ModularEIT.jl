@@ -11,7 +11,7 @@ The **U-Net** is a convolutional encoder–decoder with skip connections, the st
 
 For diffusion models, the noise level or time $t$ enters through a [[Sinusoidal Time Embedding]] added to every block, and residual blocks with group normalisation are used.
 
-**Local vs. global models.** A small CNN with a limited receptive field learns local texture statistics but not global composition. A U-Net sees the whole image and learns global structure with a similar parameter count. Plain convolutions assume a regular grid and do not "see" non-rectangular domains; an extra *mask channel* (1 inside the domain, 0 outside) lets the network learn the boundary. For unstructured FEM meshes, graph neural networks are the analogue.
+**Local vs. global models.** A small CNN with a limited receptive field learns local texture statistics but not global composition. A U-Net sees the whole image and learns global structure with a similar parameter count. Plain convolutions assume a regular grid and do not "see" non-rectangular domains; an extra *mask channel* (1 inside the domain, 0 outside) lets the network learn the boundary (see [[Masked and Partial Convolutions]]). For unstructured FEM meshes, graph neural networks are the analogue (see [[Graph Convolutions on Finite Element Meshes]], and [[Networks on EIT Domains]] for the options).
 
 ## References
 

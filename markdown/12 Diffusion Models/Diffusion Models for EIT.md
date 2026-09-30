@@ -12,7 +12,7 @@ Recent work that combines diffusion or score-based priors with EIT:
 **Recurring themes.**
 
 - EIT's forward operator is expensive and nonlinear. Methods that need few forward solves or tolerate inexact data steps ([[DiffPIR]], [[RED-Diff]]) are more practical than those that backpropagate through the network at every step ([[Diffusion Posterior Sampling]]).
-- Pixel-grid diffusion models do not match FEM meshes or curved domains. Mask channels, graph networks or implicit representations bridge the gap (see [[U-Net]]).
+- Pixel-grid diffusion models do not match FEM meshes or curved domains. Mask channels, conformal maps to a reference domain or graph networks on the mesh bridge the gap (see [[U-Net]] and [[Networks on EIT Domains]]).
 - Weakly determined interiors invite [[Hallucinations and Uncertainty|hallucinations]]. Multiple posterior samples are the natural uncertainty estimate.
 
 ## References

@@ -21,9 +21,24 @@ return x_0
 - $\rho_t$ grows as the noise decreases: the prior dominates early, the data late.
 - $\zeta\in[0,1]$ mixes deterministic (DDIM-like, $\zeta = 0$) and stochastic re-noising.
 
+## Linearized data consistency for EIT
+
+Solving the nonlinear prox at every diffusion step costs PDE solves. If a reconstruction $\theta_0$ that fits the data to the noise level is available, for example from [[Levenberg-Marquardt Method|Levenberg–Marquardt]], the residual can be linearised there once, $r(\theta)\approx r_0 + J(\theta-\theta_0)$. The prox then has a closed form through the SVD $J = U S V^\top$:
+
+$$
+\operatorname*{argmin}_\theta\ \frac{\lVert r_0 + J(\theta-\theta_0)\rVert^2}{\eta^2} + \frac{\lVert\theta-\hat\theta\rVert^2}{\gamma_t^2}
+= \hat\theta - V\operatorname{diag}\Big(\frac{s_i}{s_i^2+\eta^2/\gamma_t^2}\Big)U^\top\big(r_0 + J(\hat\theta-\theta_0)\big),
+$$
+
+with the residual noise level $\eta$ and the trust $\gamma_t\propto\bar\sigma_t/\sqrt\lambda$ in the denoised estimate $\hat\theta$. Mode by mode, directions the data determine ($s_i\gg\eta/\gamma_t$) are taken from the data, and the others are left to the prior. This is the filter of the model resolution matrix (see [[Resolution and Confidence Maps]]), applied at every step, and the sampling needs no PDE solve. The linearised term knows no bounds, so the result is clipped to the range of the training images.
+
+In the landscape example of EITDenoiser.jl (32 electrodes, 1 % noise, 64 × 64 pixels) the samples fit the *nonlinear* data at the noise level, agree where the data determine the conductivity (sky, height of the horizon, dark ground), and differ in the undetermined texture (haze, the outline of the ridge). Their mean is slightly more accurate than the Levenberg–Marquardt reconstruction the linearisation started from.
+
+**In EITDenoiser.jl:** `LinearizedData`, `data_prox`, `pixel_consistency`, `diffusion_sample`, see the [repository](https://github.com/DanielBoigk/EITDenoiser.jl).
+
 **Compared with DPS.** No backpropagation through the network is needed, and the data term is enforced by optimisation rather than by a single gradient step. This makes DiffPIR much less sensitive to the relative scaling of prior and likelihood and suits expensive nonlinear operators better. It is the diffusion analogue of [[Plug-and-Play Priors]].
 
 ## References
 
-1. Y. Zhu, K. Zhang, J. Liang, J. Cao, B. Wen, R. Timofte, L. Van Gool (2023). *Denoising Diffusion Models for Plug-and-Play Image Restoration*. CVPR Workshops 2023. [arXiv:2305.08995](https://arxiv.org/abs/2305.08995)
+1. Y. Zhu, K. Zhang, J. Liang, J. Cao, B. Wen, R. Timofte, L. Van Gool (2023). *Denoising Diffusion Models for Plug-and-Play Image Restoration*. CVPR Workshops 2023. [doi:10.1109/CVPRW59228.2023.00129](https://doi.org/10.1109/CVPRW59228.2023.00129)
 2. K. Zhang, Y. Li, W. Zuo, L. Zhang, L. Van Gool, R. Timofte (2021). *Plug-and-Play Image Restoration with Deep Denoiser Prior*. IEEE TPAMI. [arXiv:2008.13751](https://arxiv.org/abs/2008.13751)
