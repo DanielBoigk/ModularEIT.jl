@@ -34,7 +34,9 @@ with the residual noise level $\eta$ and the trust $\gamma_t\propto\bar\sigma_t/
 
 In the landscape example of EITDenoiser.jl (32 electrodes, 1 % noise, 64 × 64 pixels) the samples fit the *nonlinear* data at the noise level, agree where the data determine the conductivity (sky, height of the horizon, dark ground), and differ in the undetermined texture (haze, the outline of the ridge). Their mean is slightly more accurate than the Levenberg–Marquardt reconstruction the linearisation started from.
 
-**In EITDenoiser.jl:** `LinearizedData`, `data_prox`, `pixel_consistency`, `diffusion_sample`, see the [repository](https://github.com/DanielBoigk/EITDenoiser.jl).
+Where a sample misses the nonlinear data slightly, a few Levenberg–Marquardt steps close the gap. They must be *strongly* damped: then they move the sample by well under a percent. Weakly damped steps re-fit the data in poorly determined directions and nearly double the error, destroying what the prior contributed.
+
+**In EITDenoiser.jl:** `LinearizedData`, `data_prox`, `pixel_consistency`, `diffusion_sample`, `polish_sample`, see the [repository](https://github.com/DanielBoigk/EITDenoiser.jl).
 
 **Compared with DPS.** No backpropagation through the network is needed, and the data term is enforced by optimisation rather than by a single gradient step. This makes DiffPIR much less sensitive to the relative scaling of prior and likelihood and suits expensive nonlinear operators better. It is the diffusion analogue of [[Plug-and-Play Priors]].
 
