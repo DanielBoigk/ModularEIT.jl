@@ -3,7 +3,7 @@ tags: [outlook, plasma, pde-optimization, inverse-problems, proposal]
 aliases: [Birkeland-Eyde process, Plasma NOx synthesis, Moonshot proposal]
 ---
 
-**Proposal in one paragraph.** Fertiliser nitrogen is made by Haber–Bosch: ammonia from hydrogen (today mostly from natural gas) and nitrogen, followed by the Ostwald process to nitric acid. A century ago the **Birkeland–Eyde process** made nitric oxide directly from air in an electric arc, and lost only because it needed more energy. With cheap renewable electricity, plasma-based NOx synthesis becomes economically competitive once its energy cost falls to about **1.0–1.5 MJ per mol N**. The best reactors today reach about **1.8–2.5**. The remaining factor of about two is largely a *design* problem: gas bypassing the arc, back-reactions, heat losses. Yet reactor geometries are still designed by hand and a few experimental parameter sweeps. Designing them systematically is PDE-constrained shape and topology optimisation, calibrated by inverse problems and accelerated by machine learning: exactly the toolbox of an applied-analysis group.
+**Proposal in one paragraph.** Fertiliser nitrogen is made by Haber–Bosch: ammonia from hydrogen (today mostly from natural gas) and nitrogen, followed by the Ostwald process to nitric acid. A century ago the **Birkeland–Eyde process** made nitric oxide directly from air in an electric arc, and lost only because it needed more energy. With cheap renewable electricity, plasma-based NOx synthesis becomes economically competitive once its energy cost falls to about **1.0–1.5 MJ per mol N**. The best reactors today reach about **1.8–2.5**. The remaining factor of about two is largely a *design* problem: gas bypassing the arc, back-reactions, heat losses. Yet reactor geometries are still designed by hand and a few experimental parameter sweeps. Designing them systematically means calibrating a physical model from indirect measurements, optimising a design through a PDE, and making both fast with machine learning. That is inverse problems and learning, applied to a device instead of an image.
 
 ## Where the numbers stand
 
@@ -57,9 +57,20 @@ with time averages $\overline{\,\cdot\,}$.
 - **Inverse problems.** The model must be calibrated before its optimum means anything. That means identifying rate and transport coefficients and sheath models from current–voltage traces, optical emission and outlet composition, with uncertainty quantification (see [[Bayesian Inversion]]). The diagnostics are themselves tomography: the conductivity distribution of the arc from electrode measurements is an EIT problem for the same equation, and emission tomography gives temperature fields.
 - **Machine learning.** Neural-operator surrogates of the coupled simulation (Li et al. 2021) make design loops fast. Learned reduced kinetics replace detailed mechanisms. Bayesian optimisation and active learning choose the few expensive experiments. Language models accelerate the rest: literature, code and the modelling itself. That changes what a small group can attempt.
 
-## Why this group, why now
+## Why us, why now
 
-The tools are the ones developed for tomography: adjoint gradients, Jacobians, parametrisations of the unknown, adaptive meshes, regularisation and learned priors. In this code base they already exist for the conductivity equation (see [[Design Principles for EIT Solvers]]). The step is from *identifying* a conductivity to *designing* a device that is governed by one.
+Nothing on the list above is foreign to inverse problems and machine learning. Each piece has a counterpart in tomography:
+
+| reactor design needs | the same problem in tomography |
+|---|---|
+| gradients of a design objective through a PDE | adjoint gradients and Jacobians of a data misfit |
+| calibrating rate and transport coefficients with uncertainty | regularised and Bayesian parameter identification |
+| arc diagnostics from electrode and optical measurements | EIT for the same conductivity equation, emission tomography |
+| stable optimisation of ill-conditioned, high-dimensional designs | regularisation, parametrisations of the unknown |
+| fast surrogates of expensive simulations | learned reconstruction, learned regularisers, neural operators |
+| adaptive discretisation of thin layers | adaptive meshing for boundary layers and electrodes |
+
+The competence is assembled already: inverse problems, regularisation, learning, numerical PDEs. The code exists for the conductivity equation (see [[Design Principles for EIT Solvers]]). The step is from *identifying* a conductivity to *designing* a device that is governed by one. What is new is the scale of the modelling effort, and there language models change what a small group can do.
 
 **Possible first milestones.**
 
