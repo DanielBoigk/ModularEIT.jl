@@ -435,7 +435,7 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/U-Net</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -453,10 +453,13 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-for-EIT</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-on-Finite-Element-Spaces</loc>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -495,7 +498,10 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Conformal-Transplantation-of-Networks</loc>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Dihedral-Group-D4</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -503,11 +509,20 @@
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Equivariant-Convolutions</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Graph-Convolutions-on-Finite-Element-Meshes</loc>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
+  </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Invariant-Filter-Banks</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Invariant-and-Equivariant-Functions</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Masked-and-Partial-Convolutions</loc>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
+  </url><url>
+    <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Networks-on-EIT-Domains</loc>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Reynolds-Operator</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -516,7 +531,7 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-09-30T07:28:46.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Design-Principles-for-EIT-Solvers</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>

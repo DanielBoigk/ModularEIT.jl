@@ -6,65 +6,65 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Levenberg-Marquardt Method</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Levenberg-Marquardt-Method</guid>
-    <description><![CDATA[ The Levenberg–Marquardt (LM) method damps each Gauss–Newton step: \big(J^\top J+\lambda\,L_{\text{LM}}\big)\,\delta = -J^\top r , with a damping parameter \lambda&gt;0 and a symmetric positive definite matrix L_{\text{LM}}. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 23:54:17 GMT</pubDate>
+    <title>U-Net</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/U-Net</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/U-Net</guid>
+    <description><![CDATA[ The U-Net is a convolutional encoder–decoder with skip connections, the standard backbone for image-to-image tasks and for diffusion-model denoisers \varepsilon_\theta(x,t). ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Truncated SVD Regularization</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Truncated-SVD-Regularization</guid>
-    <description><![CDATA[ Truncated SVD (linear problems). ]]></description>
-    <pubDate>Tue, 29 Sep 2026 23:08:20 GMT</pubDate>
+    <title>DiffPIR</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</guid>
+    <description><![CDATA[ DiffPIR (Zhu et al. 2023) integrates a diffusion model into a plug-and-play half-quadratic splitting scheme. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Bayesian Inversion</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Bayesian-Inversion</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/03-The-Inverse-Problem/Bayesian-Inversion</guid>
-    <description><![CDATA[ In the Bayesian (statistical) approach, the unknown conductivity \sigma and the data y are random variables. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 22:45:58 GMT</pubDate>
+    <title>Diffusion Models for EIT</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-for-EIT</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-for-EIT</guid>
+    <description><![CDATA[ Recent work that combines diffusion or score-based priors with EIT: Diff-INR (Tong, Wang, Liu 2024): represents the conductivity as an implicit neural representation and uses a pretrained diffusion model as a generative regulariser during the reconstruction. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Parametrizations of the Conductivity</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity</guid>
-    <description><![CDATA[ The unknowns of a reconstruction need not be the coefficients of the conductivity in the finite element space of the forward model. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 22:45:58 GMT</pubDate>
+    <title>Diffusion Models on Finite Element Spaces</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-on-Finite-Element-Spaces</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-on-Finite-Element-Spaces</guid>
+    <description><![CDATA[ A diffusion model adds Gaussian noise to its samples (see DDPM Forward Process). On a uniform pixel grid “independent noise per pixel” is unambiguous. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Resolution and Confidence Maps</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Resolution-and-Confidence-Maps</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Resolution-and-Confidence-Maps</guid>
-    <description><![CDATA[ A reconstruction does not determine every part of the conductivity equally well. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 22:45:58 GMT</pubDate>
+    <title>Diffusion Models</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</guid>
+    <description><![CDATA[ Diffusion models learn a prior distribution by learning to reverse a gradual noising process. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Regularization</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/</guid>
-    <description><![CDATA[ Classical regularisation of the ill-posed EIT problem: penalties that encode prior knowledge, and how to weigh them against the data. Reading order. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 22:45:58 GMT</pubDate>
+    <title>Conformal Transplantation of Networks</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Conformal-Transplantation-of-Networks</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Conformal-Transplantation-of-Networks</guid>
+    <description><![CDATA[ In two dimensions EIT on any simply connected domain \Omega is equivalent to EIT on the unit disk D. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>ModularEIT Wiki</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/</guid>
-    <description><![CDATA[ A wiki on the theory of Electrical Impedance Tomography (EIT): imaging the electrical conductivity inside a body from currents and voltages measured at its surface. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 19:24:33 GMT</pubDate>
+    <title>Graph Convolutions on Finite Element Meshes</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Graph-Convolutions-on-Finite-Element-Meshes</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Graph-Convolutions-on-Finite-Element-Meshes</guid>
+    <description><![CDATA[ A convolution needs three things: a notion of neighbourhood, weights that do not depend on the position, and a way to aggregate. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Anatomy of an EIT Reconstruction</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Anatomy-of-an-EIT-Reconstruction</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Anatomy-of-an-EIT-Reconstruction</guid>
-    <description><![CDATA[ An iterative EIT reconstruction repeatedly compares simulated with measured data and improves the conductivity. It combines five exchangeable pieces. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
+    <title>Masked and Partial Convolutions</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Masked-and-Partial-Convolutions</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Masked-and-Partial-Convolutions</guid>
+    <description><![CDATA[ A domain \Omega inside a pixel grid is described by a mask m_{ij}\in\{0,1\}: 1 for pixels inside, 0 outside (see Pixel Images and Finite Element Functions). ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Choosing a Linear Solver</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-a-Linear-Solver</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-a-Linear-Solver</guid>
-    <description><![CDATA[ The systems A(\sigma)X = B of EIT are sparse, symmetric and positive semidefinite. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
+    <title>Networks on EIT Domains</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Networks-on-EIT-Domains</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Networks-on-EIT-Domains</guid>
+    <description><![CDATA[ Convolutional networks are built for pixel images: a rectangular grid, uniform resolution, and translation-invariant n\times n stencils. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item><item>
-    <title>Choosing an Optimizer</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-an-Optimizer</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/00-Overviews/Choosing-an-Optimizer</guid>
-    <description><![CDATA[ Which method minimises J(\sigma) = \Phi(\sigma)+\alpha R(\sigma) best depends mainly on two properties: whether the misfit \Phi is a sum of squares, and whether the regulariser R is smooth. ]]></description>
-    <pubDate>Tue, 29 Sep 2026 15:43:11 GMT</pubDate>
+    <title>Geometric Learning</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/</guid>
+    <description><![CDATA[ EIT on symmetric domains has symmetric data: rotating the conductivity rotates the measurements. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item>
     </channel>
   </rss>
