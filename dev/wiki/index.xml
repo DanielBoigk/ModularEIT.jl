@@ -6,65 +6,65 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Block Conjugate Gradient</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient</guid>
-    <description><![CDATA[ The block conjugate gradient method (O’Leary 1980) solves A X = B for s right-hand sides simultaneously. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 11:42:04 GMT</pubDate>
+    <title>Conformal Invariance of the Conductivity Equation</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</guid>
+    <description><![CDATA[ In two dimensions the Conductivity Equation is invariant under conformal maps. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Coarsening of Bisection Meshes</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</guid>
-    <description><![CDATA[ Coarsening a mesh produced by Newest Vertex Bisection (NVB) undoes bisections. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 09:49:51 GMT</pubDate>
+    <title>Boundary Mass and Stiffness Matrices</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Boundary-Mass-and-Stiffness-Matrices</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Boundary-Mass-and-Stiffness-Matrices</guid>
+    <description><![CDATA[ Boundary data (voltages f, currents g) are functions on \partial\Omega. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Gauss-Newton Method</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</guid>
-    <description><![CDATA[ For a nonlinear least-squares objective \Phi(\sigma) = \tfrac12\|r(\sigma)\|^2 with residual r(\sigma) = \mathcal F(\sigma)-y and Jacobian J = r&#039;(\sigma): gradient: \nabla\Phi = J^\top r; Hessian: \nabla^2\Phi = J^\top J + \sum_k r_k\nabla^2r_k. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+    <title>Galerkin Method</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Galerkin-Method</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Galerkin-Method</guid>
+    <description><![CDATA[ A Galerkin method approximates a variational problem \text{find } u\in V:\quad a(u,v) = \ell(v)\quad\forall v\in V by replacing the infinite-dimensional space V with a finite-dimensional subspace V_h = \operatorname{span}\{\varphi_1,\dots,\varphi_n\}. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Noise-Level Stagnation Test</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Noise-Level-Stagnation-Test</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Noise-Level-Stagnation-Test</guid>
-    <description><![CDATA[ A stopping rule for iterative reconstructions that measures each step’s decrease of the misfit against the statistical fluctuation of the misfit itself. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+    <title>L2 Projection</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/L2-Projection</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/L2-Projection</guid>
+    <description><![CDATA[ The L^2 projection of a function w onto a finite element space V_h=\operatorname{span}\{\varphi_i\} is the best approximation in L^2(\Omega): P_hw = \arg\min_{v_h\in V_h}\|w-v_h\|_{L^2} \quad\Longleftrightarrow\quad M\,\mathbf z = \mathbf b,\qquad b_i = \int_\Omega w\,\varphi_i\,\mathrm dx , with th... ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Stopping Criteria</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria</guid>
-    <description><![CDATA[ Common rules for terminating a reconstruction: Discrepancy principle: stop when \|\mathcal F(\sigma_k)-y^\delta\|\le\tau\delta (\tau\gtrsim1, \delta the noise level). ]]></description>
-    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+    <title>Lagrange Finite Elements</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Lagrange-Finite-Elements</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Lagrange-Finite-Elements</guid>
+    <description><![CDATA[ Lagrange elements use piecewise polynomial basis functions defined by their values at nodes. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Optimization</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/</guid>
-    <description><![CDATA[ Methods that minimise the regularised reconstruction functional: Newton-type methods for least squares, quasi-Newton methods, and proximal splitting for non-smooth and learned priors. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+    <title>Mass Matrix</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Mass-Matrix</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Mass-Matrix</guid>
+    <description><![CDATA[ The mass matrix is the Gram matrix of the basis in L^2(\Omega): M_{ij} = \int_\Omega\varphi_i\,\varphi_j\,\mathrm dx . ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Approximation Error Approach</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Approximation-Error-Approach</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Approximation-Error-Approach</guid>
-    <description><![CDATA[ Every reconstruction model is an approximation: a coarser mesh than reality, pixels instead of a continuous conductivity, idealised electrodes. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+    <title>Pixel Images and Finite Element Functions</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions</guid>
+    <description><![CDATA[ Learned priors, image denoisers and plots work with pixel images, while the forward problem works with finite element coefficients. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Data and Noise</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/</guid>
-    <description><![CDATA[ Where test data come from and what corrupts real data: synthetic conductivities, noise and modelling errors, and how to avoid overly optimistic results. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 17:15:18 GMT</pubDate>
+    <title>Stiffness Matrix</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Stiffness-Matrix</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Stiffness-Matrix</guid>
+    <description><![CDATA[ The (unweighted) stiffness matrix discretises the Laplacian: K_{ij} = \int_\Omega\nabla\varphi_i\cdot\nabla\varphi_j\,\mathrm dx,\qquad \mathbf z^\top K\mathbf z = \|\nabla z_h\|^2_{L^2(\Omega)} . ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>Plasma Nitrogen Fixation as a Moonshot</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</guid>
-    <description><![CDATA[ Proposal in one paragraph. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 08:52:09 GMT</pubDate>
+    <title>Fast Solvers on Disk Domains</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains</guid>
+    <description><![CDATA[ On a disk, the constant-coefficient Neumann problem separates in polar coordinates: Fourier modes in the angle, and one ordinary differential equation along the radius per mode. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item><item>
-    <title>DiffPIR</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</guid>
-    <description><![CDATA[ DiffPIR (Zhu et al. 2023) integrates a diffusion model into a plug-and-play half-quadratic splitting scheme. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 08:13:06 GMT</pubDate>
+    <title>A Posteriori Error Estimation and Adaptive Meshing</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</guid>
+    <description><![CDATA[ A finite element solution u_h satisfies the discrete equations exactly. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item>
     </channel>
   </rss>

@@ -66,7 +66,7 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Conformal-Invariance-of-the-Conductivity-Equation</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/02-The-Forward-Problem/Dirichlet-Problem</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -144,7 +144,7 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Boundary-Mass-and-Stiffness-Matrices</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Conductivity-Tensor</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -162,19 +162,19 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Galerkin-Method</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Grounding-of-the-Potential</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/L2-Projection</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Lagrange-Finite-Elements</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Mass-Matrix</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Null-Space-of-the-Neumann-Problem</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -183,10 +183,10 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Stiffness-Matrix</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Weighted-Stiffness-Matrix</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -210,7 +210,7 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Rectangular-Domains</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -231,34 +231,34 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/A-Posteriori-Error-Estimation-and-Adaptive-Meshing</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Adaptive-Meshing-in-EIT</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</loc>
-    <lastmod>2026-10-01T09:49:51.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/D%C3%B6rfler-Marking</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Goal-Oriented-Error-Estimation</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Hanging-Nodes</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Newest-Vertex-Bisection</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Numerical-Conformal-Mapping</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Residual-Estimator-for-the-Conductivity-Equation</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Zienkiewicz-Zhu-Estimator</loc>
-    <lastmod>2026-09-29T15:43:11.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/</loc>
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
@@ -321,7 +321,7 @@
     <lastmod>2026-09-29T15:43:11.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Parametrizations-of-the-Conductivity</loc>
-    <lastmod>2026-09-29T22:45:58.000Z</lastmod>
+    <lastmod>2026-10-01T12:58:28.000Z</lastmod>
   </url><url>
     <loc>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/08-Regularization/Resolution-and-Confidence-Maps</loc>
     <lastmod>2026-09-29T22:45:58.000Z</lastmod>
