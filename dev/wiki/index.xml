@@ -10,7 +10,7 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</guid>
     <description><![CDATA[ Coarsening a mesh produced by Newest Vertex Bisection (NVB) undoes bisections. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 09:19:42 GMT</pubDate>
+    <pubDate>Thu, 01 Oct 2026 09:49:51 GMT</pubDate>
   </item><item>
     <title>Gauss-Newton Method</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</link>
