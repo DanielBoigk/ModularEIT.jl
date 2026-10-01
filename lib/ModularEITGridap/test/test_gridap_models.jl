@@ -36,5 +36,9 @@ using Test
         err(σ) = norm(σ - σtrue) / norm(σtrue .- 1)
         @test objective_value(obj, res.σ) < 1e-2 * objective_value(obj, σ0)
         @test err(res.σ) < 0.7 * err(σ0)
+        # the same as a reconstruction problem
+        prob = EITProblem(d, fm, I, U; regularization = (1e-5 => TotalVariationRegularizer(d; ε = 1e-2),))
+        reconstruct!(prob, GaussNewton(); maxiter = 15)
+        @test solution(prob) ≈ res.σ
     end
 end

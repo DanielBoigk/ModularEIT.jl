@@ -54,6 +54,7 @@ export AbstractInclusion, CircleInclusion, EllipseInclusion, PolygonInclusion, I
 export PixelFunction, image_phantom, TransformedPhantom, lognormal_phantom, levelset_phantom
 export gaussian_random_field, corrupt_image, conductivity, simulate_data
 export AbstractParametrization, SubspaceParametrization, ParametrizedObjective, parameter_count
+export EITProblem, reconstruct!, solution, data_misfit
 
 
 include("AbstractTypes.jl")
@@ -94,5 +95,7 @@ include("Data/Noise.jl")
 include("Data/ApproximationError.jl")
 include("Data/Phantoms.jl")
 include("Data/Simulation.jl")
+
+include("Reconstruction/Problem.jl")
 
 end # module ModularEIT

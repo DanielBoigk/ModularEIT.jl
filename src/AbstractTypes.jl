@@ -113,8 +113,8 @@ abstract type AbstractLinearSolver end
 """
     AbstractEITProblem
 
-A complete reconstruction problem (discretization, electrode model, data, current guess).
-Reserved for a later reconstruction layer.
+A complete reconstruction problem (discretization, forward model, data, objective, current
+iterate), solved by [`reconstruct!`](@ref); see [`EITProblem`](@ref).
 """
 abstract type AbstractEITProblem end
 

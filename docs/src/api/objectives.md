@@ -93,7 +93,7 @@ WeightedSquaredEuclidean
 ProjectedMisfit
 ```
 
-## Reserved types
+## Abstract types of the reconstruction layer
 
 ```@docs
 AbstractEITProblem

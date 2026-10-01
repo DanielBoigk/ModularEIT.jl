@@ -32,6 +32,7 @@ makedocs(
             "Electrode Models & Forward Problem" => "api/forward.md",
             "Objectives" => "api/objectives.md",
             "Regularization & Optimization" => "api/optimization.md",
+            "Reconstruction Problems" => "api/reconstruction.md",
             "Synthetic Data & Noise" => "api/data.md",
             "Parametrizations" => "api/parametrization.md",
             "Adaptive Meshing" => "api/adaptivity.md",

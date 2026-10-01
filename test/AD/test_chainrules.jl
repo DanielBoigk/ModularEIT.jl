@@ -45,6 +45,11 @@ using Test
         test_rrule(residual, pobj ⊢ NoTangent(), θ; tol...)
     end
 
+    @testset "reconstruction problem" begin
+        prob = EITProblem(disc, fm, I, data; regularization = (1e-3 => TikhonovRegularizer(disc),))
+        test_rrule(objective_value, prob ⊢ NoTangent(), σ; tol...)
+    end
+
     @testset "L² gradients are rejected" begin
         objL2 = AdjointStateObjective(fm, I, data; gradient = L2Gradient(FEMatrices(disc)))
         @test_throws ArgumentError ChainRulesCore.rrule(objective_value, objL2, σ)

@@ -22,6 +22,10 @@ function ChainRulesCore.rrule(::typeof(objective_value), obj::AbstractObjective,
     return J, objective_value_pullback
 end
 
+# a reconstruction problem is differentiated as its objective
+ChainRulesCore.rrule(::typeof(objective_value), prob::ModularEIT.EITProblem, θ::AbstractVector) =
+    ChainRulesCore.rrule(objective_value, prob.objective, θ)
+
 # The Jacobian of the residual at σ: matrix-free where available, dense otherwise.
 function _jacobian(obj, σ)
     try
