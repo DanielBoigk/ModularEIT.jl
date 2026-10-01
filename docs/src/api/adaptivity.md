@@ -57,3 +57,4 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Dörfler Marking](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Dörfler-Marking)
 - [Hanging Nodes](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Hanging-Nodes)
 - [Newest Vertex Bisection](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Newest-Vertex-Bisection)
+- [Coarsening of Bisection Meshes](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes)

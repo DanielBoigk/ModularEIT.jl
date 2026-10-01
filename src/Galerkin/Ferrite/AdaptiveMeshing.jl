@@ -32,7 +32,7 @@ Adaptively refinable mesh. Use [`refine_mesh!`](@ref) / [`coarsen_mesh!`](@ref) 
   hanging nodes.
 - Linear triangle `grid`: newest vertex bisection, at most `maxlevel` bisections per cell
   (default 20; two bisections quarter a cell). Refined grids are conforming; facet and cell
-  sets are carried over. Coarsening is not implemented.
+  sets are carried over. Coarsening undoes bisections exactly.
 
 Other cell types (tetrahedra, quadratic cells) are accepted with a warning and never refined.
 """
@@ -110,15 +110,15 @@ max_level(am::AdaptiveMesh) = am.forest === nothing ? 0 :
 """
     coarsen_mesh!(am, cells)
 
-Coarsen: every complete family of sibling cells among `cells` is merged into its parent.
+Coarsen: every complete family of sibling cells among `cells` is merged into its parent. On
+triangle meshes a family is the two or four cells around a vertex created by bisection (merging
+them undoes that bisection exactly).
 """
 function coarsen_mesh!(am::AdaptiveMesh, cells::AbstractVector{<:Integer})
     am.forest === nothing && (_warn_no_refinement(); return am)
-    am.forest isa Ferrite.AMR.BisectionMesh &&
-        (@warn "Coarsening of bisection-refined triangle meshes is not implemented yet; the mesh is unchanged."; return am)
     isempty(cells) && return am
     Ferrite.AMR.coarsen!(am.forest, collect(cells))
-    Ferrite.AMR.balanceforest!(am.forest)
+    am.forest isa Ferrite.AMR.BisectionMesh || Ferrite.AMR.balanceforest!(am.forest)   # (stays conforming)
     am.grid = Ferrite.AMR.creategrid(am.forest)
     return am
 end

@@ -91,7 +91,12 @@ end
             refine_mesh!(am, [1])
         end
         @test maximum(cell_levels(am)) <= 4      # cells at the cap are not refined
-        @test_logs (:warn, r"not implemented") coarsen_mesh!(am, [1, 2])
+        # coarsening everything (repeatedly) returns to the initial mesh
+        for _ in 1:10
+            coarsen_mesh!(am, collect(1:getncells(current_grid(am))))
+        end
+        @test getncells(current_grid(am)) == 32
+        @test all(==(0), cell_levels(am))
     end
 
     @testset "facet sets follow the refinement" begin

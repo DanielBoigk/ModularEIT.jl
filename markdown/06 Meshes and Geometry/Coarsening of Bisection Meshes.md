@@ -44,16 +44,9 @@ One sweep coarsens by at most one level per vertex. Several levels need repeated
 
 ## Implementation notes
 
-The bisection mesh (`BisectionMesh` in the AMR module of the Ferrite.jl fork, `src/Adaptivity/bisection.jl`) already stores what the local algorithm needs:
+The bisection mesh (`BisectionMesh` in the AMR module of the Ferrite.jl fork, `src/Adaptivity/bisection.jl`) stores what the local algorithm needs: the triangles in the $(i,j,k)$ convention, their levels, the midpoint table (split edge → node), facet sets as node pairs and the leaves containing every edge. Coarsening (`coarsen!`) runs in two passes. The first finds the removable vertices: it inverts the midpoint table to get the edge each vertex split, and accepts a vertex only if the leaves of its star pair up into children whose reconstructed parent has exactly that edge as refinement edge. In a star of four this rejects the wrong pairing across the split edge. The second pass merges, restores the split edges in the midpoint table and the facet sets, and renumbers nodes and cells. Both passes are linear in the number of cells. Because coarsening renumbers the cells, refinement and coarsening marked on the same mesh are applied together (`refine_and_coarsen!`).
 
-- `tris` in the $(i,j,k)$ convention,
-- `levels`,
-- the midpoint table `midpoints` (split edge → node),
-- facet sets as node pairs `facetsets`,
-- the leaves containing every edge, `edgecells`,
-- per-triangle cell sets.
-
-Missing are the removability test, the merge sweep, removal from `midpoints`, `facetsets` and `edgecells`, and node renumbering. Like refinement, coarsening belongs next to Ferrite's quadrilateral and hexahedral AMR, as would a tetrahedral counterpart.
+**In ModularEIT.jl:** [`coarsen_mesh!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.coarsen_mesh!).
 
 ## References
 
