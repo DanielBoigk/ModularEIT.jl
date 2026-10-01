@@ -1,6 +1,7 @@
 # Conformal maps from the unit disk (Theodorsen's method), conformally mapped polar meshes, and the
 # FFT preconditioner of the disk used on the mapped mesh.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using LinearAlgebra
 using Random

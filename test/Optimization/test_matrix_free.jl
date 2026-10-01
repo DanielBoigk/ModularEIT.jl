@@ -1,6 +1,7 @@
 # Matrix-free Jacobians (J v, Jᵀ w), Jacobians in row blocks (column norms without storing J),
 # and Gauss–Newton with CG on the normal equations.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

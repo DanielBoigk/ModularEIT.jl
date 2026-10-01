@@ -2,6 +2,7 @@
 # interface with scalar indexing disabled. Anything that passes here only uses operations every
 # GPUArrays/KernelAbstractions backend (CUDA, AMDGPU, oneAPI, Metal) provides.
 using ModularEIT
+using ModularEITFerrite
 using LinearAlgebra
 using SparseArrays
 using Random

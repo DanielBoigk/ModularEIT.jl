@@ -1,6 +1,7 @@
 # Proximal operators (Tikhonov, smoothed and exact total variation, user maps) and the proximal
 # methods built on them: proximal gradient (FISTA) and ADMM.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

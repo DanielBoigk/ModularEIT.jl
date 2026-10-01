@@ -18,7 +18,7 @@ $$
 
 **Uses.** $H^1$-seminorm [[Tikhonov Regularization]] ($\tfrac\beta2\mathbf z^\top K\mathbf z$), Laplacian smoothing, and as a Levenberg–Marquardt matrix $L_{\text{LM}}$ (see [[Levenberg-Marquardt Method]]). The conductivity-weighted version is the [[Weighted Stiffness Matrix]].
 
-**In ModularEIT.jl:** [`assemble_stiffness!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.assemble_stiffness!), [`FEMatrices`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.FEMatrices).
+**In ModularEIT.jl:** [`assemble_stiffness!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEITFerrite.assemble_stiffness!), [`FEMatrices`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.FEMatrices).
 
 ## References
 

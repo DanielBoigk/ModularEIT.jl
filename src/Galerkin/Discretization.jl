@@ -1,10 +1,158 @@
-# Conductivity tensor: the weighted stiffness matrix is linear in σ,
+# The interface between the generic EIT layer (forward model, objectives, solvers, optimization)
+# and a finite element back end (ModularEITFerrite, ModularEITGridap). A back end defines a
+# subtype of AbstractDiscretization and adds methods to the functions declared here; the generic
+# layer only calls these functions and works with the data types defined here (FEMatrices,
+# ConductivityTensor, the electrode models and ForwardModel).
+
+using LinearAlgebra
+using SparseArrays
+import KernelAbstractions as KA
+using KernelAbstractions: @kernel, @index, @Const
+
+# ---------------------------------------------------------------------------------------
+# Back end contract
+# ---------------------------------------------------------------------------------------
+
+"""
+    ndofs_u(disc)
+
+Number of degrees of freedom of the potential (the free ones on non-conforming meshes).
+Back end contract.
+"""
+function ndofs_u end
+
+"""
+    ndofs_σ(disc)
+
+Number of degrees of freedom of the conductivity. Back end contract.
+"""
+function ndofs_σ end
+
+"""
+    interpolate_function(disc, f; field = :σ)
+
+Coefficients of the interpolant of the function `f(x)` in the σ space (`field = :σ`) or the u
+space (`field = :u`). Back end contract.
+"""
+function interpolate_function end
+
+"""
+    l2_project(disc, f; field = :σ, kwargs...)
+
+Coefficients of the L² projection of the function `f(x)` onto the σ or u space. Back end
+contract.
+"""
+function l2_project end
+
+"""
+    fe_inner(disc, a, b; field = :σ, kind = :L2, mats = nothing)
+
+Inner product of two coefficient vectors as functions: `:L2`, `:H1semi` or `:H1`. Back end
+contract.
+"""
+function fe_inner end
+
+"""
+    fe_norm(disc, a; kwargs...)
+
+Norm `√fe_inner(disc, a, a; kwargs...)`. Back end contract.
+"""
+function fe_norm end
+
+"""
+    total_variation(disc, σ; ε = 0)
+    total_variation!(g, disc, σ; ε = 0)
+
+Total variation `∫ √(|∇σ|² + ε²)` of a conductivity (for piecewise constants: the facet jumps),
+and its coefficient gradient (in place). Back end contract.
+"""
+function total_variation end
+@doc (@doc total_variation) function total_variation! end
+
+"""
+    lumped_mass(disc)
+
+Row sums of the mass matrix of the σ space (cell areas for piecewise constants), the diagonal
+metric of proximal steps. Back end contract.
+"""
+function lumped_mass end
+
+"""
+    angular_electrodes(disc, L; coverage = 0.5, offset = 0.0, center = nothing, angles = nothing)
+
+`L` electrodes (sets of boundary facets in the back end's representation) around `center`,
+centred at the angles `offset + 2π(ℓ-1)/L` or at `angles`, covering the fraction `coverage` of
+the boundary. Back end contract.
+"""
+function angular_electrodes end
+
+"""
+    electrode_length(disc, electrode)
+
+Length (area in 3D) of an electrode. Back end contract.
+"""
+function electrode_length end
+
+"""
+    transfer_electrodes(src, electrodes, dst)
+
+The electrodes of `src` as electrodes of the discretization `dst` of the same domain (e.g. a
+finer mesh for simulated data). Back end contract.
+"""
+function transfer_electrodes end
+
+"""
+    structured_grid(disc)
+
+The [`StructuredGrid`](@ref) of a discretization on a uniform rectangle grid (bilinear u
+space), for the DCT preconditioner. Back end contract (optional).
+"""
+function structured_grid end
+
+"""
+    polar_structure(disc)
+
+The [`PolarStructure`](@ref) of a discretization on a polar disk mesh, for the polar FFT
+preconditioner. Back end contract (optional).
+"""
+function polar_structure end
+
+# the PolarStructure of the reference (disk) mesh of a conformally mapped mesh
+function _reference_structure end
+
+# ---------------------------------------------------------------------------------------
+# Matrices of a discretization
+# ---------------------------------------------------------------------------------------
+
+"""
+    FEMatrices(disc)
+
+Assembled matrices of a discretization: `M_u`, `K_u` (mass and stiffness of the u space),
+`M_Γ` (boundary mass of the u space on the boundary), `M_σ`, `K_σ` (mass and stiffness of the σ
+space; `K_σ = 0` for piecewise constants) and `M_σ_fac` (Cholesky factorisation of `M_σ`, used
+for L² projections and L² gradients). The constructor for a discretization is part of the back
+end contract.
+"""
+struct FEMatrices{MT <: SparseMatrixCSC{Float64, Int}, F}
+    M_u::MT
+    K_u::MT
+    M_Γ::MT
+    M_σ::MT
+    K_σ::MT
+    M_σ_fac::F
+end
+
+# ---------------------------------------------------------------------------------------
+# Conductivity tensor
+# ---------------------------------------------------------------------------------------
+#
+# The weighted stiffness matrix is linear in σ,
 #
 #     L(σ) = Σₐ σₐ Lₐ,    (Lₐ)ᵢⱼ = ∫ ψₐ ∇φᵢ⋅∇φⱼ dΩ,
 #
 # so with the fixed sparsity pattern of L its stored values are nzval(L(σ)) = T σ for one sparse
-# matrix T of size nnz(L) × n_σ, built once per mesh. The same T gives every σ-derivative of a
-# bilinear form in L: for vectors λ, u
+# matrix T of size nnz(L) × n_σ, built once per mesh by the back end. The same T gives every
+# σ-derivative of a bilinear form in L: for vectors λ, u
 #
 #     ∂/∂σₐ (λᵀ L(σ) u) = λᵀ Lₐ u = Σₖ Tₖₐ λ[rowₖ] u[colₖ] = (Tᵀ w)ₐ,   wₖ = λ[rowₖ] u[colₖ],
 #
@@ -22,8 +170,8 @@
 Sparse tensor `T` (`nnz(pattern) × n_σ`) with `nzval(L(σ)) = T σ` for the weighted stiffness
 matrix `L(σ) = ∫ σ ∇φᵢ⋅∇φⱼ` in the storage order of `pattern`. `pattern` may be larger than the
 u–u block (e.g. the augmented matrix of the complete electrode model), as long as the u dofs come
-first; entries outside the u–u block get zero rows. On non-conforming grids the tensor is
-condensed with the conformity constraints (`Cᵀ L(σ) C`).
+first; entries outside the u–u block get zero rows. The constructor for a discretization is part
+of the back end contract.
 
 Fields: `pattern` (host `SparseMatrixCSC`), `T` and `Tt` (`T` and `Tᵀ`, on the device if
 `to_device` is given), `rows`, `cols` (row/column of each stored entry) and a buffer `w`.
@@ -39,9 +187,8 @@ struct ConductivityTensor{MS <: SparseMatrixCSC{Float64, Int}, MT, MTt, VI, VW}
     w::VW
 end
 
-function ConductivityTensor(disc::FerriteDiscretization; pattern = _u_pattern(disc),
-                            to_device = identity)
-    T = _conductivity_tensor(disc, pattern)
+# The tensor from its matrix T on `pattern`, with the row/column of every stored entry.
+function ConductivityTensor(pattern::SparseMatrixCSC{Float64, Int}, T::SparseMatrixCSC; to_device = identity)
     rows = copy(pattern.rowval)
     cols = zeros(Int, nnz(pattern))
     for j in 1:size(pattern, 2), p in nzrange(pattern, j)
@@ -52,74 +199,6 @@ function ConductivityTensor(disc::FerriteDiscretization; pattern = _u_pattern(di
     end
     return ConductivityTensor(pattern, to_device(T), to_device(sparse(T')), to_device(rows),
                               to_device(cols), to_device(zeros(nnz(pattern))))
-end
-
-# COO assembly of T on the unconstrained pattern of dh_u: for every cell the local tensor
-# ∫ ψₐ ∇φᵢ⋅∇φⱼ, scattered to (nz index of (i, j), σ dof a); duplicates are summed by `sparse`.
-# Then T = R T_full with the sparse map R from the stored entries (i, j) of the full pattern to
-# the entries (p, q) of `pattern`, weighted by the conformity constraints C[i, p] C[j, q]
-# (R is a 0/1 selection on conforming grids).
-function _conductivity_tensor(disc::FerriteDiscretization, pattern::SparseMatrixCSC)
-    full = allocate_matrix(disc.dh_u)
-    T_full = _conductivity_tensor_full(disc, full)
-    Ct = disc.C_u === nothing ? nothing : sparse(disc.C_u')     # column i of Cᵀ = row i of C
-    Ir, Jr, Vr = Int[], Int[], Float64[]
-    for j in 1:size(full, 2), k in nzrange(full, j)
-        i = full.rowval[k]
-        if Ct === nothing
-            push!(Ir, _nz_index(pattern, i, j)); push!(Jr, k); push!(Vr, 1.0)
-        else
-            for a in nzrange(Ct, i), b in nzrange(Ct, j)
-                push!(Ir, _nz_index(pattern, Ct.rowval[a], Ct.rowval[b]))
-                push!(Jr, k)
-                push!(Vr, Ct.nzval[a] * Ct.nzval[b])
-            end
-        end
-    end
-    R = sparse(Ir, Jr, Vr, nnz(pattern), nnz(full))
-    return R * T_full
-end
-
-function _conductivity_tensor_full(disc::FerriteDiscretization, pattern::SparseMatrixCSC)
-    cv_u, cv_σ = disc.cv_u, disc.cv_σ
-    nu, nσ = getnbasefunctions(cv_u), getnbasefunctions(cv_σ)
-    nq = getnquadpoints(cv_u)
-    Ae = zeros(nu, nu, nσ)
-    σdofs = zeros(Int, nσ)
-    nzidx = zeros(Int, nu, nu)
-    ncell = getncells(disc.grid)
-    Is = Vector{Int}(undef, ncell * nu * nu * nσ)
-    Js = similar(Is)
-    Vs = Vector{Float64}(undef, length(Is))
-    p = 0
-    for cell in CellIterator(disc.dh_u)
-        reinit!(cv_u, cell)
-        reinit!(cv_σ, cell)
-        udofs = celldofs(cell)
-        celldofs!(σdofs, disc.dh_σ, cellid(cell))
-        fill!(Ae, 0)
-        for q in 1:nq
-            dΩ = getdetJdV(cv_u, q)
-            for a in 1:nσ
-                ψ = shape_value(cv_σ, q, a) * dΩ
-                iszero(ψ) && continue
-                for j in 1:nu
-                    ∇φⱼ = shape_gradient(cv_u, q, j)
-                    for i in 1:nu
-                        Ae[i, j, a] += ψ * (shape_gradient(cv_u, q, i) ⋅ ∇φⱼ)
-                    end
-                end
-            end
-        end
-        for j in 1:nu, i in 1:nu
-            nzidx[i, j] = _nz_index(pattern, udofs[i], udofs[j])
-        end
-        for a in 1:nσ, j in 1:nu, i in 1:nu
-            p += 1
-            Is[p], Js[p], Vs[p] = nzidx[i, j], σdofs[a], Ae[i, j, a]
-        end
-    end
-    return sparse(Is, Js, Vs, nnz(pattern), ndofs(disc.dh_σ))
 end
 
 # position of the stored entry (i, j) in A.nzval
@@ -143,6 +222,14 @@ function assemble_weighted_stiffness!(L::SparseMatrixCSC, ct::ConductivityTensor
     weighted_stiffness_values!(nonzeros(L), ct, σ; A₀)
     return L
 end
+
+"""
+    assemble_weighted_stiffness(disc, σ)
+
+The weighted stiffness matrix `∫ σ ∇φᵢ⋅∇φⱼ` of a discretization, assembled directly (for
+repeated assembly use a [`ConductivityTensor`](@ref)). Back end contract.
+"""
+function assemble_weighted_stiffness end
 
 """
     weighted_stiffness_values!(nzval, ct::ConductivityTensor, σ; A₀ = nothing)

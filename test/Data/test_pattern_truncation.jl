@@ -1,6 +1,7 @@
 # Boundary-data SVD truncated at the noise level: noise of the rotated data, noise level of every
 # new pattern, truncation and reconstruction from the retained pairs.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using LinearAlgebra
 using Random

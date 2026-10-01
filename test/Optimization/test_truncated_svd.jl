@@ -1,6 +1,7 @@
 # Jacobian SVD (parameter modes ordered by how well the data determine them) and Gauss–Newton with
 # truncated-SVD steps.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using LinearAlgebra
 using Random

@@ -1,6 +1,7 @@
 # Regularizers and regularized objectives: values, gradients (central finite differences) and
 # the Gauss–Newton Hessians used by the second-order methods.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

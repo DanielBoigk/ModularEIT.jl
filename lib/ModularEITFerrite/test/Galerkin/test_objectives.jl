@@ -1,6 +1,7 @@
 # Objectives: adjoint-state least squares (Neumann and Dirichlet mode) and Kohn–Vogelius.
 # Gradients and Jacobians are checked against central finite differences in random directions.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

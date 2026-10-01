@@ -97,7 +97,7 @@ abstract type AbstractInclusion end
     AbstractParametrization
 
 A linear map `σ = P θ` from reconstruction parameters to conductivity coefficients, e.g. pixel
-values ([`PixelParametrization`](@ref)) or subspaces of them ([`SubspaceParametrization`](@ref)).
+values (`PixelParametrization` (Ferrite back end)) or subspaces of them ([`SubspaceParametrization`](@ref)).
 Objectives in the parameters: [`ParametrizedObjective`](@ref).
 """
 abstract type AbstractParametrization end

@@ -1,6 +1,7 @@
 # Electrode models turned into discrete forward models: injection P, measurement Q, the CEM
 # augmentation, Neumann (current-driven) and Dirichlet (voltage-driven) forward solves.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using FerriteGmsh
 using SparseArrays

@@ -15,7 +15,8 @@ replaced without touching the others.
 
 ## Features
 
-- **Discretization** ([Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)): separate finite
+- **Discretization** through back end packages, currently `ModularEITFerrite`
+  ([Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)): separate finite
   element spaces for potential and conductivity (e.g. P1/P0, Q1/Q0 on pixel images), triangles and
   quadrilaterals, and a conductivity tensor that makes the system matrix linear in σ.
 - **Electrode models:** continuum, point, gap and complete electrode model, with current-driven
@@ -52,14 +53,20 @@ using Pkg
 Pkg.add(url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular")
 Pkg.add(url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
+Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITFerrite")
 ```
 
-ModularEIT depends on forks of [Ferrite.jl](https://github.com/DanielBoigk/Ferrite.jl) (newest
-vertex bisection with coarsening for triangle meshes) and
-[Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block conjugate gradients with null-space
-projection). Add the forks first: Julia uses the `[sources]` entries of a package only when it
-is the active project, so `Pkg.add` of ModularEIT alone would install the registered versions,
-and ModularEIT would fail to load.
+ModularEIT has no finite element code of its own; the discretization comes from a back end
+package. `ModularEITFerrite` (in `lib/` of this repository) is the
+[Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) back end. Load both:
+`using ModularEIT, ModularEITFerrite`.
+
+ModularEIT depends on a fork of [Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block
+conjugate gradients with null-space projection), and the Ferrite back end on a fork of
+[Ferrite.jl](https://github.com/DanielBoigk/Ferrite.jl) (newest vertex bisection with coarsening
+for triangle meshes). Add the forks first: Julia uses the `[sources]` entries of a package only
+when it is the active project, so `Pkg.add` alone would install the registered versions, and
+ModularEIT would fail to load.
 
 ## Example
 
@@ -67,7 +74,7 @@ Reconstruct an inclusion from noisy complete-electrode-model data. The data are 
 finer mesh with the same electrodes to avoid the inverse crime.
 
 ```julia
-using ModularEIT, Ferrite, Random
+using ModularEIT, ModularEITFerrite, Ferrite, Random
 
 # reconstruction mesh (disk, rings graded towards the boundary) and 16-electrode CEM
 disc = FerriteDiscretization(polar_grid(16, 128; boundary_spacing = 1 / 40))
@@ -113,9 +120,10 @@ the documentation build runs them and generates the pages and notebooks.
 
 | Path | Contents |
 |:--|:--|
-| `src/` | The library: `LinearSolvers/`, `Galerkin/` (forward model, objectives, regularizers, Ferrite back end), `Optimization/`, `Data/`, `Geometry/` |
+| `src/` | The library: `LinearSolvers/`, `Galerkin/` (back end contract, electrode models, forward model, objectives, regularizers), `Optimization/`, `Data/`, `Geometry/` |
+| `lib/ModularEITFerrite/` | The Ferrite.jl back end (its own package and tests) |
 | `ext/` | cuDSS extension (GPU factorization) |
-| `test/` | Test suite (`julia --project -e 'using Pkg; Pkg.test()'`) |
+| `test/` | Test suite of the generic layer (`julia --project -e 'using Pkg; Pkg.test()'`); the back end's tests: `julia --project=lib/ModularEITFerrite -e 'using Pkg; Pkg.test()'` |
 | `benchmark/` | Benchmark scripts and results |
 | `examples/` | Tutorials as Literate.jl scripts (rendered into the documentation and notebooks) |
 | `docs/` | Documenter.jl API documentation; the build also renders the wiki and checks the links between both |

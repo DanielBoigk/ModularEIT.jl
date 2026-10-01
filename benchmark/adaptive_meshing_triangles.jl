@@ -8,7 +8,7 @@
 # patterns, compared with the base mesh bisected uniformly 8 times.
 #
 # Run: julia --project benchmark/adaptive_meshing_triangles.jl
-using ModularEIT, Ferrite, FerriteGmsh, LinearAlgebra, Printf
+using ModularEIT, ModularEITFerrite, Ferrite, FerriteGmsh, LinearAlgebra, Printf
 
 const L = 16
 const Z = 1e-3

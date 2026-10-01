@@ -1,6 +1,7 @@
 # Noise models: statistics, reproducibility, source/meter noise through the forward model,
 # operator-level noise, modelling errors and the discrepancy target.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using LinearAlgebra
 using Statistics

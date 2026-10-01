@@ -1,6 +1,7 @@
 # Adaptive meshing: quadrilateral meshes refined with Ferrite's AMR (hanging nodes, conformity
 # constraints condensed into the u space), error indicators, marking and conductivity transfer.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra
@@ -44,7 +45,7 @@ using Test
         @test x1' * mats.K_u * x1 ≈ 4.0                 # linear functions lie in the constrained space
         @test l2_project(disc, x -> x[1]; field = :u) ≈ x1
         # boundary facets: 4 sides of length 2
-        @test sum(f -> ModularEIT._facet_measure(disc, f), disc.boundary_facets) ≈ 8.0
+        @test sum(f -> ModularEITFerrite._facet_measure(disc, f), disc.boundary_facets) ≈ 8.0
         # conductivity tensor on the condensed pattern equals the condensed element loop
         ct = ConductivityTensor(disc)
         σ = 0.5 .+ rand(rng, ndofs_σ(disc))
@@ -63,7 +64,7 @@ using Test
         # u = x₁ lies in the constrained space: the voltage-driven solve with boundary values x₁
         # reproduces it exactly, also at the hanging nodes
         fm = ForwardModel(disc, ContinuumModel())
-        bx, _ = ModularEIT._dof_coordinates(disc, disc.boundary_dofs)
+        bx, _ = ModularEITFerrite._dof_coordinates(disc, disc.boundary_dofs)
         _, X = forward_dirichlet(fm, ones(ndofs_σ(disc)), bx)
         @test X ≈ interpolate_function(disc, x -> x[1]; field = :u) atol = 1e-12
 
@@ -88,7 +89,7 @@ using Test
     @testset "indicators and marking" begin
         disc = FerriteDiscretization(grid)
         fm = ForwardModel(disc, ContinuumModel())
-        bx, _ = ModularEIT._dof_coordinates(disc, disc.boundary_dofs)
+        bx, _ = ModularEITFerrite._dof_coordinates(disc, disc.boundary_dofs)
         σ1 = ones(ndofs_σ(disc))
         _, X = forward_dirichlet(fm, σ1, bx)                 # exact solution u = x₁
         η = flux_recovery_indicator(disc, σ1, X)
@@ -126,7 +127,7 @@ using Test
         refine_mesh!(am4, [2, 3, 6, 11, 40])                 # boundary cells, under electrodes
         fine = FerriteDiscretization(current_grid(am4))
         for d in (coarse, fine)
-            @test ModularEIT._centroid(d, d.boundary_facets) ≈ Vec(0.0, 0.0) atol = 1e-14
+            @test ModularEITFerrite._centroid(d, d.boundary_facets) ≈ Vec(0.0, 0.0) atol = 1e-14
         end
         # the same physical electrodes (the four sides) on both meshes: same angles, same patterns
         sides(d) = [collect(getfacetset(d.grid, n)) for n in ("right", "top", "left", "bottom")]
@@ -143,7 +144,7 @@ using Test
         # on the boundary node distribution
         # electrodes: the middle half of every side (edges on mesh lines of the 8 × 8 base mesh)
         function middles(g)
-            mid(f) = ModularEIT._facet_midpoint(g, f)
+            mid(f) = ModularEITFerrite._facet_midpoint(g, f)
             [[f for f in getfacetset(g, n) if abs(mid(f)[n in ("left", "right") ? 2 : 1]) < 0.5]
              for n in ("right", "top", "left", "bottom")]
         end
@@ -179,7 +180,7 @@ using Test
         d_fine = FerriteDiscretization(current_grid(am2))
         σ_fine = rand(rng, ndofs_σ(d_fine))
         fine_cells = findall(c -> getncells(current_grid(am2)) > 0 &&
-                                  ModularEIT._facet_measure(d_fine, FacetIndex(c, 1)) < 0.4, 1:getncells(current_grid(am2)))
+                                  ModularEITFerrite._facet_measure(d_fine, FacetIndex(c, 1)) < 0.4, 1:getncells(current_grid(am2)))
         coarsen_mesh!(am2, fine_cells)
         d_coarse = FerriteDiscretization(current_grid(am2))
         @test getncells(current_grid(am2)) == 16

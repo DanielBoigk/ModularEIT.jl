@@ -19,7 +19,7 @@ aliases: [Q1 elements, P1 elements, Quadrilateral elements, P0 elements]
 
 **Error estimates.** For smooth $u$ and $Q_k/P_k$ elements on a quasi-uniform mesh of size $h$: $\|u-u_h\|_{H^1} = \mathcal O(h^k)$ and $\|u-u_h\|_{L^2} = \mathcal O(h^{k+1})$. With discontinuous conductivities the solution has limited regularity, and the rates drop unless the mesh follows the discontinuities.
 
-**In ModularEIT.jl:** [`FerriteDiscretization`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.FerriteDiscretization).
+**In ModularEIT.jl:** [`FerriteDiscretization`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEITFerrite.FerriteDiscretization).
 
 ## References
 

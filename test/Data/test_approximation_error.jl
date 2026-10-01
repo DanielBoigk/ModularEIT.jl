@@ -2,6 +2,7 @@
 # samples, as Gaussian mean and low-rank covariance; whitened misfit, its derivatives and
 # Gauss–Newton on it.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using LinearAlgebra
 using Random

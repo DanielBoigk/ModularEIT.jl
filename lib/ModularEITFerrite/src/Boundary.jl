@@ -1,5 +1,6 @@
-# Electrode models on a Ferrite discretization. Each model maps a vector of injected currents to
-# a load vector (P) and the state to a vector of measured voltages (Q); see ForwardModel.jl.
+# Electrode models on a Ferrite discretization (the model types are in ModularEIT): each model
+# maps a vector of injected currents to a load vector (P) and the state to a vector of measured
+# voltages (Q); see ForwardModel.jl in ModularEIT.
 #
 #   continuum:  every boundary dof is an electrode. Currents are boundary current densities
 #               (coefficients at the boundary dofs), P g = ∫_Γ g φᵢ; voltages are the boundary
@@ -13,61 +14,6 @@
 #
 # Electrodes are vectors of boundary facets; `angular_electrodes` builds them for a ring of
 # electrodes around a centre point (discs, and squares from pixel images).
-
-"""
-    ContinuumModel()
-
-Continuum model: every boundary dof acts as an electrode. Current patterns are boundary current
-densities (one value per boundary dof, `disc.boundary_dofs` order), voltages are the boundary
-values of the potential.
-"""
-struct ContinuumModel <: AbstractElectrodeModel end
-
-"""
-    PointElectrodeModel(points; measure = points)
-
-Point electrodes: current `I_ℓ` enters at the boundary dof closest to `points[ℓ]`, voltages are
-read at the boundary dofs closest to `measure`. Injection and measurement points may differ.
-"""
-struct PointElectrodeModel{V} <: AbstractElectrodeModel
-    inject::Vector{V}
-    measure::Vector{V}
-end
-PointElectrodeModel(points; measure = points) = PointElectrodeModel(collect(points), collect(measure))
-
-"""
-    GapModel(electrodes; measure = electrodes)
-
-Gap model: current `I_ℓ` is uniformly distributed over electrode `electrodes[ℓ]` (a vector of
-boundary `FacetIndex`), zero in the gaps. The voltage of a measurement electrode is the mean
-potential on it. Injection and measurement electrodes may differ (`measure`).
-"""
-struct GapModel <: AbstractElectrodeModel
-    inject::Vector{Vector{FacetIndex}}
-    measure::Vector{Vector{FacetIndex}}
-end
-GapModel(electrodes; measure = electrodes) = GapModel(collect.(electrodes), collect.(measure))
-
-"""
-    CompleteElectrodeModel(electrodes, z; measure = 1:length(electrodes))
-
-Complete electrode model with contact impedances `z` (scalar or one per electrode). The electrode
-voltages `U` are unknowns of the forward problem (grounded by `Σ U_ℓ = 0`); `measure` selects the
-electrodes whose voltages are measured (e.g. only electrodes that carry no current).
-"""
-struct CompleteElectrodeModel <: AbstractElectrodeModel
-    electrodes::Vector{Vector{FacetIndex}}
-    z::Vector{Float64}
-    measure::Vector{Int}
-end
-function CompleteElectrodeModel(electrodes, z; measure = 1:length(electrodes))
-    L = length(electrodes)
-    zv = z isa Number ? fill(Float64(z), L) : collect(Float64, z)
-    length(zv) == L || throw(DimensionMismatch("need one contact impedance per electrode"))
-    all(>(0), zv) || throw(ArgumentError("contact impedances must be positive"))
-    all(in(1:L), measure) || throw(ArgumentError("measure must index electrodes 1:$L"))
-    return CompleteElectrodeModel(collect.(electrodes), zv, collect(measure))
-end
 
 """
     angular_electrodes(disc, L; coverage = 0.5, offset = 0.0, center = nothing, angles = nothing)

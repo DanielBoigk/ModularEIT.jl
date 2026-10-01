@@ -1,7 +1,7 @@
 # Adaptive Meshing
 
 ```@meta
-CurrentModule = ModularEIT
+CurrentModule = ModularEITFerrite
 ```
 
 Adaptive refinement of quadrilateral (and hexahedral) meshes with Ferrite's AMR and of linear
@@ -29,19 +29,19 @@ end
 ```
 
 ```@docs
-AdaptiveMesh
-current_grid
-refine_mesh!
-coarsen_mesh!
-cell_levels
-max_level
-is_nonconforming
-residual_indicator
-flux_recovery_indicator
-goal_oriented_indicator
-jump_indicator
+ModularEITFerrite.AdaptiveMesh
+ModularEITFerrite.current_grid
+ModularEITFerrite.refine_mesh!
+ModularEITFerrite.coarsen_mesh!
+ModularEITFerrite.cell_levels
+ModularEITFerrite.max_level
+ModularEITFerrite.is_nonconforming
+ModularEITFerrite.residual_indicator
+ModularEITFerrite.flux_recovery_indicator
+ModularEITFerrite.goal_oriented_indicator
+ModularEITFerrite.jump_indicator
 dorfler_marking
-transfer_conductivity
+ModularEITFerrite.transfer_conductivity
 ```
 
 ## Wiki articles

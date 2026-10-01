@@ -2,6 +2,7 @@
 # tensor T with nzval(L(σ)) = T σ, gradient contractions, Riesz maps, coefficient assembly and
 # FE-space functionals. Meshes: triangles and quadrilaterals on [-1, 1]².
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

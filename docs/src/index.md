@@ -16,14 +16,20 @@ using Pkg
 Pkg.add(url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular")
 Pkg.add(url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
+Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITFerrite")
 ```
 
-ModularEIT depends on forks of [Ferrite.jl](https://github.com/DanielBoigk/Ferrite.jl) (newest
-vertex bisection with coarsening for triangle meshes) and
-[Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block conjugate gradients with null-space
-projection). Add the forks first: Julia uses the `[sources]` entries of a package only when it
-is the active project, so `Pkg.add` of ModularEIT alone would install the registered versions,
-and ModularEIT would fail to load.
+ModularEIT has no finite element code of its own; the discretization comes from a back end
+package. `ModularEITFerrite` (in `lib/` of this repository) is the
+[Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) back end. Load both:
+`using ModularEIT, ModularEITFerrite`.
+
+ModularEIT depends on a fork of [Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block
+conjugate gradients with null-space projection), and the Ferrite back end on a fork of
+[Ferrite.jl](https://github.com/DanielBoigk/Ferrite.jl) (newest vertex bisection with coarsening
+for triangle meshes). Add the forks first: Julia uses the `[sources]` entries of a package only
+when it is the active project, so `Pkg.add` alone would install the registered versions, and
+ModularEIT would fail to load.
 
 ## Package overview
 

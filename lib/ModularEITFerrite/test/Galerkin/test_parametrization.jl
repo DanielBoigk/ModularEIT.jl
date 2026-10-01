@@ -1,6 +1,7 @@
 # Parametrizations σ = P θ: pixel grids, subspaces (DCT modes, boundary bands) and objectives in
 # the parameters, on pixel-aligned, triangular, polar and adaptively refined meshes.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

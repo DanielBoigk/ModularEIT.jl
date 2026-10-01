@@ -1,5 +1,6 @@
 # Finite element functions ↔ pixel images (2D meshes).
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using FerriteGmsh
 using SparseArrays

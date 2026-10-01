@@ -1,7 +1,7 @@
 # Linear Solvers
 
 ```@meta
-CurrentModule = ModularEIT
+CurrentModule = ModularEITFerrite
 ```
 
 Projected block conjugate gradient method for the singular (pure Neumann) EIT systems
@@ -134,10 +134,10 @@ Theory: wiki articles [Discrete Cosine Transform](https://danielboigk.github.io/
 ```@docs
 DCTPreconditioner
 dct_preconditioner
-update_preconditioner!
+ModularEIT.update_preconditioner!
 StructuredGrid
 structured_grid
-dct_neumann_solve
+ModularEIT.dct_neumann_solve
 ```
 
 ## FFT preconditioner (disk meshes)
@@ -158,10 +158,10 @@ Theory: wiki article [Fast Solvers on Disk Domains](https://danielboigk.github.i
 AbstractFastPreconditioner
 PolarPreconditioner
 polar_preconditioner
-polar_grid
+ModularEITFerrite.polar_grid
 PolarStructure
 polar_structure
-fast_neumann_solve
+ModularEIT.fast_neumann_solve
 ```
 
 ## Conformally mapped domains
@@ -186,8 +186,8 @@ Theory: wiki articles [Conformal Invariance of the Conductivity Equation](https:
 ```@docs
 ConformalMap
 map_derivative
-ConformalGrid
-conformal_grid
+ModularEITFerrite.ConformalGrid
+ModularEITFerrite.conformal_grid
 ```
 
 ## Wiki articles

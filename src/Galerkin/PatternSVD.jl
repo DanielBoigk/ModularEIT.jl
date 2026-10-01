@@ -71,7 +71,7 @@ On uniform boundary meshes the two built-in metrics give the same patterns up to
 the continuum model with the L² metric the values approximate the singular values of the
 Neumann-to-Dirichlet map on the span of the input patterns.
 """
-function pattern_svd(disc::FerriteDiscretization, fm::ForwardModel, currents::AbstractMatrix,
+function pattern_svd(disc::AbstractDiscretization, fm::ForwardModel, currents::AbstractMatrix,
                      voltages::AbstractMatrix; metric = :euclidean, noise = nothing, reference = nothing)
     Mi, Mv = _pattern_metrics(disc, fm, metric)
     reference isa AbstractVector && (reference = forward_neumann(fm, reference, currents)[1])
@@ -141,7 +141,7 @@ function truncate_patterns(p::NamedTuple, K::Integer; measurements = nothing)
             reference = p.reference === nothing ? nothing : p.reference[:, r])
 end
 
-function _pattern_metrics(disc::FerriteDiscretization, fm::ForwardModel, metric)
+function _pattern_metrics(disc::AbstractDiscretization, fm::ForwardModel, metric)
     metric isa Tuple && length(metric) == 2 && return metric
     ni, nm = n_inject(fm), n_measure(fm)
     metric === :euclidean && return (Matrix(1.0I, ni, ni), Matrix(1.0I, nm, nm))

@@ -1,6 +1,7 @@
 # Newest vertex bisection of triangle meshes: conformity, orientation, shape regularity, facet
 # sets, levels, and the finite element layer on refined triangle meshes.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using FerriteGmsh
 using SparseArrays
@@ -106,7 +107,7 @@ end
         end
         g = current_grid(am)
         disc = FerriteDiscretization(g)
-        len(set) = sum(f -> ModularEIT._facet_measure(disc, f), set)
+        len(set) = sum(f -> ModularEITFerrite._facet_measure(disc, f), set)
         for name in ("left", "right", "top", "bottom")
             @test len(getfacetset(g, name)) ≈ 2.0
         end
@@ -119,8 +120,8 @@ end
         amc = AdaptiveMesh(circle)
         refine_mesh!(amc, collect(1:50))
         dc = FerriteDiscretization(current_grid(amc))
-        @test sum(f -> ModularEIT._facet_measure(dc, f), getfacetset(current_grid(amc), "boundary")) ≈
-              sum(f -> ModularEIT._facet_measure(FerriteDiscretization(circle), f), getfacetset(circle, "boundary"))
+        @test sum(f -> ModularEITFerrite._facet_measure(dc, f), getfacetset(current_grid(amc), "boundary")) ≈
+              sum(f -> ModularEITFerrite._facet_measure(FerriteDiscretization(circle), f), getfacetset(circle, "boundary"))
         @test haskey(current_grid(amc).cellsets, "domain")
         @test length(getcellset(current_grid(amc), "domain")) == getncells(current_grid(amc))
     end

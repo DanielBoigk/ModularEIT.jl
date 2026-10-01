@@ -21,7 +21,7 @@ summed over the current patterns $s$. The tangential component of $J$ still jump
 
 **Properties.** The estimator is cheap: one mass-matrix solve per pattern and vector component, independent of the equation. It is asymptotically exact for smooth solutions on sufficiently regular meshes. It is not guaranteed to be reliable on coarse meshes or at singularities, where residual estimators (see [[A Posteriori Error Estimation and Adaptive Meshing]]) have rigorous bounds. For an exact discrete solution, for example a linear $u$, it vanishes.
 
-**In ModularEIT.jl:** [`flux_recovery_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.flux_recovery_indicator).
+**In ModularEIT.jl:** [`flux_recovery_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.flux_recovery_indicator).
 
 ## References
 

@@ -17,7 +17,7 @@
 #md # [Jupyter notebook](reconstruction.ipynb). Besides ModularEIT it uses Ferrite.jl and
 #md # CairoMakie.jl for the plots.
 
-using ModularEIT, Ferrite, Random, LinearAlgebra
+using ModularEIT, ModularEITFerrite, Ferrite, Random, LinearAlgebra
 using CairoMakie
 
 # ## Mesh, electrodes and forward model

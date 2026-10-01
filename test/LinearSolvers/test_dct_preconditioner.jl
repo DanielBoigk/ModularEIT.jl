@@ -2,6 +2,7 @@
 # for constant σ (all electrode models, current- and voltage-driven), mesh-independent iteration
 # counts for variable σ, and agreement with the direct solver inside objectives.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra
@@ -42,7 +43,7 @@ end
         @test sort(g.perm) == 1:35                                  # a permutation of the u dofs
         # lexicographic order: x fastest
         disc = rect(6, 4; lo = (0.0, 0.0), hi = (3.0, 1.0))
-        xy = ModularEIT._dof_coordinates(disc, g.perm)
+        xy = ModularEITFerrite._dof_coordinates(disc, g.perm)
         @test xy[1][1:3] ≈ [0.0, 0.5, 1.0] && xy[2][1:3] ≈ [0.0, 0.0, 0.0]
         @test xy[2][8] ≈ 0.25
         @test_throws ArgumentError ModularEIT.structured_grid(FerriteDiscretization(generate_grid(Triangle, (4, 4))))

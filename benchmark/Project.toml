@@ -5,6 +5,7 @@ Ferrite = "c061ca5d-56c9-439f-9c0e-210fe06d3992"
 Krylov = "ba0b0d4f-ebba-5204-a429-3ac8c609bfb7"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 ModularEIT = "7608eb13-d8ec-417a-a672-b3f475c1af64"
+ModularEITFerrite = "4e1b8f0b-f07f-4a56-87d6-d07522e0b7e4"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
@@ -13,3 +14,4 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Ferrite = {url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular"}
 Krylov = {url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg"}
 ModularEIT = {path = ".."}
+ModularEITFerrite = {path = "../lib/ModularEITFerrite"}

@@ -17,7 +17,7 @@
 #md # This page is generated from `examples/toy_plasma_reactor.jl` and is also available as a
 #md # [Jupyter notebook](toy_plasma_reactor.ipynb).
 
-using ModularEIT, Ferrite, SparseArrays, LinearAlgebra, Random, Printf
+using ModularEIT, ModularEITFerrite, Ferrite, SparseArrays, LinearAlgebra, Random, Printf
 using CairoMakie
 
 # ## Model

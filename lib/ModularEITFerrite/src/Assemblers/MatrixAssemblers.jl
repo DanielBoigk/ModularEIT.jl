@@ -12,23 +12,6 @@
 # discretization. The Dirichlet version of L is the principal submatrix on the free dofs, see
 # `ForwardModel`.
 
-"""
-    FEMatrices(disc::FerriteDiscretization)
-
-Assembled matrices of a discretization: `M_u`, `K_u` (mass and stiffness of the u space),
-`M_Γ` (boundary mass of the u space on `disc.boundary_facets`), `M_σ`, `K_σ` (mass and
-stiffness of the σ space; `K_σ = 0` for piecewise constants) and `M_σ_fac` (Cholesky
-factorisation of `M_σ`, used for L² projections and L² gradients).
-"""
-struct FEMatrices{MT <: SparseMatrixCSC{Float64, Int}, F}
-    M_u::MT
-    K_u::MT
-    M_Γ::MT
-    M_σ::MT
-    K_σ::MT
-    M_σ_fac::F
-end
-
 function FEMatrices(disc::FerriteDiscretization)
     M_u = _condense(disc, assemble_mass(disc.dh_u, disc.cv_u))
     K_u = _condense(disc, assemble_stiffness(disc.dh_u, disc.cv_u))

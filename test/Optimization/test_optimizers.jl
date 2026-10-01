@@ -1,6 +1,7 @@
 # Optimisers: gradient descent, L-BFGS and Gauss–Newton / Levenberg–Marquardt, unconstrained and
 # with box constraints, with Euclidean and non-diagonal Riesz maps, on model problems and on EIT.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

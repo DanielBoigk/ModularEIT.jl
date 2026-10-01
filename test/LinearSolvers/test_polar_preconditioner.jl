@@ -2,6 +2,7 @@
 # structure, the FFT-in-θ pseudo-inverse, exactness for constant σ, iteration bounds for variable σ
 # and agreement with the direct solver.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra

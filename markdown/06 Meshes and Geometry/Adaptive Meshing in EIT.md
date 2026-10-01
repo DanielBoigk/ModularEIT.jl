@@ -40,7 +40,7 @@ A convergent adaptive algorithm for the regularised EIT problem refines with an 
 
 Quadtree refinement of quadrilaterals (octrees in 3D) splits a cell into four children and creates [[Hanging Nodes]]. It fits pixel meshes well and keeps the cells shape regular. Triangles can be refined conformingly by [[Newest Vertex Bisection]] or red-green refinement, without hanging nodes. Marking is usually done by [[Dörfler Marking]].
 
-**In ModularEIT.jl:** [`AdaptiveMesh`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.AdaptiveMesh), [`refine_mesh!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.refine_mesh!), [`goal_oriented_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.goal_oriented_indicator).
+**In ModularEIT.jl:** [`AdaptiveMesh`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.AdaptiveMesh), [`refine_mesh!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.refine_mesh!), [`goal_oriented_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.goal_oriented_indicator).
 
 ## References
 

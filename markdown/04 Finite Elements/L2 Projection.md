@@ -21,7 +21,7 @@ with the [[Mass Matrix]] $M$ of $V_h$.
 
 **Relation to the discrete gradient.** The vector $\mathbf b$ with $b_i = -\int_\Omega\nabla u\cdot\nabla\lambda\,\varphi_i$ is exactly the derivative of the discretised objective with respect to the coefficients $z_i$ of $\sigma$. The projection $M^{-1}\mathbf b$ is its $L^2$ Riesz representative. Which one to use depends on the metric of the optimiser (see [[Gradient Representation and the Riesz Map]]).
 
-**In ModularEIT.jl:** [`l2_project`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.l2_project), [`transfer_conductivity`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.transfer_conductivity).
+**In ModularEIT.jl:** [`l2_project`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.l2_project), [`transfer_conductivity`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.transfer_conductivity).
 
 ## References
 

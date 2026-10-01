@@ -22,7 +22,7 @@
 #
 # Run: SCENARIO=aligned STRATEGIES=uniform,GO-res julia --project benchmark/adaptive_meshing.jl
 #      (prints a table; STRATEGIES defaults to all)
-using ModularEIT, Ferrite, LinearAlgebra, Printf
+using ModularEIT, ModularEITFerrite, Ferrite, LinearAlgebra, Printf
 
 const L = 16
 const Z = 1e-3
@@ -43,7 +43,7 @@ function square_electrodes(disc)
              (x -> x[1] ≈ -1, x -> -x[2]), (x -> x[2] ≈ -1, x -> x[1]))
     els = [FacetIndex[] for _ in 1:L]
     for f in disc.boundary_facets
-        m = ModularEIT._facet_midpoint(disc.grid, f)
+        m = ModularEITFerrite._facet_midpoint(disc.grid, f)
         for (k, (onside, t)) in enumerate(sides), (j, c) in enumerate(centres)
             onside(m) && abs(t(m) - c) < 0.125 && push!(els[4(k - 1) + j], f)
         end

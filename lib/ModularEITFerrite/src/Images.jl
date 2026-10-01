@@ -135,29 +135,6 @@ end
 from_image(disc::FerriteDiscretization, img::AbstractMatrix; field::Symbol = :σ, bbox = nothing, kwargs...) =
     from_image(ImageMap(disc, size(img, 1), size(img, 2); field, bbox), img; kwargs...)
 
-# continuous pixel coordinates: (row, column) with pixel centres at integers
-function _pixel_coords(img, (xmin, xmax, ymin, ymax), p)
-    n, m = size(img)
-    return (ymax - p[2]) / (ymax - ymin) * n + 0.5, (p[1] - xmin) / (xmax - xmin) * m + 0.5
-end
-
-function _bilinear(img, box, p)
-    n, m = size(img)
-    r, c = _pixel_coords(img, box, p)
-    i0 = n == 1 ? 1 : clamp(floor(Int, r), 1, n - 1)
-    j0 = m == 1 ? 1 : clamp(floor(Int, c), 1, m - 1)
-    s = n == 1 ? 0.0 : r - i0            # may leave [0, 1] at the border: linear extrapolation
-    t = m == 1 ? 0.0 : c - j0
-    i1, j1 = min(i0 + 1, n), min(j0 + 1, m)
-    return (1 - s) * ((1 - t) * img[i0, j0] + t * img[i0, j1]) + s * ((1 - t) * img[i1, j0] + t * img[i1, j1])
-end
-
-function _pixel_value(img, box, p)
-    n, m = size(img)
-    r, c = _pixel_coords(img, box, p)
-    return img[clamp(round(Int, r), 1, n), clamp(round(Int, c), 1, m)]
-end
-
 # replace NaN pixels by the mean of their finite 8-neighbours, repeatedly (nearest-neighbour fill)
 function _fill_nan(img::Matrix{Float64})
     any(isnan, img) || return img

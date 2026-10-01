@@ -1,5 +1,6 @@
 # Regrounding measured voltages and SVD of boundary data pairs under different inner products.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using FerriteGmsh
 using SparseArrays

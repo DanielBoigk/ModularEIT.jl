@@ -1,7 +1,7 @@
 # Images
 
 ```@meta
-CurrentModule = ModularEIT
+CurrentModule = ModularEITFerrite
 ```
 
 Conversion between finite element functions on 2D meshes and `n × m` pixel images, e.g. for
@@ -21,9 +21,9 @@ u_img = to_image(im, u)
 ```
 
 ```@docs
-ImageMap
-to_image
-from_image
+ModularEITFerrite.ImageMap
+ModularEITFerrite.to_image
+ModularEITFerrite.from_image
 ```
 
 ## Unit images
@@ -41,9 +41,9 @@ ui.image, ui.mask, ui.bbox, ui.range
 ```
 
 ```@docs
-UnitImage
-unit_image
-from_unit_image
+ModularEITFerrite.UnitImage
+ModularEITFerrite.unit_image
+ModularEITFerrite.from_unit_image
 ```
 
 ## Wiki articles

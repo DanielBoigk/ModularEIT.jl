@@ -32,7 +32,7 @@ On Dirichlet boundaries, as in voltage-driven problems or the [[Shunt Model]] el
 
 **Goal-oriented use.** Products of the indicators of the state and of the measurement duals give a residual-based [[Goal-Oriented Error Estimation|goal-oriented indicator]] for the electrode voltages. This is the residual counterpart of the product of [[Zienkiewicz-Zhu Estimator|recovery estimates]].
 
-**In ModularEIT.jl:** [`residual_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.residual_indicator).
+**In ModularEIT.jl:** [`residual_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.residual_indicator).
 
 ## References
 

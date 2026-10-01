@@ -1,6 +1,7 @@
 # Synthetic conductivities (inclusion phantoms, Gaussian random fields, images), data simulation
 # without inverse crime, and spectral image corruption.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using LinearAlgebra
 using Statistics

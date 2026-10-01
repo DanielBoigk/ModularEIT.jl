@@ -1,6 +1,7 @@
 # Confidence maps from the Jacobian: sensitivities, the diagonal of the model resolution matrix
 # and the linearized posterior standard deviation.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using LinearAlgebra
 using Random

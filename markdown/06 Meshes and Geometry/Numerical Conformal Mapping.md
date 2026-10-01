@@ -80,7 +80,7 @@ Mapping the nodes of a disk mesh, such as a graded polar mesh (see [[Fast Solver
 - **Conditioning.** The stiffness matrix of the mapped mesh is spectrally equivalent to the one of the disk mesh, with constants $1+O(h\,|\Phi''|/|\Phi'|)$. The fast disk solver is therefore a preconditioner for the mapped problem, and its quality does not deteriorate under refinement.
 - **Everything else is standard.** Electrodes, conductivities, data and reconstructions live on the mapped mesh. No boundary weights $|\Phi'|$ are needed, because the finite element method is applied on $\Omega$ itself.
 
-**In ModularEIT.jl:** [`ConformalMap`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.ConformalMap), [`map_derivative`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.map_derivative), [`conformal_grid`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.conformal_grid), [`PolarPreconditioner`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.PolarPreconditioner).
+**In ModularEIT.jl:** [`ConformalMap`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.ConformalMap), [`map_derivative`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.map_derivative), [`conformal_grid`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEITFerrite.conformal_grid), [`PolarPreconditioner`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.PolarPreconditioner).
 
 ## References
 

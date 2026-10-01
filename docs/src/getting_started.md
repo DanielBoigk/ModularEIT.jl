@@ -6,7 +6,7 @@ pixel image gives).
 ## Discretization and electrodes
 
 ```@example tour
-using ModularEIT, Ferrite
+using ModularEIT, ModularEITFerrite, Ferrite
 
 grid = generate_grid(Quadrilateral, (24, 24))          # [-1, 1]², Q1 potential, Q0 conductivity
 disc = FerriteDiscretization(grid)

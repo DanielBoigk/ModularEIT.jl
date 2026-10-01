@@ -1,7 +1,7 @@
 # Discretization
 
 ```@meta
-CurrentModule = ModularEIT
+CurrentModule = ModularEITFerrite
 ```
 
 The potential ``u`` and the conductivity ``\sigma`` live in separate finite element spaces on
@@ -12,7 +12,7 @@ affine cells.
 
 ```@docs
 AbstractDiscretization
-FerriteDiscretization
+ModularEITFerrite.FerriteDiscretization
 ndofs_u
 ndofs_σ
 ```
@@ -21,10 +21,10 @@ ndofs_σ
 
 ```@docs
 FEMatrices
-assemble_mass!
-assemble_stiffness!
-assemble_boundary_mass!
-assemble_boundary_load!
+ModularEITFerrite.assemble_mass!
+ModularEITFerrite.assemble_stiffness!
+ModularEITFerrite.assemble_boundary_mass!
+ModularEITFerrite.assemble_boundary_load!
 ```
 
 ## Conductivity tensor

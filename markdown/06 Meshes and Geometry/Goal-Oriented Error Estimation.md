@@ -19,7 +19,7 @@ for any $z_h$ in the finite element space, by Galerkin orthogonality. $\mathcal 
 
 **A simple product indicator.** By Cauchy–Schwarz, $|a(u-u_h,z-z_h)|\le\sum_K\|u-u_h\|_{a,K}\,\|z-z_h\|_{a,K}$. Estimating both local energy errors with the [[Zienkiewicz-Zhu Estimator]] gives the indicator $\eta_K = \eta_K(u)\,\eta_K(z)$. Summed over patterns and measurements, it needs no residual evaluation. It refines only where the primal error is large *and* the measurements are sensitive, and it vanishes when either solution is resolved exactly.
 
-**In ModularEIT.jl:** [`goal_oriented_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.goal_oriented_indicator).
+**In ModularEIT.jl:** [`goal_oriented_indicator`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.goal_oriented_indicator).
 
 ## References
 

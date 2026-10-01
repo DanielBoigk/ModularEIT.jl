@@ -22,7 +22,7 @@
 #md # This page is generated from `examples/showcase_landscape.jl` and is also available as a
 #md # [Jupyter notebook](showcase_landscape.ipynb).
 
-using ModularEIT, Ferrite, Random, LinearAlgebra
+using ModularEIT, ModularEITFerrite, Ferrite, Random, LinearAlgebra
 using CairoMakie
 
 # ## The image

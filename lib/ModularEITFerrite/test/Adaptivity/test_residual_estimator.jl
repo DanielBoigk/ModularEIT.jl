@@ -1,6 +1,7 @@
 # Residual-based error indicator: element residuals, current-density jumps across interior
 # facets (conforming and hanging), boundary residuals of every electrode model.
 using ModularEIT
+using ModularEITFerrite
 using Ferrite
 using SparseArrays
 using LinearAlgebra
@@ -18,7 +19,7 @@ using Test
         for grid in (generate_grid(Triangle, (5, 5)), current_grid(am), current_grid(amt))
             disc = FerriteDiscretization(grid)
             fm = ForwardModel(disc, ContinuumModel())
-            bx, by = ModularEIT._dof_coordinates(disc, disc.boundary_dofs)
+            bx, by = ModularEITFerrite._dof_coordinates(disc, disc.boundary_dofs)
             σ = ones(ndofs_σ(disc))
             _, X = forward_dirichlet(fm, σ, bx .+ 2 .* by)          # u = x₁ + 2x₂
             η = residual_indicator(disc, fm, σ, X; mode = :dirichlet)
@@ -34,7 +35,7 @@ using Test
         grid = generate_grid(Quadrilateral, (4, 4))
         disc = FerriteDiscretization(grid)
         fm = ForwardModel(disc, ContinuumModel())
-        bx, by = ModularEIT._dof_coordinates(disc, disc.boundary_dofs)
+        bx, by = ModularEITFerrite._dof_coordinates(disc, disc.boundary_dofs)
         f = [x < 0 ? 2x : x for x in bx]                     # ∂₁u = 2 left, 1 right
         σ = interpolate_function(disc, x -> x[1] < 0 ? 1.0 : 2.0)
         _, X = forward_dirichlet(fm, σ, f)

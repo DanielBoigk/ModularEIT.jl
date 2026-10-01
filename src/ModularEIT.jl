@@ -1,9 +1,10 @@
 """
     ModularEIT
 
-Modular building blocks for Electrical Impedance Tomography (EIT): finite element
-discretizations, electrode models, forward solvers, adjoint-state and Kohn–Vogelius objectives
-and projected linear solvers that can be combined freely.
+Modular building blocks for Electrical Impedance Tomography (EIT): electrode models, forward
+solvers, adjoint-state and Kohn–Vogelius objectives, regularizers, optimizers and projected linear
+solvers that can be combined freely. The finite element discretization comes from a back end
+package: ModularEITFerrite (Ferrite.jl) or ModularEITGridap (Gridap.jl).
 """
 module ModularEIT
 
@@ -17,28 +18,26 @@ export ProjectedMinresWorkspace, BlockMinresStats, pbminres, pbminres!
 export DeviceSparseMatrixCSR, device_converter
 export AbstractLinearSolver, DirectSolver, BlockCGSolver, InfeasibleConductivityError
 export StructuredGrid, DCTPreconditioner, dct_preconditioner
-export AbstractFastPreconditioner, PolarStructure, PolarPreconditioner, polar_preconditioner, polar_grid
-export ConformalMap, map_derivative, ConformalGrid, conformal_grid
+export AbstractFastPreconditioner, PolarStructure, PolarPreconditioner, polar_preconditioner
+export ConformalMap, map_derivative
 
 export AbstractDiscretization, AbstractElectrodeModel, AbstractForwardModel, AbstractObjective
 export AbstractMisfit, AbstractRieszMap, AbstractEITProblem, AbstractSolutionState
 export AbstractRegularizer, AbstractOptimizer
 
-export FerriteDiscretization, ndofs_u, ndofs_σ
-export FEMatrices, assemble_mass, assemble_mass!, assemble_stiffness, assemble_stiffness!
-export assemble_boundary_mass, assemble_boundary_mass!, assemble_boundary_load!
-export assemble_weighted_stiffness, assemble_weighted_stiffness!, weighted_stiffness_values!
-export ConductivityTensor, pair_products!, tensor_gradient!
+# back end contract (methods are added by ModularEITFerrite, ModularEITGridap)
+export ndofs_u, ndofs_σ, interpolate_function, l2_project, fe_inner, fe_norm, total_variation, total_variation!
+export lumped_mass, angular_electrodes, electrode_length, transfer_electrodes, structured_grid, polar_structure
+export assemble_weighted_stiffness, pixel_image
+
+export FEMatrices, ConductivityTensor, assemble_weighted_stiffness!, weighted_stiffness_values!
+export pair_products!, tensor_gradient!
 export CoefficientGradient, L2Gradient, riesz_map, riesz_map!
-export interpolate_function, l2_project, fe_inner, fe_norm, total_variation, total_variation!
 
 export ContinuumModel, PointElectrodeModel, GapModel, CompleteElectrodeModel
-export angular_electrodes, electrode_length, transfer_electrodes
 export ForwardModel, system_matrix!, n_inject, n_measure, n_control, trigonometric_patterns
 export forward_neumann, forward_dirichlet, reground, pattern_svd, truncate_patterns
-export ImageMap, to_image, from_image, UnitImage, unit_image, from_unit_image
-export AdaptiveMesh, current_grid, refine_mesh!, coarsen_mesh!, is_nonconforming, cell_levels, max_level
-export residual_indicator, flux_recovery_indicator, goal_oriented_indicator, jump_indicator, dorfler_marking, transfer_conductivity
+export dorfler_marking
 export SquaredEuclidean, WeightedSquaredEuclidean, ProjectedMisfit
 export AdjointStateObjective, KohnVogeliusObjective, objective_value, value_and_gradient!
 export residual!, residual_and_jacobian!, n_residual, boundary_error, pattern_values
@@ -47,15 +46,14 @@ export TikhonovRegularizer, TotalVariationRegularizer, RegularizedObjective, gau
 export minimize, OptimizationState, GradientDescent, LBFGS, GaussNewton
 export jacobian_svd, jacobian_basis, TruncatedGaussNewton
 export sensitivity_map, resolution_map, posterior_std
-export prox, prox!, ProximalMap, lumped_mass, ProximalGradient, ADMM
+export prox, prox!, ProximalMap, ProximalGradient, ADMM
 export AbstractNoiseModel, GaussianNoise, RelativeGaussianNoise, SourceMeterNoise, add_noise, add_noise!
 export ApproximationError, whiten, ApproximationErrorObjective
 export expected_squared_error, discrepancy_target, perturb_boundary_operator, perturb_contact_impedance, electrode_angles
 export AbstractInclusion, CircleInclusion, EllipseInclusion, PolygonInclusion, InclusionPhantom, random_inclusions
 export PixelFunction, image_phantom, TransformedPhantom, lognormal_phantom, levelset_phantom
 export gaussian_random_field, corrupt_image, conductivity, simulate_data
-export AbstractParametrization, PixelParametrization, SubspaceParametrization, ParametrizedObjective
-export parameter_count, pixel_image, pixel_parameters, dct_basis, boundary_band_basis
+export AbstractParametrization, SubspaceParametrization, ParametrizedObjective, parameter_count
 
 
 include("AbstractTypes.jl")
@@ -70,9 +68,12 @@ include("LinearSolvers/SolverInterface.jl")
 include("LinearSolvers/DCT.jl")
 include("LinearSolvers/Polar.jl")
 
+include("Galerkin/Discretization.jl")
+include("Galerkin/ElectrodeModels.jl")
 include("Galerkin/ForwardModel.jl")
+include("Galerkin/PatternSVD.jl")
+include("Galerkin/Marking.jl")
 include("Galerkin/Regularizers.jl")
-include("Galerkin/Ferrite/Ferrite.jl")
 include("Galerkin/FastPreconditioner.jl")
 include("Galerkin/Objectives/Misfits.jl")
 include("Galerkin/Objectives/AdjointState.jl")

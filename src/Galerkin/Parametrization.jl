@@ -27,8 +27,8 @@ parameter_count(par::AbstractParametrization) = size(par.P, 2)
     SubspaceParametrization(pixels::PixelParametrization, B)
 
 Pixel values restricted to the span of the columns of `B` (`n m × k`): `pixels = B θ`,
-`σ = P_pixels B θ`. Bases: [`dct_basis`](@ref) (smooth, low-dimensional),
-[`boundary_band_basis`](@ref) (free pixels along the boundary), or combinations `[B₁ B₂]`.
+`σ = P_pixels B θ`. Bases: `dct_basis` (Ferrite back end) (smooth, low-dimensional),
+`boundary_band_basis` (Ferrite back end) (free pixels along the boundary), or combinations `[B₁ B₂]`.
 """
 struct SubspaceParametrization{PP, MB, MP} <: AbstractParametrization
     pixels::PP
@@ -41,6 +41,14 @@ function SubspaceParametrization(pixels::AbstractParametrization, B::AbstractMat
     return SubspaceParametrization(pixels, B, P isa SparseMatrixCSC ? P : Matrix(P))
 end
 
+"""
+    pixel_image(par, θ)
+
+The parameters `θ` of a pixel-based parametrization as an image (row 1 at the top). Back end
+contract for pixel parametrizations.
+"""
+function pixel_image end
+
 pixel_image(sp::SubspaceParametrization, θ::AbstractVector) = pixel_image(sp.pixels, sp.B * θ)
 
 """
@@ -48,7 +56,7 @@ pixel_image(sp::SubspaceParametrization, θ::AbstractVector) = pixel_image(sp.pi
 
 The objective `obj` as a function of the parameters `θ` of `par` (`σ = P θ`): values, gradients
 `Pᵀ ∇_σ J` and, for least-squares objectives, residuals and Jacobians `(∂r/∂σ) P`, so that all
-optimizers apply (bounds on pixel parameters bound σ, see [`PixelParametrization`](@ref)).
+optimizers apply (bounds on pixel parameters bound σ, see `PixelParametrization` (Ferrite back end)).
 Regularizers on the parameters act on the pixel discretization, e.g.
 `RegularizedObjective(ParametrizedObjective(data, pp), α => TotalVariationRegularizer(pp.pixel_disc))`.
 """

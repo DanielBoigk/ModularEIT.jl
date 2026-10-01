@@ -44,7 +44,7 @@ and measurements $Q\,C$. $A_C$ is again symmetric positive semidefinite. Since $
 
 **Piecewise constant conductivities** need no constraints: they are discontinuous anyway. A coarse cell simply has two fine neighbours across the refined edge. For jump-based functionals such as the [[Total Variation]], each fine facet is paired with the coarse cell.
 
-**In ModularEIT.jl:** [`AdaptiveMesh`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.AdaptiveMesh), [`is_nonconforming`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEIT.is_nonconforming).
+**In ModularEIT.jl:** [`AdaptiveMesh`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.AdaptiveMesh), [`is_nonconforming`](https://danielboigk.github.io/ModularEIT.jl/dev/api/adaptivity/#ModularEITFerrite.is_nonconforming).
 
 ## References
 

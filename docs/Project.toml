@@ -5,11 +5,13 @@ Ferrite = "c061ca5d-56c9-439f-9c0e-210fe06d3992"
 Krylov = "ba0b0d4f-ebba-5204-a429-3ac8c609bfb7"
 Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
 ModularEIT = "7608eb13-d8ec-417a-a672-b3f475c1af64"
+ModularEITFerrite = "4e1b8f0b-f07f-4a56-87d6-d07522e0b7e4"
 
 [sources]
 Krylov = {url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg"}
 Ferrite = {url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular"}
 ModularEIT = {path = ".."}
+ModularEITFerrite = {path = "../lib/ModularEITFerrite"}
 
 [compat]
 Documenter = "1"

@@ -1,8 +1,8 @@
 # Test suite, grouped by component (folders of test/). Run everything, or only some folders:
 #     julia --project -e 'using Pkg; Pkg.test()'
-#     julia --project -e 'using Pkg; Pkg.test(test_args = ["Images", "Data"])'
-# Pkg.test provides the test-only dependencies (FerriteGmsh, Statistics, JLArrays), which a
-# plain `include` of a test file in the package environment does not see.
+#     julia --project -e 'using Pkg; Pkg.test(test_args = ["LinearSolvers", "Data"])'
+# The test environment (test/Project.toml) also has the Ferrite back end, which most tests use
+# for their discretizations; the back end's own tests are in lib/ModularEITFerrite/test.
 using Test
 
 const TESTDIR = @__DIR__
@@ -12,13 +12,8 @@ const SUITES = [
     ("linear solvers", "LinearSolvers", ["test_projected_block_cg.jl", "test_projected_cholesky.jl",
                                          "test_krylov_ldl.jl", "test_gpu_agnostic.jl",
                                          "test_dct_preconditioner.jl", "test_polar_preconditioner.jl"]),
-    ("Galerkin layer", "Galerkin", ["test_fem_assembly.jl", "test_electrode_models.jl",
-                                    "test_objectives.jl", "test_pattern_svd.jl", "test_conformal.jl",
-                                    "test_parametrization.jl"]),
-    ("adaptivity", "Adaptivity", ["test_adaptive_meshing.jl", "test_bisection.jl", "test_residual_estimator.jl"]),
     ("optimization", "Optimization", ["test_regularizers.jl", "test_optimizers.jl", "test_proximal.jl", "test_truncated_svd.jl", "test_confidence.jl", "test_matrix_free.jl"]),
     ("data", "Data", ["test_noise.jl", "test_synthetic.jl", "test_pattern_truncation.jl", "test_approximation_error.jl"]),
-    ("images", "Images", ["test_images.jl"]),
 ]
 
 SELECTED === nothing || issubset(SELECTED, [folder for (_, folder, _) in SUITES]) ||

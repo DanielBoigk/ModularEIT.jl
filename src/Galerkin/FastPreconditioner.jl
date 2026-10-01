@@ -68,13 +68,13 @@ end
     PolarPreconditioner(disc; variant = :constant)
 
 Choice of the FFT preconditioner for [`BlockCGSolver`](@ref) on a rotationally symmetric disk
-mesh of linear triangles, e.g. [`polar_grid`](@ref): the constant-conductivity system is
+mesh of linear triangles, e.g. `polar_grid` (Ferrite back end): the constant-conductivity system is
 inverted with an FFT in the angle and one tridiagonal solve per angular mode along the radius
 (`O(n log n)`), for every electrode model and for current- and voltage-driven problems. The
 radial spacing is arbitrary (e.g. graded towards the boundary). Variants and costs as for
 [`DCTPreconditioner`](@ref).
 
-On a conformally mapped mesh ([`conformal_grid`](@ref)) pass the disk mesh as `reference`: the
+On a conformally mapped mesh (`conformal_grid` (Ferrite back end)) pass the disk mesh as `reference`: the
 stiffness matrix of the disk then preconditions the one of the mapped domain; since the map is
 conformal, both are spectrally equivalent with constants close to 1.
 """

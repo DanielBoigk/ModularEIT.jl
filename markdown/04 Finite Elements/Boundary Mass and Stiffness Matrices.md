@@ -24,7 +24,7 @@ where $\nabla_\Gamma$ is the tangential (surface) gradient. They are assembled l
 
 The pair $(K_\Gamma, M_\Gamma)$ also defines the [[Discrete Fractional Sobolev Norms]].
 
-**In ModularEIT.jl:** [`assemble_boundary_mass!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.assemble_boundary_mass!), [`FEMatrices`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.FEMatrices).
+**In ModularEIT.jl:** [`assemble_boundary_mass!`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEITFerrite.assemble_boundary_mass!), [`FEMatrices`](https://danielboigk.github.io/ModularEIT.jl/dev/api/discretization/#ModularEIT.FEMatrices).
 
 ## References
 

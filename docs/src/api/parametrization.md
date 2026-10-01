@@ -1,7 +1,7 @@
 # Parametrizations
 
 ```@meta
-CurrentModule = ModularEIT
+CurrentModule = ModularEITFerrite
 ```
 
 The unknowns of a reconstruction need not be the finite element coefficients of the
@@ -37,15 +37,15 @@ Theory: wiki article [Parametrizations of the Conductivity](https://danielboigk.
 
 ```@docs
 AbstractParametrization
-PixelParametrization
+ModularEITFerrite.PixelParametrization
 SubspaceParametrization
 ParametrizedObjective
 conductivity(::AbstractParametrization, ::AbstractVector)
 parameter_count
 pixel_image
-pixel_parameters
-dct_basis
-boundary_band_basis
+ModularEITFerrite.pixel_parameters
+ModularEITFerrite.dct_basis
+ModularEITFerrite.boundary_band_basis
 InfeasibleConductivityError
 ```
 

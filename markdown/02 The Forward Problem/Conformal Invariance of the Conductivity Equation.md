@@ -47,7 +47,7 @@ The [[Neumann-to-Dirichlet Map]] of $(\Omega,\sigma)$ and the one of $(D,\tilde\
 - **Model domains.** Forward and inverse problems on any simply connected domain can be solved on the disk: reconstruct $\tilde\sigma$ and push it forward by $\sigma = \tilde\sigma\circ\Phi^{-1}$. If the true boundary is only approximately known, reconstructing on a wrong domain produces an anisotropic error, and only its conformal part can be corrected.
 - **Fast solvers.** A mesh of $\Omega$ obtained by mapping a disk mesh with $\Phi$ has a stiffness matrix that is spectrally equivalent to the one of the disk mesh, with constants close to $1$. Each element is mapped by an almost-similarity. Disk solvers therefore precondition the mapped problem (see [[Fast Solvers on Disk Domains]], [[Numerical Conformal Mapping]]).
 
-**In ModularEIT.jl:** [`ConformalMap`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.ConformalMap), [`conformal_grid`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.conformal_grid).
+**In ModularEIT.jl:** [`ConformalMap`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.ConformalMap), [`conformal_grid`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEITFerrite.conformal_grid).
 
 ## References
 

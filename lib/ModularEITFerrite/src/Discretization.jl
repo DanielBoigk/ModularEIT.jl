@@ -11,9 +11,6 @@
 # (matrices, loads, dof lists, the conductivity tensor) is condensed to the free dofs, so
 # everything downstream works with a conforming space. `ndofs_u` counts the free dofs.
 
-using Ferrite
-using SparseArrays
-using LinearAlgebra
 
 """
     FerriteDiscretization(grid; ip_u, ip_σ, boundary, qr_order)
@@ -207,17 +204,3 @@ function _facet_midpoint(grid, fi::FacetIndex)
     nodes = Ferrite.facets(getcells(grid, c))[f]
     return sum(n -> get_node_coordinate(grid, n), nodes) / length(nodes)
 end
-
-include("Assemblers/MatrixAssemblers.jl")
-include("Assemblers/TensorAssembler.jl")
-include("Assemblers/CoeffAssembler.jl")
-include("FESpace.jl")
-include("StructuredGrid.jl")
-include("PolarGrid.jl")
-include("Regularizers.jl")
-include("Boundary.jl")
-include("PatternSVD.jl")
-include("Images.jl")
-include("Parametrization.jl")
-include("AdaptiveMeshing.jl")
-include("ResidualEstimator.jl")

@@ -170,11 +170,35 @@ end
 # ---------------------------------------------------------------------------------------------
 # Pixel functions, images, random fields
 
+# Sampling of a pixel image at a point of the bounding box (xmin, xmax, ymin, ymax).
+# continuous pixel coordinates: (row, column) with pixel centres at integers
+function _pixel_coords(img, (xmin, xmax, ymin, ymax), p)
+    n, m = size(img)
+    return (ymax - p[2]) / (ymax - ymin) * n + 0.5, (p[1] - xmin) / (xmax - xmin) * m + 0.5
+end
+
+function _bilinear(img, box, p)
+    n, m = size(img)
+    r, c = _pixel_coords(img, box, p)
+    i0 = n == 1 ? 1 : clamp(floor(Int, r), 1, n - 1)
+    j0 = m == 1 ? 1 : clamp(floor(Int, c), 1, m - 1)
+    s = n == 1 ? 0.0 : r - i0            # may leave [0, 1] at the border: linear extrapolation
+    t = m == 1 ? 0.0 : c - j0
+    i1, j1 = min(i0 + 1, n), min(j0 + 1, m)
+    return (1 - s) * ((1 - t) * img[i0, j0] + t * img[i0, j1]) + s * ((1 - t) * img[i1, j0] + t * img[i1, j1])
+end
+
+function _pixel_value(img, box, p)
+    n, m = size(img)
+    r, c = _pixel_coords(img, box, p)
+    return img[clamp(round(Int, r), 1, n), clamp(round(Int, c), 1, m)]
+end
+
 """
     PixelFunction(values; bbox = (-1, 1, -1, 1), interpolation = :nearest)
 
 Function on the rectangle `bbox = (xmin, xmax, ymin, ymax)` given by pixel values (row 1 at the
-top, as for [`to_image`](@ref)), evaluated by `:nearest` pixel or `:bilinear` interpolation
+top, as for `to_image` (Ferrite back end)), evaluated by `:nearest` pixel or `:bilinear` interpolation
 between pixel centres. Points outside the box take the value of the nearest border pixel.
 """
 struct PixelFunction
