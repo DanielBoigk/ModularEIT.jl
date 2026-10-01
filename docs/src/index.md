@@ -13,8 +13,17 @@ ModularEIT
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/DanielBoigk/ModularEIT.jl")
+Pkg.add(url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular")
+Pkg.add(url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg")
+Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
 ```
+
+ModularEIT depends on forks of [Ferrite.jl](https://github.com/DanielBoigk/Ferrite.jl) (newest
+vertex bisection with coarsening for triangle meshes) and
+[Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block conjugate gradients with null-space
+projection). Add the forks first: Julia uses the `[sources]` entries of a package only when it
+is the active project, so `Pkg.add` of ModularEIT alone would install the registered versions,
+and ModularEIT would fail to load.
 
 ## Package overview
 

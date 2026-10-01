@@ -35,10 +35,10 @@ replaced without touching the others.
     planar domains.
 
   Block CG with Jacobi or AMG runs on the CPU and on GPUs (KernelAbstractions); the Cholesky
-  factorization uses cuDSS on NVIDIA GPUs (CUDA and cuDSS extensions). The FFT preconditioners
+  factorization uses cuDSS on NVIDIA GPUs (cuDSS extension). The FFT preconditioners
   currently run on the CPU.
 - **Meshes:** adaptive refinement (residual, recovery-based and goal-oriented estimators, Dörfler
-  marking; hanging nodes on quadrilaterals, newest vertex bisection on triangles), graded polar
+  marking; hanging nodes on quadrilaterals, newest vertex bisection with coarsening on triangles), graded polar
   meshes of the disk, and conformally mapped meshes.
 - **Data:** noise models (absolute, relative, source/meter, operator-level, electrode modelling
   errors), mesh-independent phantoms (random inclusions, Gaussian random fields, images),
@@ -49,8 +49,17 @@ replaced without touching the others.
 
 ```julia
 using Pkg
+Pkg.add(url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular")
+Pkg.add(url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
 ```
+
+ModularEIT depends on forks of [Ferrite.jl](https://github.com/DanielBoigk/Ferrite.jl) (newest
+vertex bisection with coarsening for triangle meshes) and
+[Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block conjugate gradients with null-space
+projection). Add the forks first: Julia uses the `[sources]` entries of a package only when it
+is the active project, so `Pkg.add` of ModularEIT alone would install the registered versions,
+and ModularEIT would fail to load.
 
 ## Example
 
@@ -105,7 +114,7 @@ the documentation build runs them and generates the pages and notebooks.
 | Path | Contents |
 |:--|:--|
 | `src/` | The library: `LinearSolvers/`, `Galerkin/` (forward model, objectives, regularizers, Ferrite back end), `Optimization/`, `Data/`, `Geometry/` |
-| `ext/` | CUDA and cuDSS extensions |
+| `ext/` | cuDSS extension (GPU factorization) |
 | `test/` | Test suite (`julia --project -e 'using Pkg; Pkg.test()'`) |
 | `benchmark/` | Benchmark scripts and results |
 | `examples/` | Tutorials as Literate.jl scripts (rendered into the documentation and notebooks) |
