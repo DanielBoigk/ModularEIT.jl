@@ -6,6 +6,12 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Block Conjugate Gradient</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient</guid>
+    <description><![CDATA[ The block conjugate gradient method (O’Leary 1980) solves A X = B for s right-hand sides simultaneously. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 11:42:04 GMT</pubDate>
+  </item><item>
     <title>Coarsening of Bisection Meshes</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</guid>
@@ -59,12 +65,6 @@
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/DiffPIR</guid>
     <description><![CDATA[ DiffPIR (Zhu et al. 2023) integrates a diffusion model into a plug-and-play half-quadratic splitting scheme. ]]></description>
     <pubDate>Wed, 30 Sep 2026 08:13:06 GMT</pubDate>
-  </item><item>
-    <title>Outlook</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/</guid>
-    <description><![CDATA[ Existing software, design principles for modular EIT solvers, open questions, and where the same mathematics could go next. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:42:18 GMT</pubDate>
   </item>
     </channel>
   </rss>
