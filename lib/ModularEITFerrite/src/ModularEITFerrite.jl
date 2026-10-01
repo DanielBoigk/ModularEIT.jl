@@ -27,6 +27,11 @@ import ModularEIT: ADMM, AbstractDiscretization, AbstractLinearSolver, AbstractP
     total_variation, total_variation!, transfer_electrodes, value_and_gradient!
 import ModularEIT: _as_matrix, _bilinear, _dct_matrix, _forward_model, _init_neumann_solver,
     _nz_index, _pixel_value, _project_adjoint!, _reference_structure, _solve!
+# electrode primitives (back end contract) and electrode helpers
+import ModularEIT: _boundary_facets, _boundary_dofs, _boundary_mass, _boundary_load, _facet_free_dofs,
+    _facet_measure, _facet_midpoint, _facet_vertices, _u_pattern, _spatial_dim, _dof_coordinates,
+    _centroid, _angles, _electrode_angle, _boundary_weights, _grounding, _electrode_averages,
+    _nearest_boundary_dofs, _segment_distance
 
 export FerriteDiscretization, is_nonconforming
 export assemble_mass, assemble_mass!, assemble_stiffness, assemble_stiffness!
