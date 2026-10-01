@@ -6,23 +6,41 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Gauss-Newton Method</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</guid>
+    <description><![CDATA[ For a nonlinear least-squares objective \Phi(\sigma) = \tfrac12\|r(\sigma)\|^2 with residual r(\sigma) = \mathcal F(\sigma)-y and Jacobian J = r&#039;(\sigma): gradient: \nabla\Phi = J^\top r; Hessian: \nabla^2\Phi = J^\top J + \sum_k r_k\nabla^2r_k. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+  </item><item>
+    <title>Noise-Level Stagnation Test</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Noise-Level-Stagnation-Test</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Noise-Level-Stagnation-Test</guid>
+    <description><![CDATA[ A stopping rule for iterative reconstructions that measures each step’s decrease of the misfit against the statistical fluctuation of the misfit itself. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+  </item><item>
+    <title>Stopping Criteria</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria</guid>
+    <description><![CDATA[ Common rules for terminating a reconstruction: Discrepancy principle: stop when \|\mathcal F(\sigma_k)-y^\delta\|\le\tau\delta (\tau\gtrsim1, \delta the noise level). ]]></description>
+    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+  </item><item>
+    <title>Optimization</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/</guid>
+    <description><![CDATA[ Methods that minimise the regularised reconstruction functional: Newton-type methods for least squares, quasi-Newton methods, and proximal splitting for non-smooth and learned priors. ]]></description>
+    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
+  </item><item>
     <title>Approximation Error Approach</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Approximation-Error-Approach</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Approximation-Error-Approach</guid>
     <description><![CDATA[ Every reconstruction model is an approximation: a coarser mesh than reality, pixels instead of a continuous conductivity, idealised electrodes. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 17:15:18 GMT</pubDate>
+    <pubDate>Thu, 01 Oct 2026 08:43:23 GMT</pubDate>
   </item><item>
     <title>Data and Noise</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/</guid>
     <description><![CDATA[ Where test data come from and what corrupts real data: synthetic conductivities, noise and modelling errors, and how to avoid overly optimistic results. ]]></description>
     <pubDate>Wed, 30 Sep 2026 17:15:18 GMT</pubDate>
-  </item><item>
-    <title>Gauss-Newton Method</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</guid>
-    <description><![CDATA[ For a nonlinear least-squares objective \Phi(\sigma) = \tfrac12\|r(\sigma)\|^2 with residual r(\sigma) = \mathcal F(\sigma)-y and Jacobian J = r&#039;(\sigma): gradient: \nabla\Phi = J^\top r; Hessian: \nabla^2\Phi = J^\top J + \sum_k r_k\nabla^2r_k. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 16:49:00 GMT</pubDate>
   </item><item>
     <title>Plasma Nitrogen Fixation as a Moonshot</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</link>
@@ -46,24 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/U-Net</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/U-Net</guid>
     <description><![CDATA[ The U-Net is a convolutional encoder–decoder with skip connections, the standard backbone for image-to-image tasks and for diffusion-model denoisers \varepsilon_\theta(x,t). ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
-  </item><item>
-    <title>Diffusion Models for EIT</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-for-EIT</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-for-EIT</guid>
-    <description><![CDATA[ Recent work that combines diffusion or score-based priors with EIT: Diff-INR (Tong, Wang, Liu 2024): represents the conductivity as an implicit neural representation and uses a pretrained diffusion model as a generative regulariser during the reconstruction. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
-  </item><item>
-    <title>Diffusion Models on Finite Element Spaces</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-on-Finite-Element-Spaces</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/Diffusion-Models-on-Finite-Element-Spaces</guid>
-    <description><![CDATA[ A diffusion model adds Gaussian noise to its samples (see DDPM Forward Process). On a uniform pixel grid “independent noise per pixel” is unambiguous. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
-  </item><item>
-    <title>Diffusion Models</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</guid>
-    <description><![CDATA[ Diffusion models learn a prior distribution by learning to reverse a gradual noising process. ]]></description>
     <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item>
     </channel>
