@@ -32,6 +32,9 @@ import ModularEIT: _boundary_facets, _boundary_dofs, _boundary_mass, _boundary_l
     _facet_measure, _facet_midpoint, _facet_vertices, _u_pattern, _spatial_dim, _dof_coordinates,
     _centroid, _angles, _electrode_angle, _boundary_weights, _grounding, _electrode_averages,
     _nearest_boundary_dofs, _segment_distance
+# regularizer primitives
+import ModularEIT: _is_piecewise_constant, _facet_graph, _gram_matrix, _total_variation!, _tv_hessian,
+    _tv_gradient_operator, _FacetGraph
 
 export FerriteDiscretization, is_nonconforming
 export assemble_mass, assemble_mass!, assemble_stiffness, assemble_stiffness!
