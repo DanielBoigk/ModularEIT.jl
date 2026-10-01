@@ -64,11 +64,13 @@ function ProjectedMinresWorkspace(A, B::AbstractVecOrMat; nullspace = nothing, g
                                   scaling::Symbol = :jacobi, diagonal = nothing,
                                   columnwise::Bool = false)
     scaling in (:none, :jacobi) || throw(ArgumentError("scaling must be :none or :jacobi"))
-    # reuse the validation / orthonormalisation of the block CG workspace
-    cg = BlockCGWorkspace(A, B; nullspace, grounding)
     Bm = _as_matrix(B)
     n, s = size(Bm)
     T = eltype(Bm)
+    size(A, 1) == size(A, 2) == n || throw(DimensionMismatch("A must be $n × $n"))
+    Vh, Wh, Fh = _nullspace_basis(T, n, nullspace, grounding)
+    dev(M) = copyto!(similar(Bm, size(M)...), M)
+    buf(r, c) = fill!(similar(Bm, r, c), zero(T))
     d = nothing
     if scaling == :jacobi
         dh = diagonal === nothing ? Vector(diag(A)) : Vector(diagonal)
@@ -77,8 +79,8 @@ function ProjectedMinresWorkspace(A, B::AbstractVecOrMat; nullspace = nothing, g
     end
     SV = typeof(similar(Bm, n))
     kw = columnwise ? Krylov.MinresWorkspace(n, n, SV) : Krylov.BlockMinresWorkspace(n, n, s, SV, typeof(Bm))
-    return ProjectedMinresWorkspace(kw, similar(Bm), similar(Bm), d, cg.V, cg.W, cg.F, cg.Ks,
-                                    cg.nrm, zeros(T, s), zeros(T, s), zeros(T, s))
+    return ProjectedMinresWorkspace(kw, similar(Bm), similar(Bm), d, dev(Vh), dev(Wh), dev(Fh),
+                                    buf(size(Vh, 2), s), buf(1, s), zeros(T, s), zeros(T, s), zeros(T, s))
 end
 
 """

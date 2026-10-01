@@ -20,6 +20,10 @@ BlockCGSolver
 
 ## Projected block CG
 
+The iteration is `block_cg` of the [Krylov.jl fork](https://github.com/DanielBoigk/Krylov.jl)
+(branch `block-cg`), which also handles null spaces and grounding in general; the functions here
+add the EIT defaults (null space = constants) and ModularEIT's preconditioners.
+
 ```@docs
 pbcg
 pbcg!
@@ -108,9 +112,9 @@ DeviceSparseMatrixCSR
 
 With CUDA.jl, `to_device = x -> x isa SparseMatrixCSC ? CuSparseMatrixCSR(x) : CuArray(x)`
 uses cuSPARSE instead of the generic kernel and, together with CUDSS.jl, factorises on the GPU.
-Loading CUDA.jl activates the `ModularEITCUDAExt` package extension. It replaces the cuBLAS GEMM
-used for the tall-skinny Gram products `XᵀY` by one GEMV per column for Float64 blocks with
-2–8 columns. For those shapes cuBLAS picks a kernel that is 10–30× slower. Note that consumer
+Loading CUDA.jl activates the `KrylovCUDAExt` package extension of the Krylov.jl fork. It
+replaces the cuBLAS GEMM used for the tall-skinny Gram products `XᵀY` (`Krylov.kgram!`, used by
+block CG and the projections) by one GEMV per column for Float64 blocks with 2–8 columns. For those shapes cuBLAS picks a kernel that is 10–30× slower. Note that consumer
 GPUs run Float64 at 1/64 of the Float32 rate, so Float32 is usually the better choice there
 (see `benchmark/`).
 

@@ -1,210 +1,22 @@
-# Projected block conjugate gradient method for symmetric positive semidefinite systems
+# Projected block conjugate gradients for symmetric positive semidefinite systems
 #
 #     A X = B,    A : ℝⁿ → ℝⁿ symmetric,  ker(A) = V,  A positive definite on V⊥,
 #
-# i.e. for SPD operators on the quotient space ℝⁿ/V. The typical case is the EIT
-# stiffness matrix Lσ = ∫ σ ∇φᵢ⋅∇φⱼ dΩ with pure Neumann boundary conditions, whose
-# null space are the constants. See the wiki articles "Projected Conjugate Gradient",
-# "Block Conjugate Gradient" and "Grounding of the Potential".
+# i.e. for SPD operators on the quotient space ℝⁿ/V. The typical case is the EIT stiffness matrix
+# Lσ = ∫ σ ∇φᵢ⋅∇φⱼ dΩ with pure Neumann boundary conditions, whose null space are the constants.
+# The solver itself is `block_cg` of the Krylov.jl fork (github.com/DanielBoigk/Krylov.jl,
+# branch block-cg); this file adds the EIT defaults (null space = constants), the preconditioners
+# (Jacobi, smoothed-aggregation AMG), and the interface used by the rest of the package. See the
+# wiki articles "Projected Conjugate Gradient", "Block Conjugate Gradient" and "Grounding of the
+# Potential".
 #
-# All O(n) work is done with generic array operations (sparse × dense products, BLAS-3,
-# broadcasting), so the same code runs on the CPU and on any GPUArrays backend (sparse matrices
-# as DeviceSparseMatrixCSR or vendor types such as CuSparseMatrixCSR). Only s×s and k×s matrices
-# are moved to the host.
+# All O(n) work is done with generic array operations, so the same code runs on the CPU and on
+# any GPUArrays backend (sparse matrices as DeviceSparseMatrixCSR or vendor types).
 
 using LinearAlgebra
 using SparseArrays
 import AlgebraicMultigrid
-
-# ---------------------------------------------------------------------------------------
-# Small helpers
-# ---------------------------------------------------------------------------------------
-
-# The first `r*c` entries of a column-major buffer, viewed as an `r × c` matrix (no copy).
-# On the GPU this stays a dense device array, so it can be passed to CUBLAS/CUSPARSE.
-_block(X::AbstractMatrix, r::Integer, c::Integer) =
-    size(X) == (r, c) ? X : reshape(view(vec(X), 1:(r * c)), r, c)
-# first `r` columns
-_cols(X::AbstractMatrix, r::Integer) = _block(X, size(X, 1), r)
-
-# device (or host) block → freshly allocated small host matrix, and back
-_host(D::AbstractMatrix{T}) where {T} = copyto!(Matrix{T}(undef, size(D)), D)
-
-"""
-    _gram!(G, X, Y)
-
-`G ← XᵀY` for tall-skinny blocks (`n × s` with `n ≫ s`). Generic fallback: `mul!`. Array
-backends can specialise this; the CUDA extension replaces cuBLAS GEMM by one GEMV per column
-for small Float64 blocks, where cuBLAS picks a very slow kernel.
-"""
-_gram!(G, X, Y) = mul!(G, X', Y)
-
-_as_matrix(B::AbstractMatrix) = B
-_as_matrix(b::AbstractVector) = reshape(b, :, 1)
-
-# ---------------------------------------------------------------------------------------
-# Workspace
-# ---------------------------------------------------------------------------------------
-
-"""
-    BlockCGWorkspace(A, B; nullspace = nothing, grounding = nothing)
-
-Preallocated storage for [`pbcg!`](@ref) with `size(B, 2)` right-hand sides. All `n × s`
-buffers are allocated with `similar(B, …)`, so passing device arrays gives a device workspace.
-
-- `nullspace`: basis of `V = ker(A)` as an `n × k` matrix or a vector. Default: the constant
-  vector (pure Neumann problem). It does not need to be orthonormal.
-- `grounding`: linear functionals `W` (`n × k` or vector) fixing the component in `V`; the
-  returned solution satisfies `Wᵀx = 0`. Default: `W = V`, i.e. the solution orthogonal to the
-  null space (minimum Euclidean norm). For EIT with the boundary sum fixed to zero, pass the
-  indicator vector of the boundary degrees of freedom (see [`boundary_grounding`](@ref)).
-  `WᵀV` must be invertible.
-"""
-mutable struct BlockCGWorkspace{T, MT <: AbstractMatrix{T}}
-    R::MT                 # residual                         n × s
-    Z::MT                 # preconditioned residual / next P n × s
-    P::MT                 # search directions                n × s
-    Q::MT                 # A P (also scratch)               n × s
-    V::MT                 # orthonormal null-space basis     n × k
-    W::MT                 # grounding functionals            n × k
-    F::MT                 # V (WᵀV)⁻¹                         n × k
-    Ks::MT                # k × s device buffer
-    Ss::MT                # s × s device buffer
-    Ss2::MT               # s × s device buffer
-    mask::MT              # 1 × s device buffer (deflation mask)
-    maskh::Matrix{T}      # 1 × s host buffer
-    nrm::MT               # 1 × s device buffer (column norms)
-    nrmh::Vector{T}       # s host buffer
-    dvec::Vector{T}       # s host buffers
-    bnorm::Vector{T}
-    rnorm::Vector{T}
-    tol::Vector{T}
-    active::Vector{Bool}
-end
-
-function BlockCGWorkspace(A, B::AbstractVecOrMat; nullspace = nothing, grounding = nothing)
-    Bm = _as_matrix(B)
-    n, s = size(Bm)
-    size(A, 1) == size(A, 2) == n || throw(DimensionMismatch("A must be $n × $n"))
-    T = eltype(Bm)
-
-    Vh = nullspace === nothing ? ones(T, n, 1) : T.(Array(_as_matrix(nullspace)))
-    size(Vh, 1) == n || throw(DimensionMismatch("null-space basis must have $n rows"))
-    Vh = Matrix(qr(Vh).Q)                                   # orthonormal basis of V
-    k = size(Vh, 2)
-    Wh = grounding === nothing ? copy(Vh) : T.(Array(_as_matrix(grounding)))
-    size(Wh) == (n, k) || throw(DimensionMismatch("grounding must be $n × $k"))
-    WV = Wh' * Vh
-    abs(det(WV)) > eps(T) * opnorm(Wh) || throw(ArgumentError("WᵀV must be invertible"))
-    Fh = Vh / WV
-
-    dev(M) = copyto!(similar(Bm, size(M)...), M)
-    buf(r, c) = fill!(similar(Bm, r, c), zero(T))
-    return BlockCGWorkspace{T, typeof(buf(1, 1))}(
-        buf(n, s), buf(n, s), buf(n, s), buf(n, s),
-        dev(Vh), dev(Wh), dev(Fh), buf(k, s), buf(s, s), buf(s, s), buf(1, s), ones(T, 1, s), buf(1, s), zeros(T, s),
-        zeros(T, s), zeros(T, s), zeros(T, s), zeros(T, s), fill(true, s))
-end
-
-"""
-    boundary_grounding(n, dofs; weights = nothing)
-
-Grounding functional `w` with `wᵢ = 1` (or `weights`) on the degrees of freedom `dofs`, so that
-`wᵀx = Σ_{i ∈ dofs} xᵢ = 0`. Pass it as `grounding` to [`pbcg`](@ref).
-"""
-function boundary_grounding(n::Integer, dofs; weights = nothing, T = Float64)
-    w = zeros(T, n)
-    w[dofs] .= weights === nothing ? one(T) : weights
-    return w
-end
-
-# X ← (I - V Vᵀ) X : orthogonal projection onto V⊥ (V orthonormal)
-function _project!(X, ws)  # ws: any object with fields V, Ks
-    r = size(X, 2)
-    K = _cols(ws.Ks, r)
-    _gram!(K, ws.V, X)
-    mul!(X, ws.V, K, -1, 1)
-    return X
-end
-
-# X ← X - V (WᵀV)⁻¹ Wᵀ X : oblique projection onto {Wᵀx = 0} along V
-function _ground!(X, ws)   # ws: any object with fields W, F, Ks
-    K = _cols(ws.Ks, size(X, 2))
-    _gram!(K, ws.W, X)
-    mul!(X, ws.F, K, -1, 1)
-    return X
-end
-
-# Euclidean column norms of X: one O(n s) reduction on the device, s values to the host.
-function _colnorms!(out::Vector, X, ws)  # ws: fields nrm, nrmh
-    s = size(X, 2)
-    buf = _block(ws.nrm, 1, s)
-    sum!(abs2, buf, X)
-    copyto!(ws.nrmh, 1, buf, 1, s)
-    @inbounds for j in 1:s
-        out[j] = sqrt(max(ws.nrmh[j], zero(eltype(out))))
-    end
-    return out
-end
-
-# ---------------------------------------------------------------------------------------
-# Rank-revealing orthonormalisation of the search block (SVQB)
-# ---------------------------------------------------------------------------------------
-
-# Replaces the leading columns of P by an orthonormal basis of span(P) and returns its
-# dimension r. Columns are first normalised, so only (near) linear dependence, not scale,
-# decides which directions are dropped. Uses ws.Q as n × s scratch.
-function _orthonormalize!(ws::BlockCGWorkspace{T}, s::Int, rank_tol) where {T}
-    P, Q = ws.P, ws.Q
-    G = _block(ws.Ss, s, s)
-    _gram!(G, P, P)
-    Gh = _host(G)
-    d = ws.dvec
-    tiny = floatmin(T) / eps(T)
-    @inbounds for j in 1:s
-        d[j] = Gh[j, j] > tiny ? inv(sqrt(Gh[j, j])) : zero(T)
-    end
-    @inbounds for j in 1:s, i in 1:s
-        Gh[i, j] *= d[i] * d[j]
-    end
-    E = eigen!(Symmetric(Gh))                              # O(s³) on the host
-    λmax = maximum(E.values; init = zero(T))
-    λmax > 0 || return 0
-    Th = zeros(T, s, s)
-    r = 0
-    @inbounds for j in s:-1:1                               # largest eigenvalues first
-        λ = E.values[j]
-        λ > rank_tol * λmax || continue
-        r += 1
-        c = inv(sqrt(λ))
-        for i in 1:s
-            Th[i, r] = d[i] * E.vectors[i, j] * c
-        end
-    end
-    r == 0 && return 0
-    Tr = _block(ws.Ss2, s, r)
-    copyto!(Tr, Th[:, 1:r])
-    Qr = _cols(Q, r)
-    mul!(Qr, P, Tr)
-    copyto!(_cols(P, r), Qr)
-    return r
-end
-
-# Solve the small SPD system G Y = C on the host (Cholesky, eigen-based pseudo-inverse as
-# fallback). G is r × r, C is r × s; the result overwrites C.
-function _small_spd_solve!(G::AbstractMatrix{T}, C::AbstractMatrix{T}) where {T}
-    Gs = Symmetric(G)
-    F = cholesky!(copy(Gs); check = false)
-    if issuccess(F)
-        ldiv!(F, C)
-    else
-        E = eigen(Gs)
-        λmax = maximum(abs, E.values)
-        λinv = [λ > sqrt(eps(T)) * λmax ? inv(λ) : zero(T) for λ in E.values]
-        C .= E.vectors * (Diagonal(λinv) * (E.vectors' * C))
-    end
-    return C
-end
+import Krylov
 
 # ---------------------------------------------------------------------------------------
 # Preconditioners
@@ -324,9 +136,43 @@ end
 
 apply_preconditioner!(Z, M::AMGPreconditioner, R) = _vcycle!(Z, M, R, 1)
 
+# A ModularEIT preconditioner as a Krylov.jl operator: `mul!(Z, op, R)` applies M⁻¹.
+struct _KrylovPreconditioner{P}
+    M::P
+end
+LinearAlgebra.mul!(Z, op::_KrylovPreconditioner, R) = apply_preconditioner!(Z, op.M, R)
+_krylov_preconditioner(::Nothing) = I
+_krylov_preconditioner(M) = _KrylovPreconditioner(M)
+
 # ---------------------------------------------------------------------------------------
 # Solver
 # ---------------------------------------------------------------------------------------
+
+"""
+    BlockCGWorkspace(A, B; nullspace = nothing, grounding = nothing)
+
+Preallocated storage for [`pbcg!`](@ref) with `size(B, 2)` right-hand sides: a
+`Krylov.BlockCgWorkspace` of the Krylov.jl fork. All `n × s` buffers have the array type of `B`,
+so passing device arrays gives a device workspace.
+
+- `nullspace`: basis of `V = ker(A)` as an `n × k` matrix or a vector. Default: the constant
+  vector (pure Neumann problem). It does not need to be orthonormal. Pass an `n × 0` matrix for
+  a positive definite `A` (e.g. a Dirichlet system).
+- `grounding`: linear functionals `W` (`n × k` or vector) fixing the component in `V`; the
+  returned solution satisfies `Wᵀx = 0`. Default: `W = V`, i.e. the solution orthogonal to the
+  null space (minimum Euclidean norm). For EIT with the boundary sum fixed to zero, pass the
+  indicator vector of the boundary degrees of freedom (see [`boundary_grounding`](@ref)).
+  `WᵀV` must be invertible.
+"""
+function BlockCGWorkspace(A, B::AbstractVecOrMat; nullspace = nothing, grounding = nothing)
+    Bm = _as_matrix(B)
+    n = size(Bm, 1)
+    size(A, 1) == size(A, 2) == n || throw(DimensionMismatch("A must be $n × $n"))
+    T = eltype(Bm)
+    V, W, _ = _nullspace_basis(T, n, nullspace, grounding)
+    k = size(V, 2)
+    return Krylov.BlockCgWorkspace(A, Bm; nullspace = k == 0 ? nothing : V, grounding = k == 0 ? nothing : W)
+end
 
 """
 Result information of [`pbcg!`](@ref).
@@ -348,8 +194,9 @@ end
     pbcg!(X, ws, A, B; M = nothing, rtol = √eps, atol = 0, maxiter = 10n, recompute_every = 50,
           rank_tol = √eps)
 
-Solve `A X = Π B` with the projected block conjugate gradient method, in place in `X` (which
-is used as initial guess), and return a [`BlockCGStats`](@ref).
+Solve `A X = Π B` with the projected block conjugate gradient method (`Krylov.block_cg!` of
+the Krylov.jl fork) in the workspace `ws` (see [`BlockCGWorkspace`](@ref)), in place in `X`
+(which is used as initial guess), and return a [`BlockCGStats`](@ref).
 
 `Π = I - V Vᵀ` is the orthogonal projector onto `V⊥ = range(A)`. Every residual and every
 preconditioned residual is projected, so the iteration never leaves `V⊥` (round-off and
@@ -357,115 +204,25 @@ preconditioners that do not preserve `V⊥` cannot pollute the solution, and inc
 are handled by solving the projected, consistent problem). At the end the component in `V`
 is fixed by the grounding condition `Wᵀx = 0` of the workspace.
 
-Block iteration (O'Leary 1980, in Galerkin form with orthonormalised search blocks):
-
-    P ← orthonormal basis of span(P)      (rank-revealing; handles dependent columns)
-    α = (PᵀAP)⁻¹ PᵀR,   X += Pα,   R -= APα
-    Z = Π M⁻¹ R,        β = -(PᵀAP)⁻¹ (AP)ᵀZ,   P ← Z + Pβ
-
-Columns that have converged are removed from the block (deflation). `recompute_every`
-replaces the updated residual by the true residual `Π(B - AX)` to limit round-off drift.
+`M` is a preconditioner applied by [`ModularEIT.apply_preconditioner!`](@ref)
+([`JacobiPreconditioner`](@ref), [`AMGPreconditioner`](@ref), [`DCTPreconditioner`](@ref),
+[`PolarPreconditioner`](@ref)) or `nothing`. Column `j` has converged when its residual is
+below `atol + rtol ‖Π bⱼ‖`; converged columns are removed from the block (deflation), dependent
+search directions are dropped (relative eigenvalue threshold `rank_tol`), and every
+`recompute_every` iterations the updated residual is replaced by the true residual
+`Π(B - AX)` to limit round-off drift.
 """
-function pbcg!(X::AbstractVecOrMat, ws::BlockCGWorkspace{T}, A, B::AbstractVecOrMat;
+function pbcg!(X::AbstractVecOrMat, ws::Krylov.BlockCgWorkspace{T}, A, B::AbstractVecOrMat;
                M = nothing, rtol = sqrt(eps(T)), atol = zero(T),
                maxiter::Integer = 10 * size(A, 1), recompute_every::Integer = 50,
                rank_tol = sqrt(eps(T))) where {T}
     Xm, Bm = _as_matrix(X), _as_matrix(B)
-    s = size(Bm, 2)
-    size(ws.R, 2) == s || throw(DimensionMismatch("workspace was built for $(size(ws.R, 2)) right-hand sides"))
-    R, bnorm, rnorm, tol, active = ws.R, ws.bnorm, ws.rnorm, ws.tol, ws.active
-
-    # compatibility: ‖B‖² = ‖ΠB‖² + ‖(I-Π)B‖²
-    _colnorms!(rnorm, Bm, ws)
-    nB² = sum(abs2, rnorm)
-    copyto!(R, Bm)
-    _project!(R, ws)
-    _colnorms!(bnorm, R, ws)
-    defect = nB² > 0 ? sqrt(max(nB² - sum(abs2, bnorm), zero(T)) / nB²) : zero(T)
-    @inbounds for j in 1:s
-        tol[j] = max(T(atol), T(rtol) * bnorm[j])
-    end
-
-    # initial residual R = Π(B - A X) with X ∈ V⊥
-    _project!(Xm, ws)
-    mul!(R, A, Xm)
-    @. R = Bm - R
-    _project!(R, ws)
-    _colnorms!(rnorm, R, ws)
-    @inbounds for j in 1:s
-        active[j] = rnorm[j] > tol[j]
-    end
-
-    iter = 0
-    converged = !any(active)
-    if !converged
-        _precondition!(ws, M)
-        copyto!(ws.P, ws.Z)
-    end
-    while !converged && iter < maxiter
-        iter += 1
-        r = _orthonormalize!(ws, s, rank_tol)
-        r == 0 && break                                     # no search direction left
-        Pr, Qr = _cols(ws.P, r), _cols(ws.Q, r)
-        mul!(Qr, A, Pr)
-
-        # G = PᵀAP (r × r) and α = G⁻¹ PᵀR (r × s), both solved on the host
-        Gd = _block(ws.Ss, r, r)
-        _gram!(Gd, Pr, Qr)
-        Gh = _host(Gd)
-        @inbounds for j in 1:r, i in 1:j                    # symmetrise
-            Gh[i, j] = Gh[j, i] = (Gh[i, j] + Gh[j, i]) / 2
-        end
-        Cdr = _block(ws.Ss2, r, s)
-        _gram!(Cdr, Pr, R)
-        Ch = _host(Cdr)
-        _small_spd_solve!(copy(Gh), Ch)                     # Ch ← α
-        copyto!(Cdr, Ch)
-
-        mul!(Xm, Pr, Cdr, 1, 1)
-        if iter % recompute_every == 0
-            mul!(R, A, Xm)
-            @. R = Bm - R
-            _project!(R, ws)
-        else
-            mul!(R, Qr, Cdr, -1, 1)
-        end
-
-        _colnorms!(rnorm, R, ws)
-        @inbounds for j in 1:s
-            active[j] = rnorm[j] > tol[j]
-        end
-        converged = !any(active)
-        converged && break
-
-        # next search block: P ← Z + Pβ with β = -G⁻¹ QᵀZ (A-conjugate to the current P)
-        _precondition!(ws, M)
-        _gram!(Cdr, Qr, ws.Z)
-        copyto!(Ch, Cdr)
-        _small_spd_solve!(copy(Gh), Ch)
-        Ch .*= -1
-        copyto!(Cdr, Ch)
-        mul!(ws.Z, Pr, Cdr, 1, 1)
-        ws.P, ws.Z = ws.Z, ws.P
-    end
-
-    _ground!(Xm, ws)
-    return BlockCGStats(converged, iter, rnorm ./ max.(bnorm, floatmin(T)), defect)
-end
-
-# Z ← Π M⁻¹ R, with converged columns zeroed (deflation)
-function _precondition!(ws::BlockCGWorkspace{T}, M) where {T}
-    apply_preconditioner!(ws.Z, M, ws.R)
-    _project!(ws.Z, ws)
-    s = size(ws.Z, 2)
-    if !all(ws.active)
-        @inbounds for j in 1:s
-            ws.maskh[1, j] = ws.active[j] ? one(T) : zero(T)
-        end
-        copyto!(ws.mask, ws.maskh)
-        ws.Z .*= ws.mask
-    end
-    return ws.Z
+    size(Bm, 2) == ws.p || throw(DimensionMismatch("workspace was built for $(ws.p) right-hand sides"))
+    Krylov.block_cg!(ws, A, Bm, Xm; M = _krylov_preconditioner(M), atol = T(atol), rtol = T(rtol),
+                     itmax = Int(maxiter), recompute_every = Int(recompute_every), rank_tol = T(rank_tol))
+    copyto!(Xm, ws.X)
+    return BlockCGStats(ws.stats.solved, ws.stats.niter, ws.rnorm ./ max.(ws.bnorm, floatmin(T)),
+                        ws.defect)
 end
 
 """

@@ -61,6 +61,7 @@ export parameter_count, pixel_image, pixel_parameters, dct_basis, boundary_band_
 include("AbstractTypes.jl")
 include("Geometry/ConformalMap.jl")
 
+include("LinearSolvers/Projection.jl")
 include("LinearSolvers/ProjectedBlockCG.jl")
 include("LinearSolvers/ProjectedCholesky.jl")
 include("LinearSolvers/DeviceSparse.jl")

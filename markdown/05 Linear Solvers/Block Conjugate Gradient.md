@@ -36,6 +36,8 @@ $\beta$ makes the new block $A$-conjugate to the old one. $\alpha$ is the Galerk
 
 **CPU or GPU?** A GPU solve has a fixed cost of a few milliseconds (kernel launches and small host round trips each iteration), so it only pays off for enough work. For AMG-preconditioned block CG on an RTX 3080 against an 8-core CPU, the GPU was faster once $n\cdot s\gtrsim 5\cdot10^3$ in single precision or $\gtrsim 2\cdot10^4$ in double precision. At $10^6$ unknowns with 32 right-hand sides it was about 11× (Float64) and 80× (Float32) faster. Consumer GPUs run Float64 at 1/64 of the Float32 rate. Also, tall-skinny Gram products $X^\top Y$ with few columns can hit poorly tuned GEMM kernels, where one matrix–vector product per column was 10–30× faster.
 
+The iteration, with null-space projection, grounding, rank-revealing orthonormalisation of the search blocks and deflation, is `block_cg` in the [Krylov.jl fork](https://github.com/DanielBoigk/Krylov.jl) (branch `block-cg`).
+
 **In ModularEIT.jl:** [`pbcg`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.pbcg), [`BlockCGSolver`](https://danielboigk.github.io/ModularEIT.jl/dev/api/linear_solvers/#ModularEIT.BlockCGSolver).
 
 ## References
