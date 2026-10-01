@@ -2,6 +2,7 @@ using Documenter
 using Literate
 using ModularEIT
 using ModularEITFerrite
+using ModularEITGridap
 
 DocMeta.setdocmeta!(ModularEIT, :DocTestSetup, :(using ModularEIT); recursive=true)
 
@@ -18,7 +19,7 @@ end
 
 makedocs(
     sitename="ModularEIT.jl",
-    modules=[ModularEIT, ModularEITFerrite],
+    modules=[ModularEIT, ModularEITFerrite, ModularEITGridap],
     authors="Daniel Boigk",
     format=Documenter.HTML(prettyurls=get(ENV, "CI", nothing) == "true"),
     pages=[

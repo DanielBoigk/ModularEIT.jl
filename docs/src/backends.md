@@ -12,23 +12,37 @@ back end package, which is loaded next to ModularEIT:
 | Back end | Package | Finite element library |
 |:--|:--|:--|
 | Ferrite | `ModularEITFerrite` (in `lib/ModularEITFerrite`) | [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) (fork with triangle bisection) |
+| Gridap | `ModularEITGridap` (in `lib/ModularEITGridap`) | [Gridap.jl](https://github.com/gridap/Gridap.jl) |
 
 ```julia
 using ModularEIT, ModularEITFerrite, Ferrite
-
 disc = FerriteDiscretization(generate_grid(Triangle, (16, 16)))
+
+using ModularEIT, ModularEITGridap, Gridap
+disc = GridapDiscretization(simplexify(CartesianDiscreteModel((-1, 1, -1, 1), (16, 16))))
 ```
 
-Only the back end that is used has to be installed; the others are separate packages.
+Only the back end that is used has to be installed; the others are separate packages. On the
+same mesh both back ends give the same matrices (up to the numbering of the dofs), voltages,
+objective values and gradients; the Gridap back end's tests check this.
+
+The Ferrite back end additionally provides structured, polar and conformally mapped grids, image
+maps, pixel parametrizations and adaptive meshing. The Gridap back end covers the contract below
+(Lagrange u of any order, piecewise constant or Lagrange σ) and works with every Gridap
+`DiscreteModel`, e.g. meshes read with GridapGmsh.
 
 ```@docs
 ModularEITFerrite
+Main.ModularEITGridap
+Main.ModularEITGridap.GridapDiscretization
 ```
 
 ## The contract
 
 A back end defines a subtype of [`AbstractDiscretization`](@ref) and adds methods to these
-functions and constructors:
+functions and constructors (the electrode and regularizer primitives behind the forward models
+and the regularizers are listed in `src/Galerkin/Electrodes.jl` and
+`src/Galerkin/RegularizersFE.jl`):
 
 | Purpose | Functions |
 |:--|:--|

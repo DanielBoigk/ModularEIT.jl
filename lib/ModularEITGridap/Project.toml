@@ -1,0 +1,20 @@
+name = "ModularEITGridap"
+uuid = "58d78e9a-fdc2-4304-9f8d-8431e81fc239"
+version = "0.0.1-dev"
+authors = ["Daniel Boigk"]
+
+[deps]
+Gridap = "56d4f2e9-7ea1-5844-9cf6-b9c51ca7ce8e"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+ModularEIT = "7608eb13-d8ec-417a-a672-b3f475c1af64"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+
+[sources]
+ModularEIT = {path = "../.."}
+
+[compat]
+Gridap = "0.20"
+LinearAlgebra = "1"
+ModularEIT = "0.0.1"
+SparseArrays = "1"
+julia = "1.12"

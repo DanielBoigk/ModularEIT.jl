@@ -4,7 +4,7 @@ version = "0.0.1-dev"
 authors = ["Daniel Boigk"]
 
 [workspace]
-projects = ["test", "lib/ModularEITFerrite", "lib/ModularEITFerrite/test"]
+projects = ["test", "lib/ModularEITFerrite", "lib/ModularEITFerrite/test", "lib/ModularEITGridap", "lib/ModularEITGridap/test"]
 
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"

@@ -15,8 +15,9 @@ replaced without touching the others.
 
 ## Features
 
-- **Discretization** through back end packages, currently `ModularEITFerrite`
-  ([Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)): separate finite
+- **Discretization** through back end packages, `ModularEITFerrite`
+  ([Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)) and `ModularEITGridap`
+  ([Gridap.jl](https://github.com/gridap/Gridap.jl)): separate finite
   element spaces for potential and conductivity (e.g. P1/P0, Q1/Q0 on pixel images), triangles and
   quadrilaterals, and a conductivity tensor that makes the system matrix linear in σ.
 - **Electrode models:** continuum, point, gap and complete electrode model, with current-driven
@@ -54,11 +55,14 @@ Pkg.add(url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-trian
 Pkg.add(url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITFerrite")
+# or, for the Gridap back end (no Ferrite fork needed):
+Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITGridap")
 ```
 
 ModularEIT has no finite element code of its own; the discretization comes from a back end
-package. `ModularEITFerrite` (in `lib/` of this repository) is the
-[Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) back end. Load both:
+package in `lib/` of this repository: `ModularEITFerrite`
+([Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)) or `ModularEITGridap`
+([Gridap.jl](https://github.com/gridap/Gridap.jl)). Load ModularEIT with one of them, e.g.
 `using ModularEIT, ModularEITFerrite`.
 
 ModularEIT depends on a fork of [Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block
@@ -122,6 +126,7 @@ the documentation build runs them and generates the pages and notebooks.
 |:--|:--|
 | `src/` | The library: `LinearSolvers/`, `Galerkin/` (back end contract, electrode models, forward model, objectives, regularizers), `Optimization/`, `Data/`, `Geometry/` |
 | `lib/ModularEITFerrite/` | The Ferrite.jl back end (its own package and tests) |
+| `lib/ModularEITGridap/` | The Gridap.jl back end (its own package; its tests compare it with the Ferrite back end) |
 | `ext/` | cuDSS extension (GPU factorization) |
 | `test/` | Test suite of the generic layer (`julia --project -e 'using Pkg; Pkg.test()'`); the back end's tests: `julia --project=lib/ModularEITFerrite -e 'using Pkg; Pkg.test()'` |
 | `benchmark/` | Benchmark scripts and results |

@@ -17,11 +17,14 @@ Pkg.add(url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-trian
 Pkg.add(url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITFerrite")
+# or, for the Gridap back end (no Ferrite fork needed):
+Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITGridap")
 ```
 
 ModularEIT has no finite element code of its own; the discretization comes from a back end
-package. `ModularEITFerrite` (in `lib/` of this repository) is the
-[Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) back end. Load both:
+package in `lib/` of this repository: `ModularEITFerrite`
+([Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)) or `ModularEITGridap`
+([Gridap.jl](https://github.com/gridap/Gridap.jl)). Load ModularEIT with one of them, e.g.
 `using ModularEIT, ModularEITFerrite`.
 
 ModularEIT depends on a fork of [Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block
