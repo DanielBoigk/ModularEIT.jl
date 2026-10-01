@@ -84,6 +84,7 @@ using Test
         @test jacobian_column_norms(obj, θ) ≈ vec(sqrt.(sum(abs2, Jm; dims = 1))) rtol = 1e-8
         G, gg = jacobian_gram(obj, θ)
         @test G ≈ Jm' * Jm rtol = 1e-8
+        @test issymmetric(G)
         @test gg ≈ Jm' * r rtol = 1e-8
     end
 

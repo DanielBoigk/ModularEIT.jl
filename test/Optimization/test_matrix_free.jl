@@ -41,6 +41,7 @@ using Test
         # the Gram matrix JᵀJ and Jᵀr from row blocks
         G, g = jacobian_gram(obj, θ)
         @test G ≈ Jm' * Jm rtol = 1e-10
+        @test issymmetric(G)                               # (accumulated in one triangle)
         @test g ≈ Jm' * r rtol = 1e-10
         @test sensitivity_map(obj, θ) ≈ vec(sqrt.(sum(abs2, Jm; dims = 1))) rtol = 1e-10
     end

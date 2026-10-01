@@ -150,9 +150,9 @@ function _whitened_blocks(o::ApproximationErrorObjective, θ, want_gram::Bool)
     _jacobian_blocks!(o.obj, θ) do rows, B, _
         a2 .+= vec(sum(abs2, B; dims = 1)) ./ ae.η^2
         mul!(Cq, view(ae.Q, rows, :)', B, 1 / ae.η, true)
-        want_gram && mul!(G, B', B, 1 / ae.η^2, true)
+        want_gram && _gram_update!(G, B, 1 / ae.η^2)
     end
-    return a2, Cq, G
+    return a2, Cq, G                     # (G: upper triangle only)
 end
 
 function jacobian_column_norms(o::ApproximationErrorObjective, θ::AbstractVector)
@@ -165,6 +165,7 @@ function jacobian_gram(o::ApproximationErrorObjective, θ::AbstractVector)
     _, Cq, G = _whitened_blocks(o, θ, true)
     c = 2 .* o.ae.w .- o.ae.w .^ 2
     G .-= Cq' * (c .* Cq)
+    _symmetrize!(G)
     r = residual!(similar(o.r), o, θ)
     g = jacobian_operator(o, θ)' * r
     return G, g

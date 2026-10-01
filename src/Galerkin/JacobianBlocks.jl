@@ -67,8 +67,16 @@ function jacobian_gram(obj::AbstractObjective, θ::AbstractVector)
     n = length(θ)
     G, g = zeros(n, n), zeros(n)
     _jacobian_blocks!(obj, θ) do _, B, rr
-        mul!(G, B', B, true, true)
+        _gram_update!(G, B, 1.0)
         mul!(g, B', rr, true, true)
     end
-    return G, g
+    return _symmetrize!(G), g
 end
+
+# G ← G + α BᵀB in the upper triangle only, mirrored once by _symmetrize! at the end. (mul!(G, B',
+# B, α, true) calls syrk too, but mirrors the triangle of all of G after every update: for
+# 16384 pixels 5–10 s per 64-row block, against 0.07 s for the update itself.)
+_gram_update!(G::StridedMatrix{Float64}, B::StridedMatrix{Float64}, α::Real) = BLAS.syrk!('U', 'T', Float64(α), B, 1.0, G)
+_gram_update!(G, B, α) = mul!(G, B', B, α, true)
+_symmetrize!(G::StridedMatrix{Float64}) = LinearAlgebra.copytri!(G, 'U')
+_symmetrize!(G) = G
