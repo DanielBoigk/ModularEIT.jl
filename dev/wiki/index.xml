@@ -6,6 +6,24 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Approximation Error Approach</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Approximation-Error-Approach</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/Approximation-Error-Approach</guid>
+    <description><![CDATA[ Every reconstruction model is an approximation: a coarser mesh than reality, pixels instead of a continuous conductivity, idealised electrodes. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 17:15:18 GMT</pubDate>
+  </item><item>
+    <title>Data and Noise</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/10-Data-and-Noise/</guid>
+    <description><![CDATA[ Where test data come from and what corrupts real data: synthetic conductivities, noise and modelling errors, and how to avoid overly optimistic results. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 17:15:18 GMT</pubDate>
+  </item><item>
+    <title>Gauss-Newton Method</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Gauss-Newton-Method</guid>
+    <description><![CDATA[ For a nonlinear least-squares objective \Phi(\sigma) = \tfrac12\|r(\sigma)\|^2 with residual r(\sigma) = \mathcal F(\sigma)-y and Jacobian J = r&#039;(\sigma): gradient: \nabla\Phi = J^\top r; Hessian: \nabla^2\Phi = J^\top J + \sum_k r_k\nabla^2r_k. ]]></description>
+    <pubDate>Wed, 30 Sep 2026 16:49:00 GMT</pubDate>
+  </item><item>
     <title>Plasma Nitrogen Fixation as a Moonshot</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/14-Outlook/Plasma-Nitrogen-Fixation-as-a-Moonshot</guid>
@@ -46,24 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/12-Diffusion-Models/</guid>
     <description><![CDATA[ Diffusion models learn a prior distribution by learning to reverse a gradual noising process. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
-  </item><item>
-    <title>Conformal Transplantation of Networks</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Conformal-Transplantation-of-Networks</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Conformal-Transplantation-of-Networks</guid>
-    <description><![CDATA[ In two dimensions EIT on any simply connected domain \Omega is equivalent to EIT on the unit disk D. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
-  </item><item>
-    <title>Graph Convolutions on Finite Element Meshes</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Graph-Convolutions-on-Finite-Element-Meshes</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Graph-Convolutions-on-Finite-Element-Meshes</guid>
-    <description><![CDATA[ A convolution needs three things: a notion of neighbourhood, weights that do not depend on the position, and a way to aggregate. ]]></description>
-    <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
-  </item><item>
-    <title>Masked and Partial Convolutions</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Masked-and-Partial-Convolutions</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/13-Geometric-Learning/Masked-and-Partial-Convolutions</guid>
-    <description><![CDATA[ A domain \Omega inside a pixel grid is described by a mask m_{ij}\in\{0,1\}: 1 for pixels inside, 0 outside (see Pixel Images and Finite Element Functions). ]]></description>
     <pubDate>Wed, 30 Sep 2026 07:28:46 GMT</pubDate>
   </item>
     </channel>
