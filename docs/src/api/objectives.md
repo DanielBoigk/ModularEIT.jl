@@ -22,6 +22,7 @@ Theory: wiki articles [Adjoint State Method](https://danielboigk.github.io/Modul
 ```@docs
 AdjointStateObjective
 residual!
+residual
 residual_and_jacobian!
 n_residual
 ```
@@ -47,6 +48,31 @@ ParametrizedJacobian
 jacobian_column_norms
 jacobian_gram
 ```
+
+## Automatic differentiation
+
+With [ChainRulesCore.jl](https://github.com/JuliaDiff/ChainRulesCore.jl) loaded (e.g. through
+Zygote), [`objective_value`](@ref) and [`residual`](@ref) have differentiation rules, so they can
+be used inside differentiated programs, for instance with a conductivity produced by a neural
+network or when training through the forward model. The derivatives are computed by the
+adjoint-state and linearized solves of ModularEIT, not by differentiating through the finite
+element and linear solver code:
+
+- `objective_value(obj, σ)`: reverse rule, `J̄ ∇J(σ)` (the objective must deliver coefficient
+  gradients, `gradient = CoefficientGradient()`);
+- `residual(obj, σ)`: reverse rule `Jᵀ r̄` (one adjoint solve per pattern) and forward rule `J δσ`
+  (one linearized solve per pattern), matrix-free where [`jacobian_operator`](@ref) is available.
+
+The residual of an [`AdjointStateObjective`](@ref) with zero data is the vector of measured
+voltages, so `residual` doubles as a differentiable forward map:
+
+```julia
+using ModularEIT, ModularEITFerrite, Zygote
+forward = AdjointStateObjective(fm, currents, zero(data))
+gradient(σ -> sum(abs2, residual(forward, σ)), σ)
+```
+
+Enzyme.jl can use the same rules through `Enzyme.@import_rrule`.
 
 ## Kohn–Vogelius
 

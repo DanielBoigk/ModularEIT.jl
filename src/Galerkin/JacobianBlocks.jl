@@ -80,3 +80,14 @@ _gram_update!(G::StridedMatrix{Float64}, B::StridedMatrix{Float64}, α::Real) = 
 _gram_update!(G, B, α) = mul!(G, B', B, α, true)
 _symmetrize!(G::StridedMatrix{Float64}) = LinearAlgebra.copytri!(G, 'U')
 _symmetrize!(G) = G
+
+"""
+    residual(obj, θ)
+
+The residual vector of a least-squares objective (`J = ½ ‖r‖²`) at `θ`, allocating; see
+[`residual!`](@ref). For an [`AdjointStateObjective`](@ref) with zero data and the plain misfit
+this is the vector of measured voltages, i.e. the forward map. With ChainRulesCore loaded, it has
+reverse (`Jᵀ r̄`, adjoint solves) and forward (`J δθ`, linearized solves) differentiation rules,
+as does [`objective_value`](@ref) (reverse: the adjoint-state gradient).
+"""
+residual(obj::AbstractObjective, θ::AbstractVector) = residual!(zeros(n_residual(obj)), obj, θ)

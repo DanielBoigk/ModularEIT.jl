@@ -21,13 +21,16 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Krylov = {url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg"}
 
 [weakdeps]
+ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
 CUDSS = "45b445bb-4962-46a0-9369-b4df9d0f772e"
 
 [extensions]
+ModularEITChainRulesCoreExt = "ChainRulesCore"
 ModularEITCUDSSExt = ["CUDA", "CUDSS"]
 
 [compat]
+ChainRulesCore = "1"
 AbstractFFTs = "1.5"
 AlgebraicMultigrid = "2"
 CUDA = "6"

@@ -14,6 +14,7 @@ const SUITES = [
                                          "test_dct_preconditioner.jl", "test_polar_preconditioner.jl"]),
     ("optimization", "Optimization", ["test_regularizers.jl", "test_optimizers.jl", "test_proximal.jl", "test_truncated_svd.jl", "test_confidence.jl", "test_matrix_free.jl"]),
     ("data", "Data", ["test_noise.jl", "test_synthetic.jl", "test_pattern_truncation.jl", "test_approximation_error.jl"]),
+    ("differentiation rules", "AD", ["test_chainrules.jl"]),
 ]
 
 SELECTED === nothing || issubset(SELECTED, [folder for (_, folder, _) in SUITES]) ||
