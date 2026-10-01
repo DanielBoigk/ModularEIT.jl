@@ -5,7 +5,8 @@
 #                             pixel/voxel meshes of image-based EIT. Refined meshes have hanging
 #                             nodes; FerriteDiscretization condenses them with conformity
 #                             constraints, so forward models, objectives and solvers work unchanged.
-#   linear triangles          newest vertex bisection (Bisection.jl): conforming, no hanging nodes.
+#   linear triangles          newest vertex bisection (Ferrite's BisectionMesh): conforming, no
+#                             hanging nodes.
 #   other cells (tetrahedra)  not implemented: AdaptiveMesh warns and leaves the mesh unchanged.
 #
 # Indicators:
@@ -46,8 +47,8 @@ function AdaptiveMesh(grid::Ferrite.AbstractGrid; maxlevel::Union{Nothing, Integ
         forest = Ferrite.AMR.ForestBWG(grid, something(maxlevel, 10))
         return AdaptiveMesh(forest, Ferrite.AMR.creategrid(forest))
     elseif C === Triangle
-        mesh = BisectionMesh(grid, something(maxlevel, 20))
-        return AdaptiveMesh(mesh, _creategrid(mesh))
+        mesh = Ferrite.AMR.BisectionMesh(grid, something(maxlevel, 20))
+        return AdaptiveMesh(mesh, Ferrite.AMR.creategrid(mesh))
     end
     @warn "Adaptive refinement is implemented for quadrilateral, hexahedral and linear triangle meshes; " *
           "refinement of $C meshes is not implemented yet, so this mesh will not be refined."
@@ -74,9 +75,9 @@ between neighbouring cells. Cell numbers refer to `current_grid(am)`.
 function refine_mesh!(am::AdaptiveMesh, cells::AbstractVector{<:Integer})
     am.forest === nothing && (_warn_no_refinement(); return am)
     isempty(cells) && return am
-    if am.forest isa BisectionMesh
-        _refine!(am.forest, cells)
-        am.grid = _creategrid(am.forest)
+    if am.forest isa Ferrite.AMR.BisectionMesh
+        Ferrite.AMR.refine!(am.forest, cells)
+        am.grid = Ferrite.AMR.creategrid(am.forest)
     else
         Ferrite.AMR.refine!(am.forest, collect(cells))
         Ferrite.AMR.balanceforest!(am.forest)
@@ -93,7 +94,7 @@ Refinement level of every cell of `current_grid(am)` (0 = cell of the initial gr
 """
 function cell_levels(am::AdaptiveMesh)
     am.forest === nothing && return zeros(Int, getncells(am.grid))
-    am.forest isa BisectionMesh && return copy(am.forest.levels)
+    am.forest isa Ferrite.AMR.BisectionMesh && return copy(am.forest.levels)
     return [Int(leaf.l) for tree in am.forest.cells for leaf in tree.leaves]
 end
 
@@ -104,7 +105,7 @@ Maximum refinement level; cells at this level are not refined further. Exclude t
 marking (e.g. set their indicator to zero) so that the adaptive loop keeps making progress.
 """
 max_level(am::AdaptiveMesh) = am.forest === nothing ? 0 :
-                              am.forest isa BisectionMesh ? am.forest.maxlevel : Int(first(am.forest.cells).b)
+                              am.forest isa Ferrite.AMR.BisectionMesh ? am.forest.maxlevel : Int(first(am.forest.cells).b)
 
 """
     coarsen_mesh!(am, cells)
@@ -113,7 +114,7 @@ Coarsen: every complete family of sibling cells among `cells` is merged into its
 """
 function coarsen_mesh!(am::AdaptiveMesh, cells::AbstractVector{<:Integer})
     am.forest === nothing && (_warn_no_refinement(); return am)
-    am.forest isa BisectionMesh &&
+    am.forest isa Ferrite.AMR.BisectionMesh &&
         (@warn "Coarsening of bisection-refined triangle meshes is not implemented yet; the mesh is unchanged."; return am)
     isempty(cells) && return am
     Ferrite.AMR.coarsen!(am.forest, collect(cells))

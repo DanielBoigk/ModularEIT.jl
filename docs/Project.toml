@@ -6,6 +6,7 @@ Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
 ModularEIT = "7608eb13-d8ec-417a-a672-b3f475c1af64"
 
 [sources]
+Ferrite = {url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular"}
 ModularEIT = {path = ".."}
 
 [compat]

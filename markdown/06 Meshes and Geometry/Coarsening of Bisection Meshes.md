@@ -42,17 +42,18 @@ Given a set of triangles marked for coarsening:
 
 One sweep coarsens by at most one level per vertex. Several levels need repeated sweeps, just as refinement is applied level by level. A marked triangle whose star is not fully marked is left alone, so coarsening never forces coarsening of unmarked cells. This mirrors how the refinement closure may force refinement of unmarked cells.
 
-## Implementation notes for ModularEIT
+## Implementation notes
 
-The bisection mesh (`src/Galerkin/Ferrite/Bisection.jl`) already stores what the local algorithm needs:
+The bisection mesh (`BisectionMesh` in the AMR module of the Ferrite.jl fork, `src/Adaptivity/bisection.jl`) already stores what the local algorithm needs:
 
 - `tris` in the $(i,j,k)$ convention,
 - `levels`,
 - the midpoint table `midpoints` (split edge → node),
-- facet sets as node pairs `edgesets`,
+- facet sets as node pairs `facetsets`,
+- the leaves containing every edge, `edgecells`,
 - per-triangle cell sets.
 
-Missing are the removability test, the merge sweep, removal from `midpoints` and `edgesets`, and node renumbering. The mesh code depends only on Ferrite's grid types, so it could live in a standalone package: a triangle and tetrahedron counterpart of Ferrite's quadrilateral and hexahedral AMR module.
+Missing are the removability test, the merge sweep, removal from `midpoints`, `facetsets` and `edgecells`, and node renumbering. Like refinement, coarsening belongs next to Ferrite's quadrilateral and hexahedral AMR, as would a tetrahedral counterpart.
 
 ## References
 
