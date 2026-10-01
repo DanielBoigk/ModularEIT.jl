@@ -11,7 +11,7 @@ Methods that minimise the regularised reconstruction functional: Newton-type met
 2. Quasi-Newton: [[L-BFGS]], [[L-BFGS-B]] with [[Box Constraints on Conductivity]].
 3. Splitting: [[Proximal Operator]], [[ADMM]], [[Chambolle-Pock Algorithm]], [[Nested ADMM Reconstruction]].
 4. Stochastic methods: [[Stochastic and Adaptive Gradient Methods]].
-5. When to stop: [[Stopping Criteria]].
+5. When to stop: [[Stopping Criteria]], [[Noise-Level Stagnation Test]].
 
 A guide to the choice of method is [[Choosing an Optimizer]].
 

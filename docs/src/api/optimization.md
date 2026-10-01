@@ -114,6 +114,7 @@ Theory behind this page in the [theory wiki](https://danielboigk.github.io/Modul
 - [Nested ADMM Reconstruction](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Nested-ADMM-Reconstruction)
 - [Box Constraints on Conductivity](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Box-Constraints-on-Conductivity)
 - [Stopping Criteria](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Stopping-Criteria)
+- [Noise-Level Stagnation Test](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/09-Optimization/Noise-Level-Stagnation-Test)
 - [Plug-and-Play Priors](https://danielboigk.github.io/ModularEIT.jl/dev/wiki/11-Learned-Priors/Plug-and-Play-Priors)
 
 ## Index

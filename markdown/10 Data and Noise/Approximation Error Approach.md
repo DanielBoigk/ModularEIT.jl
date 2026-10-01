@@ -39,6 +39,8 @@ Jacobians, Gram matrices and matrix-free products of the whitened residual follo
 
 Nissinen, Heikkinen and Kaipio (2008) showed with measured data that the approach allows much coarser meshes and unknown boundary shapes. With many electrodes and low noise, the modelling error of any practical mesh exceeds the noise. In a simulated example with 255 electrodes and 1 % noise, the true conductivity misfits the noise-level target by a factor of eight. There, the approximation error model is not an option but a requirement: without it, the noise-level stopping rule overfits.
 
+With an estimated covariance, the misfit of the true conductivity is only approximately $m/2$, so the discrepancy principle can stop early, while the iterates still improve. A stopping rule that compares each step's decrease with the fluctuation of the whitened misfit needs no target value (see [[Noise-Level Stagnation Test]]).
+
 **In ModularEIT.jl:** [`ApproximationError`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.ApproximationError), [`ApproximationErrorObjective`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.ApproximationErrorObjective), [`whiten`](https://danielboigk.github.io/ModularEIT.jl/dev/api/data/#ModularEIT.whiten).
 
 ## References
