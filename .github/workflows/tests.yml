@@ -3,11 +3,11 @@ name: Tests
 # Test suites of the core package and of the finite element back ends, one job each. Packages,
 # artifacts and precompiled code are cached between runs (julia-actions/cache), so after the
 # first run a job mostly runs tests.
+# (Only master: redo is pushed together with it, which would run everything twice.)
 on:
   push:
     branches:
       - master
-      - redo
     paths:
       - "src/**"
       - "ext/**"
