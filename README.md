@@ -1,5 +1,8 @@
 # ModularEIT.jl
 
+[![Tests](https://github.com/DanielBoigk/ModularEIT.jl/actions/workflows/tests.yml/badge.svg)](https://github.com/DanielBoigk/ModularEIT.jl/actions/workflows/tests.yml)
+[![Documentation](https://github.com/DanielBoigk/ModularEIT.jl/actions/workflows/documentation.yml/badge.svg)](https://danielboigk.github.io/ModularEIT.jl/dev/)
+
 A Julia library for **Electrical Impedance Tomography (EIT)** built from exchangeable parts:
 finite element discretizations, electrode models, forward solvers, objectives with adjoint
 gradients, regularizers, optimizers, fast linear solvers, and synthetic data. Every part can be

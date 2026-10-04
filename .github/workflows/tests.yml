@@ -1,0 +1,80 @@
+name: Tests
+
+# Test suites of the core package and of the finite element back ends, one job each. Packages,
+# artifacts and precompiled code are cached between runs (julia-actions/cache), so after the
+# first run a job mostly runs tests.
+on:
+  push:
+    branches:
+      - master
+      - redo
+    paths:
+      - "src/**"
+      - "ext/**"
+      - "lib/**"
+      - "test/**"
+      - "Project.toml"
+      - ".github/workflows/tests.yml"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: ModularEIT          # LinearSolvers, Optimization, Data, AD, Reconstruction
+            project: .
+          - package: ModularEITFerrite   # Galerkin, Adaptivity, Images
+            project: lib/ModularEITFerrite
+          - package: ModularEITGridap    # comparison with the Ferrite back end, Gridap models
+            project: lib/ModularEITGridap
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.12"
+      - uses: julia-actions/cache@v2
+      - name: Install dependencies
+        run: julia --project=${{ matrix.project }} -e 'using Pkg; Pkg.instantiate()'
+      - name: Run tests
+        run: julia --project=${{ matrix.project }} -e 'using Pkg; Pkg.test()'
+
+  # Too compute intensive (or impossible) on the free GitHub runners; enable on a self-hosted
+  # runner with an NVIDIA GPU.
+  #
+  # gpu:
+  #   name: GPU (CUDA)
+  #   runs-on: [self-hosted, gpu]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: julia-actions/setup-julia@v2
+  #       with:
+  #         version: "1.12"
+  #     - uses: julia-actions/cache@v2
+  #     - name: Projected block CG and Cholesky on the GPU
+  #       run: |
+  #         julia --project=benchmark -e 'using Pkg; Pkg.instantiate()'
+  #         julia --project=benchmark -e 'using CUDA; CUDA.versioninfo()'
+  #
+  # benchmarks:
+  #   name: Benchmarks
+  #   runs-on: [self-hosted, gpu]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: julia-actions/setup-julia@v2
+  #       with:
+  #         version: "1.12"
+  #     - uses: julia-actions/cache@v2
+  #     - run: julia --project=benchmark -e 'using Pkg; Pkg.instantiate()'
+  #     - run: julia --project=benchmark -t auto benchmark/projected_block_cg.jl
+  #     - run: julia --project=benchmark -t auto benchmark/projected_cholesky.jl
+  #     - run: julia --project=benchmark -t auto benchmark/adaptive_meshing.jl
