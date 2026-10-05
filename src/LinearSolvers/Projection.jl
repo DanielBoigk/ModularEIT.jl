@@ -23,9 +23,8 @@ _cols(X::AbstractMatrix, r::Integer) = _block(X, size(X, 1), r)
 """
     _gram!(G, X, Y)
 
-`G ← XᵀY` for tall-skinny blocks (`n × s` with `n ≫ s`): `Krylov.kgram!`, which Krylov.jl's CUDA
-extension specialises (one GEMV per column for small Float64 blocks, where cuBLAS GEMM picks a
-very slow kernel).
+`G ← XᵀY` for tall-skinny blocks (`n × s` with `n ≫ s`): `Krylov.kgram!` (one GEMV per column for
+double-precision blocks with 2–8 columns, where GEMM kernels are slow).
 """
 _gram!(G, X, Y) = Krylov.kgram!(G, X, Y)
 

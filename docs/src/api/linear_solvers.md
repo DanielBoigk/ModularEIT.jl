@@ -112,9 +112,10 @@ DeviceSparseMatrixCSR
 
 With CUDA.jl, `to_device = x -> x isa SparseMatrixCSC ? CuSparseMatrixCSR(x) : CuArray(x)`
 uses cuSPARSE instead of the generic kernel and, together with CUDSS.jl, factorises on the GPU.
-Loading CUDA.jl activates the `KrylovCUDAExt` package extension of the Krylov.jl fork. It
-replaces the cuBLAS GEMM used for the tall-skinny Gram products `XᵀY` (`Krylov.kgram!`, used by
-block CG and the projections) by one GEMV per column for Float64 blocks with 2–8 columns. For those shapes cuBLAS picks a kernel that is 10–30× slower. Note that consumer
+The tall-skinny Gram products `XᵀY` (`Krylov.kgram!`, used by block CG and the projections)
+are computed as one matrix-vector product per column for Float64 and ComplexF64 blocks with 2–8
+columns, on any array type. For those shapes GEMM kernels often do not split the long reduction
+dimension: cuBLAS GEMM was up to 30× slower, OpenBLAS up to 2×. Note that consumer
 GPUs run Float64 at 1/64 of the Float32 rate, so Float32 is usually the better choice there
 (see `benchmark/`).
 
