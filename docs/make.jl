@@ -42,14 +42,12 @@ makedocs(
     ],
 )
 
-# The theory wiki (Obsidian vault in `markdown/`) is rendered with Quartz from `site/`
+# The theory wiki (Obsidian vault in `markdown/`) is rendered with Quartz by `site/build.sh`
 # into `build/wiki/`, so it is deployed together with the API docs.
 # Set BUILD_WIKI=false to skip this step (e.g. when Node.js is not installed).
 build_wiki = get(ENV, "BUILD_WIKI", "true") != "false"
 if build_wiki
-    site = joinpath(@__DIR__, "..", "site")
-    isdir(joinpath(site, "node_modules")) || run(Cmd(`npm ci`; dir=site))
-    run(Cmd(`npx quartz build -d ../markdown -o $(joinpath(@__DIR__, "build", "wiki"))`; dir=site))
+    run(`$(joinpath(@__DIR__, "..", "site", "build.sh")) $(joinpath(@__DIR__, "build", "wiki"))`)
 end
 
 # The API pages link to wiki articles and the wiki articles to docstrings; fail before deploying

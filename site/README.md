@@ -1,28 +1,29 @@
 # ModularEIT wiki site
 
-[Quartz v4](https://quartz.jzhao.xyz) setup that renders the Obsidian vault in
-`../markdown` as a static site. It is taken from the Category Theory ML Wiki and keeps
-its custom transformers:
+The Obsidian vault in `../markdown` is rendered as a static site with
+[MathStruct's Quartz](https://github.com/MathStruct/quartz): Quartz v4 plus the plugins the
+MathStruct sites share, among them
 
-- `quartz/plugins/transformers/tikz.ts` renders ```` ```tikz ```` blocks (Obsidian
-  *inline-tikz* format) to SVG at build time with `node-tikzjax`, with a light and a
-  dark variant. Results are cached in `.tikz-cache/` (committed, so CI only renders new
-  diagrams).
-- `quartz/plugins/transformers/tabs.ts` renders ```` ````tabs ```` blocks of the
-  Obsidian *Markdown Tabs* plugin.
-- Math is rendered with KaTeX; `Plugin.Latex({ renderEngine: "typst" })` in
-  `quartz.config.ts` switches to Typst.
+- ```` ```tikz ```` blocks (Obsidian *inline-tikz* format) rendered to SVG at build time, with
+  a light and a dark variant. Results are cached in `.tikz-cache/` (committed, so CI only
+  renders new diagrams);
+- ```` ````tabs ```` blocks of the Obsidian *Markdown Tabs* plugin;
+- math with KaTeX; a page renders with Typst instead with `math: typst` in its frontmatter,
+  and a ```` ```typst ```` block always does.
+
+This directory only holds what is particular to this site: `quartz.config.ts`,
+`quartz.layout.ts` and the TikZ cache.
 
 ## Build
 
 ```bash
-cd site
-npm ci
-npx quartz build -d ../markdown --serve   # preview at http://localhost:8080
+site/build.sh            # -> site/public/
+site/build.sh --serve    # preview at http://localhost:8080
 ```
 
-`docs/make.jl` builds the wiki into `docs/build/wiki/` after the Documenter pages, so
-both are deployed together (`BUILD_WIKI=false julia --project=docs docs/make.jl` skips it).
+Needs git and Node ≥ 22. The shared Quartz is cloned into `site/.quartz/` (gitignored) on the
+first run. `docs/make.jl` builds the wiki into `docs/build/wiki/` after the Documenter pages,
+so both are deployed together (`BUILD_WIKI=false julia --project=docs docs/make.jl` skips it).
 
 ## Editing in Obsidian
 

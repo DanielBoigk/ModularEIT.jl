@@ -38,14 +38,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Quartz uses git history for the wiki's created/modified dates
+      # the wiki is built by site/build.sh (called from docs/make.jl), which fetches
+      # MathStruct's Quartz and installs its dependencies
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: site/package-lock.json
-      - name: Install wiki (Quartz) dependencies
-        working-directory: site
-        run: npm ci
       - uses: julia-actions/setup-julia@v2
         with:
           version: "1"
