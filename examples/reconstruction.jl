@@ -73,7 +73,8 @@ size(sim.data)                                              # 16 electrode volta
 #
 # The least-squares misfit gets its gradient and Jacobian from the adjoint state method. Its
 # linear systems are solved by block CG, preconditioned with the FFT solver of the polar mesh
-# ([`PolarPreconditioner`](@ref)), which is exact for constant conductivity.
+# ([`PolarPreconditioner`](@ref)), which inverts the stiffness matrix of constant conductivity
+# exactly (the electrode terms and the conductivity contrast are left to CG).
 
 solver = BlockCGSolver(preconditioner = PolarPreconditioner(disc))
 data = AdjointStateObjective(fm, currents, sim.data; solver)

@@ -188,6 +188,26 @@ using Test
         @test sum(FEMatrices(d_coarse).M_σ * σ_coarse) ≈ sum(FEMatrices(d_fine).M_σ * σ_fine)
     end
 
+    @testset "conductivity transfer on bisected triangles" begin
+        # the centroid of a bisected triangle lies on the edge between its children, so a
+        # quadrature-based transfer would weight the children unequally
+        am4 = AdaptiveMesh(generate_grid(Triangle, (4, 4)); maxlevel = 6)
+        d0 = FerriteDiscretization(current_grid(am4))
+        σ0 = rand(rng, ndofs_σ(d0))
+        refine_mesh!(am4, [1, 5, 9, 20])
+        refine_mesh!(am4, collect(1:8))
+        d1 = FerriteDiscretization(current_grid(am4))
+        σ1 = transfer_conductivity(d0, σ0, d1)
+        @test Set(σ1) == Set(σ0)
+        @test sum(FEMatrices(d1).M_σ * σ1) ≈ sum(FEMatrices(d0).M_σ * σ0)
+        σ1 = rand(rng, ndofs_σ(d1))
+        coarsen_mesh!(am4, collect(1:getncells(current_grid(am4))))
+        d2 = FerriteDiscretization(current_grid(am4))
+        σ2 = transfer_conductivity(d1, σ1, d2)
+        @test sum(FEMatrices(d2).M_σ * σ2) ≈ sum(FEMatrices(d1).M_σ * σ1)
+        @test minimum(σ1) <= minimum(σ2) && maximum(σ2) <= maximum(σ1)
+    end
+
     @testset "adaptive loop reduces the estimated error" begin
         am3 = AdaptiveMesh(generate_grid(Quadrilateral, (6, 6)); maxlevel = 8)
         σf = x -> hypot(x[1] - 0.3, x[2] - 0.2) < 0.35 ? 5.0 : 1.0

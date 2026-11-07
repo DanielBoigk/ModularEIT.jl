@@ -77,7 +77,7 @@ struct AMGPreconditioner{L, MC}
 end
 
 function _jacobi_weight(A::SparseMatrixCSC{T}, dinv::Vector{T}; iters = 30) where {T}
-    x = normalize!(rand(T, size(A, 1)) .- T(0.5))
+    x = normalize!(sin.(T.(1:size(A, 1))))                  # deterministic start vector
     ρ = one(T)
     for _ in 1:iters
         y = dinv .* (A * x)

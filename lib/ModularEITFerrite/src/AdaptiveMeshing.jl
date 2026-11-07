@@ -256,11 +256,14 @@ end
 
 Conductivity coefficients on `disc_new` from `σ_old` on `disc_old` (e.g. after refinement or
 coarsening): the L² projection of the old conductivity onto the new σ space, with the old
-conductivity evaluated at the quadrature points of the new mesh. For piecewise constants this
-is exact in both directions: refined cells inherit the value of their parent, coarsened cells
-get the mean of their children.
+conductivity evaluated at the quadrature points of the new mesh. For piecewise constants on
+nested meshes (refinement or coarsening of the same initial mesh) the transfer is exact in
+both directions, without quadrature: refined cells inherit the value of their parent,
+coarsened cells get the area-weighted mean of their children.
 """
 function transfer_conductivity(d_old::FerriteDiscretization, σ_old::AbstractVector, d_new::FerriteDiscretization)
+    _is_piecewise_constant(d_old) && _is_piecewise_constant(d_new) &&
+        return _transfer_nested_p0(d_old, σ_old, d_new)
     cv = d_new.cv_σ
     nq, nb = getnquadpoints(cv), getnbasefunctions(cv)
     points = Vec{Ferrite.getspatialdim(d_new.grid), Float64}[]
@@ -291,4 +294,46 @@ function transfer_conductivity(d_old::FerriteDiscretization, σ_old::AbstractVec
     end
     M = assemble_mass(d_new.dh_σ, cv)
     return cholesky(Symmetric(M)) \ b
+end
+
+# Piecewise constants on nested meshes. Every new cell lies inside one old cell (refinement) or
+# is a union of old cells (coarsening); the cell centroids tell which. Quadrature points cannot:
+# the centroid of a bisected triangle lies on the edge between its children.
+function _transfer_nested_p0(d_old::FerriteDiscretization, σ_old::AbstractVector, d_new::FerriteDiscretization)
+    c_old, a_old = _centroids_and_areas(d_old)
+    c_new, a_new = _centroids_and_areas(d_new)
+    in_old = PointEvalHandler(d_old.grid, c_new; warn = false).cells    # old cell holding each new centroid
+    in_new = PointEvalHandler(d_new.grid, c_old; warn = false).cells    # new cell holding each old centroid
+    (any(isnothing, in_old) || any(isnothing, in_new)) &&
+        throw(ArgumentError("the old and the new mesh do not cover the same domain"))
+    dof(d, c) = only(celldofs(d.dh_σ, c))
+    σ_new = zeros(ndofs(d_new.dh_σ))
+    area = zeros(length(σ_new))
+    for (o, c) in enumerate(in_new)                    # coarsening: area-weighted mean of children
+        σ_new[dof(d_new, c)] += a_old[o] * σ_old[dof(d_old, o)]
+        area[dof(d_new, c)] += a_old[o]
+    end
+    for (c, o) in enumerate(in_old)
+        i = dof(d_new, c)
+        if a_new[c] <= a_old[o] * (1 + 1e-10)          # refinement (or unchanged): inherit
+            σ_new[i] = σ_old[dof(d_old, o)]
+        else
+            σ_new[i] /= area[i]
+        end
+    end
+    return σ_new
+end
+
+function _centroids_and_areas(d::FerriteDiscretization)
+    cv = d.cv_σ
+    dim = Ferrite.getspatialdim(d.grid)
+    centroids = Vec{dim, Float64}[]
+    areas = Float64[]
+    for cell in CellIterator(d.dh_σ)                  # cells in order 1, 2, …
+        x = getcoordinates(cell)
+        reinit!(cv, cell)
+        push!(centroids, sum(x) / length(x))
+        push!(areas, sum(q -> getdetJdV(cv, q), 1:getnquadpoints(cv)))
+    end
+    return centroids, areas
 end

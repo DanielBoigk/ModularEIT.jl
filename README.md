@@ -35,9 +35,10 @@ replaced without touching the others.
 - **Linear solvers:** projected sparse Cholesky / LDLᵀ and projected block CG / MINRES for the
   singular Neumann systems, with preconditioners:
   - Jacobi and algebraic multigrid;
-  - FFT-based preconditioners that are exact for constant conductivity: DCT on rectangles, polar
-    FFT on disk meshes, and via conformal maps (Theodorsen's and Wegmann's methods) on other
-    planar domains.
+  - FFT-based preconditioners: exact inverses of the constant-conductivity stiffness matrix
+    (DCT on rectangles, polar FFT on disk meshes), approximate via conformal maps (Theodorsen's
+    and Wegmann's methods) on other planar domains. Electrode terms and variable conductivity
+    are left to the Krylov iteration.
 
   Block CG with Jacobi or AMG runs on the CPU and on GPUs (KernelAbstractions); the Cholesky
   factorization uses cuDSS on NVIDIA GPUs (cuDSS extension). The FFT preconditioners

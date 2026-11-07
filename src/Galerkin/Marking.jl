@@ -4,7 +4,9 @@
     dorfler_marking(η, θ)
 
 Dörfler (bulk) marking: the smallest set of cells, taken in decreasing order of `η`, whose
-indicators sum to at least `θ` times the total.
+indicators sum to at least `θ` times the total. The indicators are summed as given: pass
+squared local errors `η_K²` (as `residual_indicator` and `flux_recovery_indicator` return) for
+the usual criterion `Σ_M η_K² ≥ θ Σ η_K²`.
 """
 function dorfler_marking(η::AbstractVector, θ::Real)
     0 < θ <= 1 || throw(ArgumentError("θ must be in (0, 1]"))

@@ -83,7 +83,7 @@ function _forward!(obj::KohnVogeliusObjective, σ)
     for k in axes(obj.B, 2)
         obj.values[k] = dot(view(obj.B, :, k), view(obj.AX, :, k)) / 2
     end
-    if size(obj.berr, 1) == size(obj.voltages, 1)
+    if _measures_controls(fm)
         mul!(obj.berr, fm.Q, obj.XN)
         obj.berr .-= obj.voltages
         _project!(obj.berr, fm.measure_weights)
@@ -106,9 +106,17 @@ end
     boundary_error(obj::KohnVogeliusObjective)
 
 Measured minus predicted voltages of the current-driven states at the last evaluation
-(`Q x_N - V`, mean removed per pattern).
+(`Q x_N - V`, mean removed per pattern). Only defined when the model measures where it is
+controlled (as many measurements as controls, e.g. CEM with all electrodes).
 """
-boundary_error(obj::KohnVogeliusObjective) = obj.berr
+function boundary_error(obj::KohnVogeliusObjective)
+    _measures_controls(obj.fm) ||
+        throw(ArgumentError("boundary_error needs as many measurements as voltage controls"))
+    return obj.berr
+end
+
+# measurements at the control sites, so that Q x_N is comparable with the voltages V
+_measures_controls(fm::ForwardModel) = n_measure(fm) == n_control(fm)
 
 """
     pattern_values(obj::KohnVogeliusObjective)
