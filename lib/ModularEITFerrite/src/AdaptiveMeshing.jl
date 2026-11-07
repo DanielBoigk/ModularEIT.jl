@@ -149,7 +149,8 @@ function flux_recovery_indicator(disc::FerriteDiscretization, σ::AbstractVector
     qr = cv_u.qr
     nq = getnquadpoints(cv_u)
     ip = Lagrange{shape, 1}()
-    proj = L2Projector(ip, grid)
+    # direct solve: the default CG solver (reltol 1e-10) would leave an error floor in η
+    proj = L2Projector(ip, grid; solver = Ferrite.L2SolverCholesky())
     cv_rec = CellValues(qr, ip^dim)
     ncell = getncells(grid)
     η = zeros(ncell)
