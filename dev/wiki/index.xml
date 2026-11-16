@@ -6,6 +6,18 @@
       <description>Last 10 notes on ModularEIT Wiki</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Block Conjugate Gradient</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Block-Conjugate-Gradient</guid>
+    <description><![CDATA[ The block conjugate gradient method (O’Leary 1980) solves A X = B for s right-hand sides simultaneously. ]]></description>
+    <pubDate>Mon, 16 Nov 2026 18:57:08 GMT</pubDate>
+  </item><item>
+    <title>Coarsening of Bisection Meshes</title>
+    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</link>
+    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Coarsening-of-Bisection-Meshes</guid>
+    <description><![CDATA[ Coarsening a mesh produced by Newest Vertex Bisection (NVB) undoes bisections. ]]></description>
+    <pubDate>Mon, 16 Nov 2026 18:57:08 GMT</pubDate>
+  </item><item>
     <title>Newest Vertex Bisection</title>
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Newest-Vertex-Bisection</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/06-Meshes-and-Geometry/Newest-Vertex-Bisection</guid>
@@ -52,18 +64,6 @@
     <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions</link>
     <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Pixel-Images-and-Finite-Element-Functions</guid>
     <description><![CDATA[ Learned priors, image denoisers and plots work with pixel images, while the forward problem works with finite element coefficients. ]]></description>
-    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
-  </item><item>
-    <title>Stiffness Matrix</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Stiffness-Matrix</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/04-Finite-Elements/Stiffness-Matrix</guid>
-    <description><![CDATA[ The (unweighted) stiffness matrix discretises the Laplacian: K_{ij} = \int_\Omega\nabla\varphi_i\cdot\nabla\varphi_j\,\mathrm dx,\qquad \mathbf z^\top K\mathbf z = \|\nabla z_h\|^2_{L^2(\Omega)} . ]]></description>
-    <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
-  </item><item>
-    <title>Fast Solvers on Disk Domains</title>
-    <link>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains</link>
-    <guid>https://danielboigk.github.io/ModularEIT.jl/dev/wiki/05-Linear-Solvers/Fast-Solvers-on-Disk-Domains</guid>
-    <description><![CDATA[ On a disk, the constant-coefficient Neumann problem separates in polar coordinates: Fourier modes in the angle, and one ordinary differential equation along the radius per mode. ]]></description>
     <pubDate>Thu, 01 Oct 2026 12:58:28 GMT</pubDate>
   </item>
     </channel>
