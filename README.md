@@ -56,10 +56,9 @@ replaced without touching the others.
 ```julia
 using Pkg
 Pkg.Registry.add(RegistrySpec(url = "https://github.com/MathStruct/Registry.git"))
-Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
-Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITFerrite")
+Pkg.add(["ModularEIT", "ModularEITFerrite"])
 # or, for the Gridap back end:
-Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITGridap")
+Pkg.add(["ModularEIT", "ModularEITGridap"])
 ```
 
 ModularEIT has no finite element code of its own; the discretization comes from a back end
@@ -72,7 +71,7 @@ ModularEIT depends on [KrylovBlockCG.jl](https://github.com/DanielBoigk/KrylovBl
 conjugate gradients with null-space projection, for Krylov.jl), and the Ferrite back end on
 [FerriteAdaptiveTriangular.jl](https://github.com/DanielBoigk/FerriteAdaptiveTriangular.jl)
 (newest vertex bisection with coarsening for triangle meshes, for Ferrite.jl). Both work with
-the released Krylov.jl and Ferrite.jl and are found through the
+the released Krylov.jl and Ferrite.jl. All of them are in the
 [MathStruct registry](https://github.com/MathStruct/Registry), which the first line adds.
 
 ## Example
