@@ -5,7 +5,7 @@
 #                             pixel/voxel meshes of image-based EIT. Refined meshes have hanging
 #                             nodes; FerriteDiscretization condenses them with conformity
 #                             constraints, so forward models, objectives and solvers work unchanged.
-#   linear triangles          newest vertex bisection (Ferrite's BisectionMesh): conforming, no
+#   linear triangles          newest vertex bisection (FerriteAdaptiveTriangular): conforming, no
 #                             hanging nodes.
 #   other cells (tetrahedra)  not implemented: AdaptiveMesh warns and leaves the mesh unchanged.
 #
@@ -47,7 +47,7 @@ function AdaptiveMesh(grid::Ferrite.AbstractGrid; maxlevel::Union{Nothing, Integ
         forest = Ferrite.AMR.ForestBWG(grid, something(maxlevel, 10))
         return AdaptiveMesh(forest, Ferrite.AMR.creategrid(forest))
     elseif C === Triangle
-        mesh = Ferrite.AMR.BisectionMesh(grid, something(maxlevel, 20))
+        mesh = BisectionMesh(grid, something(maxlevel, 20))
         return AdaptiveMesh(mesh, Ferrite.AMR.creategrid(mesh))
     end
     @warn "Adaptive refinement is implemented for quadrilateral, hexahedral and linear triangle meshes; " *
@@ -75,7 +75,7 @@ between neighbouring cells. Cell numbers refer to `current_grid(am)`.
 function refine_mesh!(am::AdaptiveMesh, cells::AbstractVector{<:Integer})
     am.forest === nothing && (_warn_no_refinement(); return am)
     isempty(cells) && return am
-    if am.forest isa Ferrite.AMR.BisectionMesh
+    if am.forest isa BisectionMesh
         Ferrite.AMR.refine!(am.forest, cells)
         am.grid = Ferrite.AMR.creategrid(am.forest)
     else
@@ -94,7 +94,7 @@ Refinement level of every cell of `current_grid(am)` (0 = cell of the initial gr
 """
 function cell_levels(am::AdaptiveMesh)
     am.forest === nothing && return zeros(Int, getncells(am.grid))
-    am.forest isa Ferrite.AMR.BisectionMesh && return copy(am.forest.levels)
+    am.forest isa BisectionMesh && return copy(am.forest.levels)
     return [Int(leaf.l) for tree in am.forest.cells for leaf in tree.leaves]
 end
 
@@ -105,7 +105,7 @@ Maximum refinement level; cells at this level are not refined further. Exclude t
 marking (e.g. set their indicator to zero) so that the adaptive loop keeps making progress.
 """
 max_level(am::AdaptiveMesh) = am.forest === nothing ? 0 :
-                              am.forest isa Ferrite.AMR.BisectionMesh ? am.forest.maxlevel : Int(first(am.forest.cells).b)
+                              am.forest isa BisectionMesh ? am.forest.maxlevel : Int(first(am.forest.cells).b)
 
 """
     coarsen_mesh!(am, cells)
@@ -118,7 +118,7 @@ function coarsen_mesh!(am::AdaptiveMesh, cells::AbstractVector{<:Integer})
     am.forest === nothing && (_warn_no_refinement(); return am)
     isempty(cells) && return am
     Ferrite.AMR.coarsen!(am.forest, collect(cells))
-    am.forest isa Ferrite.AMR.BisectionMesh || Ferrite.AMR.balanceforest!(am.forest)   # (stays conforming)
+    am.forest isa BisectionMesh || Ferrite.AMR.balanceforest!(am.forest)   # (stays conforming)
     am.grid = Ferrite.AMR.creategrid(am.forest)
     return am
 end
@@ -149,8 +149,10 @@ function flux_recovery_indicator(disc::FerriteDiscretization, σ::AbstractVector
     qr = cv_u.qr
     nq = getnquadpoints(cv_u)
     ip = Lagrange{shape, 1}()
-    # direct solve: the default CG solver (reltol 1e-10) would leave an error floor in η
-    proj = L2Projector(ip, grid; solver = Ferrite.L2SolverCholesky())
+    # direct solve: the CG solver (reltol 1e-10) would leave an error floor in η. Ferrite 1.7.0
+    # always solves by Cholesky; later versions default to CG and take the solver as a keyword.
+    proj = isdefined(Ferrite, :L2SolverCholesky) ?
+        L2Projector(ip, grid; solver = Ferrite.L2SolverCholesky()) : L2Projector(ip, grid)
     cv_rec = CellValues(qr, ip^dim)
     ncell = getncells(grid)
     η = zeros(ncell)

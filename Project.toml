@@ -12,13 +12,14 @@ AlgebraicMultigrid = "2169fc97-5a83-5252-b627-83903c6c433c"
 FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
 KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
 Krylov = "ba0b0d4f-ebba-5204-a429-3ac8c609bfb7"
+KrylovBlockCG = "1d5e00f8-f3d2-4e05-8e0a-3b5becc64256"
 LDLFactorizations = "40e66cde-538c-5869-a4ad-c39174c6795b"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [sources]
-Krylov = {url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg"}
+KrylovBlockCG = {url = "https://github.com/DanielBoigk/KrylovBlockCG.jl", rev = "main"}
 
 [weakdeps]
 ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
@@ -37,7 +38,8 @@ CUDA = "6"
 CUDSS = "0.8"
 FFTW = "1.10"
 KernelAbstractions = "0.9.42"
-Krylov = "0.10.10"
+Krylov = "0.10.12"
+KrylovBlockCG = "0.1"
 LDLFactorizations = "0.10.2"
 LinearAlgebra = "1"
 Random = "1"

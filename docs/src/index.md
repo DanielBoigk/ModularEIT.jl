@@ -13,11 +13,10 @@ ModularEIT
 
 ```julia
 using Pkg
-Pkg.add(url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular")
-Pkg.add(url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg")
+Pkg.Registry.add(RegistrySpec(url = "https://github.com/MathStruct/Registry.git"))
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl")
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITFerrite")
-# or, for the Gridap back end (no Ferrite fork needed):
+# or, for the Gridap back end:
 Pkg.add(url = "https://github.com/DanielBoigk/ModularEIT.jl", subdir = "lib/ModularEITGridap")
 ```
 
@@ -27,12 +26,12 @@ package in `lib/` of this repository: `ModularEITFerrite`
 ([Gridap.jl](https://github.com/gridap/Gridap.jl)). Load ModularEIT with one of them, e.g.
 `using ModularEIT, ModularEITFerrite`.
 
-ModularEIT depends on a fork of [Krylov.jl](https://github.com/DanielBoigk/Krylov.jl) (block
-conjugate gradients with null-space projection), and the Ferrite back end on a fork of
-[Ferrite.jl](https://github.com/DanielBoigk/Ferrite.jl) (newest vertex bisection with coarsening
-for triangle meshes). Add the forks first: Julia uses the `[sources]` entries of a package only
-when it is the active project, so `Pkg.add` alone would install the registered versions, and
-ModularEIT would fail to load.
+ModularEIT depends on [KrylovBlockCG.jl](https://github.com/DanielBoigk/KrylovBlockCG.jl) (block
+conjugate gradients with null-space projection, for Krylov.jl), and the Ferrite back end on
+[FerriteAdaptiveTriangular.jl](https://github.com/DanielBoigk/FerriteAdaptiveTriangular.jl)
+(newest vertex bisection with coarsening for triangle meshes, for Ferrite.jl). Both work with
+the released Krylov.jl and Ferrite.jl and are found through the
+[MathStruct registry](https://github.com/MathStruct/Registry), which the first line adds.
 
 ## Package overview
 

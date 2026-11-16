@@ -11,7 +11,5 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [sources]
-Ferrite = {url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular"}
-Krylov = {url = "https://github.com/DanielBoigk/Krylov.jl", rev = "block-cg"}
 ModularEIT = {path = ".."}
 ModularEITFerrite = {path = "../lib/ModularEITFerrite"}

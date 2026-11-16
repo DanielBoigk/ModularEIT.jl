@@ -5,16 +5,18 @@ authors = ["Daniel Boigk"]
 
 [deps]
 Ferrite = "c061ca5d-56c9-439f-9c0e-210fe06d3992"
+FerriteAdaptiveTriangular = "10e3cd81-921f-451a-a702-c2ffb0ce59e8"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 ModularEIT = "7608eb13-d8ec-417a-a672-b3f475c1af64"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [sources]
-Ferrite = {url = "https://github.com/DanielBoigk/Ferrite.jl", rev = "adaptive-triangular"}
+FerriteAdaptiveTriangular = {rev = "main", url = "https://github.com/DanielBoigk/FerriteAdaptiveTriangular.jl"}
 ModularEIT = {path = "../.."}
 
 [compat]
 Ferrite = "1.7"
+FerriteAdaptiveTriangular = "0.1"
 LinearAlgebra = "1"
 ModularEIT = "0.0.1"
 SparseArrays = "1"

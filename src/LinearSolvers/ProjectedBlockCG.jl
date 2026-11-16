@@ -4,8 +4,8 @@
 #
 # i.e. for SPD operators on the quotient space ℝⁿ/V. The typical case is the EIT stiffness matrix
 # Lσ = ∫ σ ∇φᵢ⋅∇φⱼ dΩ with pure Neumann boundary conditions, whose null space are the constants.
-# The solver itself is `block_cg` of the Krylov.jl fork (github.com/DanielBoigk/Krylov.jl,
-# branch block-cg); this file adds the EIT defaults (null space = constants), the preconditioners
+# The solver itself is `block_cg` of KrylovBlockCG.jl (github.com/DanielBoigk/KrylovBlockCG.jl);
+# this file adds the EIT defaults (null space = constants), the preconditioners
 # (Jacobi, smoothed-aggregation AMG), and the interface used by the rest of the package. See the
 # wiki articles "Projected Conjugate Gradient", "Block Conjugate Gradient" and "Grounding of the
 # Potential".
@@ -17,6 +17,7 @@ using LinearAlgebra
 using SparseArrays
 import AlgebraicMultigrid
 import Krylov
+import KrylovBlockCG
 
 # ---------------------------------------------------------------------------------------
 # Preconditioners
@@ -152,7 +153,7 @@ _krylov_preconditioner(M) = _KrylovPreconditioner(M)
     BlockCGWorkspace(A, B; nullspace = nothing, grounding = nothing)
 
 Preallocated storage for [`pbcg!`](@ref) with `size(B, 2)` right-hand sides: a
-`Krylov.BlockCgWorkspace` of the Krylov.jl fork. All `n × s` buffers have the array type of `B`,
+`KrylovBlockCG.BlockCgWorkspace`. All `n × s` buffers have the array type of `B`,
 so passing device arrays gives a device workspace.
 
 - `nullspace`: basis of `V = ker(A)` as an `n × k` matrix or a vector. Default: the constant
@@ -171,7 +172,7 @@ function BlockCGWorkspace(A, B::AbstractVecOrMat; nullspace = nothing, grounding
     T = eltype(Bm)
     V, W, _ = _nullspace_basis(T, n, nullspace, grounding)
     k = size(V, 2)
-    return Krylov.BlockCgWorkspace(A, Bm; nullspace = k == 0 ? nothing : V, grounding = k == 0 ? nothing : W)
+    return KrylovBlockCG.BlockCgWorkspace(A, Bm; nullspace = k == 0 ? nothing : V, grounding = k == 0 ? nothing : W)
 end
 
 """
@@ -194,8 +195,8 @@ end
     pbcg!(X, ws, A, B; M = nothing, rtol = √eps, atol = 0, maxiter = 10n, recompute_every = 50,
           rank_tol = √eps)
 
-Solve `A X = Π B` with the projected block conjugate gradient method (`Krylov.block_cg!` of
-the Krylov.jl fork) in the workspace `ws` (see [`BlockCGWorkspace`](@ref)), in place in `X`
+Solve `A X = Π B` with the projected block conjugate gradient method (`KrylovBlockCG.block_cg!`)
+in the workspace `ws` (see [`BlockCGWorkspace`](@ref)), in place in `X`
 (which is used as initial guess), and return a [`BlockCGStats`](@ref).
 
 `Π = I - V Vᵀ` is the orthogonal projector onto `V⊥ = range(A)`. Every residual and every
@@ -212,14 +213,14 @@ search directions are dropped (relative eigenvalue threshold `rank_tol`), and ev
 `recompute_every` iterations the updated residual is replaced by the true residual
 `Π(B - AX)` to limit round-off drift.
 """
-function pbcg!(X::AbstractVecOrMat, ws::Krylov.BlockCgWorkspace{T}, A, B::AbstractVecOrMat;
+function pbcg!(X::AbstractVecOrMat, ws::KrylovBlockCG.BlockCgWorkspace{T}, A, B::AbstractVecOrMat;
                M = nothing, rtol = sqrt(eps(T)), atol = zero(T),
                maxiter::Integer = 10 * size(A, 1), recompute_every::Integer = 50,
                rank_tol = sqrt(eps(T))) where {T}
     Xm, Bm = _as_matrix(X), _as_matrix(B)
     size(Bm, 2) == ws.p || throw(DimensionMismatch("workspace was built for $(ws.p) right-hand sides"))
-    Krylov.block_cg!(ws, A, Bm, Xm; M = _krylov_preconditioner(M), atol = T(atol), rtol = T(rtol),
-                     itmax = Int(maxiter), recompute_every = Int(recompute_every), rank_tol = T(rank_tol))
+    KrylovBlockCG.block_cg!(ws, A, Bm, Xm; M = _krylov_preconditioner(M), atol = T(atol), rtol = T(rtol),
+                            itmax = Int(maxiter), recompute_every = Int(recompute_every), rank_tol = T(rank_tol))
     copyto!(Xm, ws.X)
     return BlockCGStats(ws.stats.solved, ws.stats.niter, ws.rnorm ./ max.(ws.bnorm, floatmin(T)),
                         ws.defect)

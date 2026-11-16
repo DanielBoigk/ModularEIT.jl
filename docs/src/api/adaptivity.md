@@ -5,8 +5,8 @@ CurrentModule = ModularEITFerrite
 ```
 
 Adaptive refinement of quadrilateral (and hexahedral) meshes with Ferrite's AMR and of linear
-triangle meshes with newest vertex bisection (`BisectionMesh` of the AMR module in the
-[Ferrite.jl fork](https://github.com/DanielBoigk/Ferrite.jl) that ModularEIT depends on). Refined quadrilateral meshes have hanging nodes;
+triangle meshes with newest vertex bisection (`BisectionMesh` of
+[FerriteAdaptiveTriangular.jl](https://github.com/DanielBoigk/FerriteAdaptiveTriangular.jl)). Refined quadrilateral meshes have hanging nodes;
 [`FerriteDiscretization`](@ref) condenses the conformity constraints, so forward models,
 objectives and solvers work unchanged. Bisection keeps triangle meshes conforming (also
 continuous σ spaces work) and carries facet and cell sets over. Theory: wiki articles

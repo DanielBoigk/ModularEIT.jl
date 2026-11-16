@@ -20,8 +20,8 @@ BlockCGSolver
 
 ## Projected block CG
 
-The iteration is `block_cg` of the [Krylov.jl fork](https://github.com/DanielBoigk/Krylov.jl)
-(branch `block-cg`), which also handles null spaces and grounding in general; the functions here
+The iteration is `block_cg` of [KrylovBlockCG.jl](https://github.com/DanielBoigk/KrylovBlockCG.jl),
+which also handles null spaces and grounding in general; the functions here
 add the EIT defaults (null space = constants) and ModularEIT's preconditioners.
 
 ```@docs
@@ -112,7 +112,7 @@ DeviceSparseMatrixCSR
 
 With CUDA.jl, `to_device = x -> x isa SparseMatrixCSC ? CuSparseMatrixCSR(x) : CuArray(x)`
 uses cuSPARSE instead of the generic kernel and, together with CUDSS.jl, factorises on the GPU.
-The tall-skinny Gram products `XᵀY` (`Krylov.kgram!`, used by block CG and the projections)
+The tall-skinny Gram products `XᵀY` (`KrylovBlockCG.kgram!`, used by block CG and the projections)
 are computed as one matrix-vector product per column for Float64 and ComplexF64 blocks with 2–8
 columns, on any array type. For those shapes GEMM kernels often do not split the long reduction
 dimension: cuBLAS GEMM was up to 30× slower, OpenBLAS up to 2×. Note that consumer

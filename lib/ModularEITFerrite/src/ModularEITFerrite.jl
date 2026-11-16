@@ -12,6 +12,7 @@ module ModularEITFerrite
 using LinearAlgebra
 using SparseArrays
 using Ferrite
+using FerriteAdaptiveTriangular: BisectionMesh
 using ModularEIT
 
 # generic functions and types of ModularEIT that this back end extends or uses

@@ -7,6 +7,7 @@
 
 using LinearAlgebra
 import Krylov
+import KrylovBlockCG
 
 # ---------------------------------------------------------------------------------------
 # Small helpers
@@ -23,10 +24,10 @@ _cols(X::AbstractMatrix, r::Integer) = _block(X, size(X, 1), r)
 """
     _gram!(G, X, Y)
 
-`G ← XᵀY` for tall-skinny blocks (`n × s` with `n ≫ s`): `Krylov.kgram!` (one GEMV per column for
+`G ← XᵀY` for tall-skinny blocks (`n × s` with `n ≫ s`): `KrylovBlockCG.kgram!` (one GEMV per column for
 double-precision blocks with 2–8 columns, where GEMM kernels are slow).
 """
-_gram!(G, X, Y) = Krylov.kgram!(G, X, Y)
+_gram!(G, X, Y) = KrylovBlockCG.kgram!(G, X, Y)
 
 _as_matrix(B::AbstractMatrix) = B
 _as_matrix(b::AbstractVector) = reshape(b, :, 1)

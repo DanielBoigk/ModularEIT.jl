@@ -11,7 +11,7 @@ back end package, which is loaded next to ModularEIT:
 
 | Back end | Package | Finite element library |
 |:--|:--|:--|
-| Ferrite | `ModularEITFerrite` (in `lib/ModularEITFerrite`) | [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) (fork with triangle bisection) |
+| Ferrite | `ModularEITFerrite` (in `lib/ModularEITFerrite`) | [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl), with [FerriteAdaptiveTriangular.jl](https://github.com/DanielBoigk/FerriteAdaptiveTriangular.jl) for triangle bisection |
 | Gridap | `ModularEITGridap` (in `lib/ModularEITGridap`) | [Gridap.jl](https://github.com/gridap/Gridap.jl) |
 
 ```julia
